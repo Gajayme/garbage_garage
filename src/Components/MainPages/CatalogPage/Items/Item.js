@@ -30,9 +30,12 @@ export const Item = ({ value, onClick }) => {
 				alt={"item"}
 			/>
 
-			<p className="catalog-page-item-name" title={name}>{name}</p>
-			<p className="catalog-page-item-size" title={size}>{size}</p>
-			<p className="catalog-page-item-price" title={price}>{price}</p>
+			<div className="catalog-item-info">
+				<p className="catalog-item-name"	title={name}>	{name}</p>
+				<p className="catalog-item-size"	title={size}>	{size}</p>
+				<p className="catalog-item-price"	title={price}>	{price}</p>
+			</div>
+
 		</div>
 	)
 }

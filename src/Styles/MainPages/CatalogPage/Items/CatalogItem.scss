@@ -1,36 +1,54 @@
 @use "../../../../Styles/_breakpoints" as bp;
 
+.catalog-page-item {
+	display: flex;
+	flex-direction: column;
+	gap: 15px;
+}
+
 .catalog-page-item:hover {
 	transform: scale(1.03);
 }
 
 .catalog-page-item-image {
-	/* TODO DMITRIY: можно просто использовать width, а не min-width и max-width?? */
-	min-width: 100%;
-	max-width: 100%;
+	width: 100%;
 }
 
-.catalog-page-item-name,
-.catalog-page-item-size,
-.catalog-page-item-price {
-	margin-top: 10px;
-	margin-bottom: 10px;
+.catalog-item-info {
+	display: flex;
+	flex-direction: column;
 
-	display: -webkit-box;
-	-webkit-box-orient: vertical;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	line-clamp: 2;
-	-webkit-line-clamp: 2;
-	line-height: 33px;
-	font-size: 33px;
+	font-size: 25px;
 
 	@include bp.up-to(bp.$bp-small) {
-		line-height: 20px;
 		font-size: 20px;
 	}
 }
 
-.catalog-page-item-price {
+.catalog-item-price {
+	color: var(--red);
+}
+
+@mixin line-clamp($lines) {
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	-webkit-line-clamp: $lines;
+	line-clamp: $lines;
+}
+
+.catalog-item-info p {
+	margin: 0 0; // сброс дефолтных отступов браузера
+}
+
+.catalog-item-name {
+	@include line-clamp(2);
+}
+.catalog-item-size {
+	@include line-clamp(1);
+}
+.catalog-item-price {
+	@include line-clamp(1);
 	color: var(--red);
 }
