@@ -1,25 +1,27 @@
 @use "../../../../Styles/_breakpoints" as bp;
 
-.catalog-item:hover {
+.catalog-page-item:hover {
 	transform: scale(1.03);
 }
 
-.catalog-item-image {
+.catalog-page-item-image {
 	/* TODO DMITRIY: можно просто использовать width, а не min-width и max-width?? */
 	min-width: 100%;
 	max-width: 100%;
 }
 
-.catalog-item p {
+.catalog-page-item-name,
+.catalog-page-item-size,
+.catalog-page-item-price {
 	margin-top: 10px;
 	margin-bottom: 10px;
 
-	display: -webkit-box;			/* Устанавливаем flex-контейнер */
-	-webkit-box-orient: vertical;	/* Задаём вертикальную ориентацию */
-	overflow: hidden;				/* Обрезаем текст, если он превышает заданные строки */
-	text-overflow: ellipsis;		/* Добавляем троеточие (...) */
-	line-clamp: 2;					/* Ограничиваем количество строк (2) */
-	-webkit-line-clamp: 2;			/* Ограничиваем количество строк (2) */
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	line-clamp: 2;
+	-webkit-line-clamp: 2;
 	line-height: 33px;
 	font-size: 33px;
 
@@ -27,4 +29,8 @@
 		line-height: 20px;
 		font-size: 20px;
 	}
+}
+
+.catalog-page-item-price {
+	color: var(--red);
 }

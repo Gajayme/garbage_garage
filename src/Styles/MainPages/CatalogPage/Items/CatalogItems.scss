@@ -14,7 +14,7 @@ $col-min-wide: 360px; // широкие экраны (> 2000px)
 $col-min-medium: 260px; // <= 2000px
 $col-min-small: 120px; // <= 500px
 
-.catalog-items {
+.catalog-page-items {
 	display: grid;
 	column-gap: $grid-gap-column-medium; // горизонтальный промежуток — фиксированный на всех экранах
 	row-gap: $grid-gap-row; // вертикальный промежуток — фиксированный на всех экранах

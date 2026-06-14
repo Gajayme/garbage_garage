@@ -23,16 +23,16 @@ export const Item = ({ value, onClick }) => {
 	const price = "price: " + value.price;
 
 	return (
-		<div className={"catalog-item"} onClick={onClick}>
+		<div className="catalog-page-item" onClick={onClick}>
 			<BorderedImage
-				className="catalog-item-image"
+				className="catalog-page-item-image"
 				imageSrc = {imageSrc}
 				alt={"item"}
 			/>
 
-			<p title={name}> {name}</p>
-			<p title={size}> {size}</p>
-			<p style={{ color: "red" }} title={price}> {price}</p>
+			<p className="catalog-page-item-name" title={name}>{name}</p>
+			<p className="catalog-page-item-size" title={size}>{size}</p>
+			<p className="catalog-page-item-price" title={price}>{price}</p>
 		</div>
 	)
 }

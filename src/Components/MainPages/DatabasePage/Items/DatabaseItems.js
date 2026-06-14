@@ -12,7 +12,7 @@ export const DatabaseItems = ({ catalogState }) => {
 	}
 
 	return (
-		<div className="catalog-items">
+		<div className="database-page-items">
 			{catalogState.map((value, index) => (
 				<Link
 					key={index}

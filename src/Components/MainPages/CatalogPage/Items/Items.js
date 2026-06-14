@@ -15,7 +15,7 @@ export const Items = ({catalogState}) => {
 	}
 
 	return (
-		<div className="catalog-items"> {
+		<div className="catalog-page-items"> {
 			catalogState.map((value, index) => {
 				if (!validateItem(value)) {
 					return null;

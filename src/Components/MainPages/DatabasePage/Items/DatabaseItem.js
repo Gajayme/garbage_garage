@@ -9,15 +9,15 @@ export const DatabaseItem = ({ value, onClick }) => {
 	const price = value.price;
 
 	return (
-		<div className="catalog-item" onClick={onClick}>
+		<div className="database-page-item" onClick={onClick}>
 			<BorderedImage
-				className="catalog-item-image"
+				className="database-page-item-image"
 				imageSrc={imageSrc}
 				alt="item"
 			/>
 
-			<p title={name}> {name}</p>
-			<p title={price}> {price}</p>
+			<p className="database-page-item-name" title={name}>{name}</p>
+			<p className="database-page-item-price" title={price}>{price}</p>
 		</div>
 	);
 };
