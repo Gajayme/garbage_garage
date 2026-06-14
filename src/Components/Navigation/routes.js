@@ -2,7 +2,7 @@ import { UploadPage } from "Components/MainPages/UploadPage/UploadPage.js";
 import { DatabasePage } from "Components/MainPages/DatabasePage/DatabasePage.js";
 import { CatalogPage } from "Components/MainPages/CatalogPage/CatalogPage.js";
 import { LoginPage } from "Components/MainPages/LoginPage/LoginPage.js";
-import { ItemPage } from "Components/MainPages/CatalogItemPage/ItemPage.js";
+import { CatalogItemPage } from "Components/MainPages/CatalogItemPage/CatalogItemPage.js";
 import { DatabaseItemPage } from "Components/MainPages/DatabaseItemPage/DatabaseItemPage.js";
 import { SettingsPage } from "Components/MainPages/SettingsPage/SettingsPage.js";
 import { AboutUsPage } from "Components/MainPages/AboutUsPage/AboutUsPage.js";
@@ -64,7 +64,7 @@ export const routes = [
 	{
 		path: `/${paths.catalog}/:itemId`,
 		needAuth: false,
-		page: ItemPage,
+		page: CatalogItemPage,
 	},
 	{
 		path: `/${paths.database}/:itemId`,

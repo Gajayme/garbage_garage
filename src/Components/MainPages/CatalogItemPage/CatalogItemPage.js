@@ -9,10 +9,10 @@ import { useItemDetails } from "./useItemDetails.js";
 import { useWhatsappLink } from "./useWhatsappLink.js";
 import { useHeightGreaterThanWidth } from "./useHeightGreaterThanWidth.js";
 
-import "Styles/MainPages/CatalogItemPage/ItemPage.scss";
+import "Styles/MainPages/CatalogItemPage/CatalogItemPage.scss";
 import "Styles/CenteredText.scss";
 
-export const ItemPage = () => {
+export const CatalogItemPage = () => {
 	const { itemId } = useParams();
 	const [modalImageUrl, setModalImageUrl] = useState(null);
 	const tallNarrowViewport = useHeightGreaterThanWidth();
