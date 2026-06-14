@@ -15,7 +15,7 @@ export const type = "typeId"
 export const status = "status"
 export const description = "description"
 
-export const base_server_url = "http://72.60.133.178:5000/"
+export const base_server_url = "http://api.garbage-garage.com/"
 
 // API для загрузки вещи на сервер
 export const post_upload = "post/upload"
