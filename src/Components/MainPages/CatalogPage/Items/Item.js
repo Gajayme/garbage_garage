@@ -13,8 +13,14 @@ import "Styles/TopAndLeftBorders.scss"
  */
 export const Item = ({ value, onClick }) => {
 	const imageSrc = value.images?.[0]?.image_url ?? null;
-	const name = value.itemName;
-	const price = value.price;
+
+	const brand = value.brand;
+	const model = value.model ? value.model : "";
+	const type = value.type;
+
+	const name = brand + " " + model + " " + type;
+	const size = "size: " + value.size;
+	const price = "price: " + value.price;
 
 	return (
 		<div className={"catalog-item"} onClick={onClick}>
@@ -25,7 +31,8 @@ export const Item = ({ value, onClick }) => {
 			/>
 
 			<p title={name}> {name}</p>
-			<p title={price}> {price}</p>
+			<p title={size}> {size}</p>
+			<p style={{ color: "red" }} title={price}> {price}</p>
 		</div>
 	)
 }

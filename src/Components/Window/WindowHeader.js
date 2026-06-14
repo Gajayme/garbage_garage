@@ -16,7 +16,7 @@ export const WindowHeader = ({ className }) => {
 					alt=""
 					aria-hidden="true"
 				/>
-				<span className="window-header__title">garage garbage</span>
+				<span className="window-header__title">garbage garage</span>
 			</div>
 			<AdminLabel />
 		</div>
