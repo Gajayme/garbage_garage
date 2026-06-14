@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { DatabaseItem } from "Components/MainPages/DatabasePage/Items/DatabaseItem.js";
-import * as NavigationConstants from "Components/Navigation/Constants";
+import * as NavigationConstants from "Components/Navigation/paths.js";
 
 import "Styles/NoDecorationTextLink.scss";
 import "Styles/MainPages/DatabasePage/Items/DatabaseItems.scss";

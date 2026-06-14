@@ -1,5 +1,5 @@
-import {NavButton} from "./NavButton";
-import * as Constants from './Constants.js'
+import { NavButton } from "./NavButton";
+import { routes } from "./routes.js";
 import { AuthChecker } from "Components/Auth/AuthChecker.js";
 
 import 'Styles/Navigation/NavButton.scss'
@@ -11,24 +11,27 @@ import 'Styles/Navigation/DefaultNavButtons.scss'
  *
  * @param {string} className - Имя класса для стилей.
  */
-export const DefaultNavButtons = ({className}) => {
+export const DefaultNavButtons = ({ className }) => {
 	return (
 		<div className={className}>
-			<NavButton className="nav-button" labelText={Constants.rootLabel} destination={Constants.root}/>
+			{routes
+				.filter((route) => route.label)
+				.map((route) => {
+					const button = (
+						<NavButton
+							key={route.path}
+							className="nav-button"
+							labelText={route.label}
+							destination={route.path}
+						/>
+					);
 
-			<AuthChecker>
-				<NavButton className="nav-button" labelText={Constants.uploadLabel} destination={Constants.root + Constants.upload}/>
-			</AuthChecker>
-
-			<AuthChecker>
-				<NavButton className="nav-button" labelText={Constants.databaseLabel} destination={Constants.root + Constants.database}/>
-			</AuthChecker>
-
-			<AuthChecker>
-				<NavButton className="nav-button" labelText={Constants.settingsLabel} destination={Constants.root + Constants.settings}/>
-			</AuthChecker>
-
-			<NavButton className="nav-button" labelText={Constants.loginLabel} destination={Constants.root + Constants.login}/>
+					return route.needAuth ? (
+						<AuthChecker key={route.path}>{button}</AuthChecker>
+					) : (
+						button
+					);
+				})}
 		</div>
-	)
-}
+	);
+};

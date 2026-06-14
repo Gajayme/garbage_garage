@@ -1,7 +1,7 @@
 import { usePrivateCatalogItems } from "Components/MainPages/DatabasePage/usePrivateCatalogItems.js";
 import { DatabaseItems } from "Components/MainPages/DatabasePage/Items/DatabaseItems.js";
 import { NavButton } from "Components/Navigation/NavButton";
-import * as Nav from "Components/Navigation/Constants";
+import * as Nav from "Components/Navigation/paths.js";
 
 import "Styles/Navigation/NavButton.scss";
 import "Styles/CenteredText.scss";

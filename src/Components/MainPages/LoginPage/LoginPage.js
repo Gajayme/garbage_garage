@@ -4,7 +4,7 @@ import { CustomInput } from 'Components/CustomInput.js'
 import { DefaultButton } from 'Components/Button.js'
 import { useLogin } from './useLogin.js'
 import { useAuth } from 'Components/Auth/AuthContext.js'
-import * as Nav from 'Components/Navigation/Constants'
+import * as Nav from "Components/Navigation/paths.js";
 
 import 'Styles/MainPages/LoginPage/LoginPage.scss'
 

@@ -5,7 +5,7 @@ import { UploadNotificationState } from './UploadPageNotificationWindow'
 import { UploadPageNotificationWindow } from "./UploadPageNotificationWindow";
 import { useResetStateWithTimeout } from "Components/hooks/useResetStateWithTimeout.js";
 import { isValidPostId } from "Components/utils/isValidPostId.js";
-import * as Nav from "Components/Navigation/Constants.js";
+import * as Nav from "Components/Navigation/paths.js";
 
 export const UploadPage = () => {
 	const { itemId } = useParams();

@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 
 import { DefaultButton } from "Components/Button.js";
 import { useAuth } from "Components/Auth/AuthContext.js";
-import * as Nav from "Components/Navigation/Constants.js";
+import * as Nav from "Components/Navigation/paths.js";
 import * as Constants from "Constants.js";
 
 import { ItemImageGrid } from "./ItemImageGrid.js";

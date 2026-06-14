@@ -2,7 +2,7 @@
 import { Link } from "react-router-dom";
 import { Item } from 'Components/MainPages/CatalogPage/Items/Item';
 import { validateItem } from 'Components/MainPages/CatalogPage/Items/validate';
-import * as NavigationConstants from "Components/Navigation/Constants";
+import * as NavigationConstants from "Components/Navigation/paths.js";
 
 import "Styles/NoDecorationTextLink.scss";
 

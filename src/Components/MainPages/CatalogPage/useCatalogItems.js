@@ -17,8 +17,6 @@ export const useCatalogItems = (filtersState) => {
 		queryKey: [GlobalConstants.itemsQueryKey, filtersState],
 		queryFn: fetchItems,
 		keepPreviousData: true,
-		staleTime: Infinity, // данные не будут дергаться с сервера при прошествии таймера
-		gcTime: Infinity,   // данные не будут удаляться из кеша при прошествии таймера
 	});
 
 	return { data, error, isLoading };
