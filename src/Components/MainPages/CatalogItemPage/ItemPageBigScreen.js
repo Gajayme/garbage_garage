@@ -3,6 +3,7 @@ import { ItemTitle } from "./ItemTitle.js";
 import { ItemInfo } from "./ItemInfo.js";
 import { ItemDescription } from "./ItemDescription.js";
 import { BuyItemButton } from "./BuyItemButton.js";
+import { getItemData } from "./Utils.js";
 
 import "Styles/MainPages/CatalogItemPage/ItemPageBigScreen.scss";
 
@@ -16,8 +17,9 @@ import "Styles/MainPages/CatalogItemPage/ItemPageBigScreen.scss";
  * @param {Function} onImageClick - обработчик клика по изображению (открытие модалки)
  * @param {string|null} whatsappLink - ссылка на WhatsApp для кнопки BUY
  */
-export const ItemPageBigScreen = ({ itemData, images, onImageClick, whatsappLink }) => {
-	const { title, size, price, description } = itemData;
+export const ItemPageBigScreen = ({ itemData, onImageClick, whatsappLink }) => {
+
+	const { title, size, price, description, images } = getItemData(itemData);
 
 	return (
 		<div className="item-page-big-screen">

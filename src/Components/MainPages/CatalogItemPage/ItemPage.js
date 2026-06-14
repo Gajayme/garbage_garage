@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import { ItemPageBigScreen } from "./ItemPageBigScreen.js";
 import { ItemPageSmallScreen } from "./ItemPageSmallScreen.js";
 import { ItemModalWindow } from "./ItemModalWindow.js";
-import { buildItemData } from "./Utils.js";
+import { validateItemData } from "./Utils.js";
 import { useItemDetails } from "./useItemDetails.js";
 import { useWhatsappLink } from "./useWhatsappLink.js";
 import { useHeightGreaterThanWidth } from "./useHeightGreaterThanWidth.js";
@@ -30,10 +30,12 @@ export const ItemPage = () => {
 		);
 	}
 
-	const itemData = buildItemData(data ? data.data : null);
-	const images = data ? data.data.images : null;
+	// Вытащим данные из response и проверим их на валидность
+	const itemData = data.data ? data.data : null;
+	const isDataValid = validateItemData(itemData);
 
-	if (!itemData) {
+	// Если данные не валидны, то выводим сообщение об ошибке
+	if (!isDataValid) {
 		return <p className="centered-text">No item data</p>;
 	}
 
@@ -42,14 +44,12 @@ export const ItemPage = () => {
 			{tallNarrowViewport ? (
 				<ItemPageSmallScreen
 					itemData={itemData}
-					images={images}
 					onImageClick={setModalImageUrl}
 					whatsappLink={whatsappLink}
 				/>
 			) : (
 				<ItemPageBigScreen
 					itemData={itemData}
-					images={images}
 					onImageClick={setModalImageUrl}
 					whatsappLink={whatsappLink}
 				/>
