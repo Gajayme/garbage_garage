@@ -8,5 +8,5 @@ services:
       dockerfile: ./.deploy/prod/Dockerfile
     container_name: rail-frontend
     ports:
-      - "80:80"                       # внешний порт 80 → внутренний 80 Nginx
+      - "3000:80"                       # внешний порт 80 → внутренний 80 Nginx
     restart: unless-stopped
