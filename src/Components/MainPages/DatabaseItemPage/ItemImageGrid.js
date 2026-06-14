@@ -7,7 +7,7 @@ export const ItemImageGrid = ({ images, onImageClick }) => {
 	if (!images) return null;
 
 	return (
-		<div className="item-image-grid">
+		<div className="database-item-page-image-grid">
 			{images.map((imageData, index) => {
 				const imageUrl = imageData ? imageData.image_url : null;
 				return (
@@ -15,8 +15,8 @@ export const ItemImageGrid = ({ images, onImageClick }) => {
 						key={index}
 						imageSrc={imageUrl}
 						onImageClick={onImageClick}
-						buttonClassName="item-image-grid-button"
-						imageClassName="item-image-grid-thumb"
+						buttonClassName="database-item-page-image-grid-button"
+						imageClassName="database-item-page-image-grid-thumb"
 					/>
 				);
 			})}

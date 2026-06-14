@@ -38,7 +38,7 @@ export const ItemPage = () => {
 	}
 
 	return (
-		<div className="item-page">
+		<div className="catalog-item-page">
 			{tallNarrowViewport ? (
 				<ItemPageSmallScreen
 					itemData={itemData}

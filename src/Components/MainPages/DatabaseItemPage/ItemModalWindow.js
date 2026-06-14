@@ -7,7 +7,7 @@ export const ItemModalWindow = ({ imageUrl, onClose }) => {
 
 	return (
 		<div
-			className="image-modal-overlay"
+			className="database-item-page-modal-overlay"
 			onClick={onClose}
 			role="button"
 			tabIndex={0}

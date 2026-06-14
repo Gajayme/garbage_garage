@@ -7,7 +7,7 @@ export const ItemDescription = ({data, delimiter = ": " }) => {
 	const { title, restData } = data;
 
 	return (
-		<div className="item-description">
+		<div className="database-item-page-description">
 			{/* Заголовок (имя вещи) */}
 			<p>{title}</p>
 

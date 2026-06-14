@@ -1,16 +1,16 @@
 
-.image-container {
+.database-item-page-modal-container {
 	position: relative;
 }
 
-.modal-window-image {
+.database-item-page-modal-image {
 	max-width: 90vw;
 	max-height: 90vh;
 	position: relative;
 	cursor: default;
 }
 
-.cross-icon-button-database {
+.database-item-page-modal-close {
 	position: absolute;
 	top: 0;
 	right: 0;
@@ -23,11 +23,11 @@
 	opacity: 0.9;
 }
 
-.cross-icon-button-database:hover {
+.database-item-page-modal-close:hover {
 	opacity: 1;
 }
 
-.cross-icon {
+.database-item-page-modal-cross-icon {
 	display: block;
 	width: 25px;
 	height: 25px;

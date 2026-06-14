@@ -79,7 +79,7 @@ export const DatabaseItemPage = () => {
 	};
 
 	return (
-		<div className="images-and-description-wrapper">
+		<div className="database-item-page-layout">
 			<ItemImageGrid images={images} onImageClick={setModalImageUrl} />
 			<div className="database-item-detail-column">
 				<ItemDescription data={itemData} />

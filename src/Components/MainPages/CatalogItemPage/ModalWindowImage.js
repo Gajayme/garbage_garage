@@ -9,24 +9,24 @@ import CrossIcon from "Assets/Icons/cross_gray.svg"
 export const ModalWindowImage = ({imageUrl, onCrossClick, onClick}) => {
 	return (
 		<div
-			className={`image-container`}
+			className="catalog-item-page-modal-container"
 			onClick={onClick}
 		>
 			<BorderedImage
-				className={"modal-window-image"}
+				className="catalog-item-page-modal-image"
 				imageSrc={imageUrl}
 				alt="enlarged"
 			/>
 			<button
 				type="button"
-				className="cross-icon-button-catalog"
+				className="catalog-item-page-modal-close"
 				aria-label="Close"
 				onClick={() => onCrossClick()}
 			>
 				<img
 					src={CrossIcon}
 					alt="close"
-					className="cross-icon"
+					className="catalog-item-page-modal-cross-icon"
 				/>
 			</button>
 		</div>

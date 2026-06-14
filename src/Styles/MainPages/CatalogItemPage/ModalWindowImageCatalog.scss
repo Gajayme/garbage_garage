@@ -1,16 +1,16 @@
 
-.image-container {
+.catalog-item-page-modal-container {
 	position: relative;
 }
 
-.modal-window-image {
+.catalog-item-page-modal-image {
 	max-width: 90vw;
 	max-height: 90vh;
 	position: relative;
 	cursor: default;
 }
 
-.cross-icon-button-catalog {
+.catalog-item-page-modal-close {
 	position: absolute;
 	top: 0;
 	right: 0;
@@ -23,11 +23,11 @@
 	opacity: 0.9;
 }
 
-.cross-icon-button-catalog:hover {
+.catalog-item-page-modal-close:hover {
 	opacity: 1;
 }
 
-.cross-icon {
+.catalog-item-page-modal-cross-icon {
 	display: block;
 	width: 25px;
 	height: 25px;
