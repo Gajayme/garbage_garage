@@ -6,6 +6,10 @@ on:
       - main
   workflow_dispatch:
 
+concurrency:
+  group: deploy-frontend
+  cancel-in-progress: true
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -51,20 +55,38 @@ jobs:
           tags: ${{ steps.image.outputs.image_name }}
 
       - name: Deploy Frontend on server
-        uses: appleboy/ssh-action@v1.2.5
-        with:
-          host: ${{ secrets.SERVER_IP }}
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.DEPLOY_KEY }}
-          port: 22
-          timeout: 60s
-          command_timeout: 20m
-          script: |
-            set -e
+        run: |
+          set -e
 
-            cd $HOME/${{ env.REPO_NAME }}/
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
 
-            docker compose pull
-            docker compose up -d --force-recreate
+          for i in 1 2 3 4 5; do
+            echo "SSH deploy attempt $i..."
 
-            docker image prune -af
+            ssh \
+              -i ~/.ssh/deploy_key \
+              -o StrictHostKeyChecking=no \
+              -o ConnectTimeout=30 \
+              -o ServerAliveInterval=30 \
+              -o ServerAliveCountMax=3 \
+              ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "
+                set -e
+
+                cd \$HOME/${{ env.REPO_NAME }}/
+
+                docker compose pull
+                docker compose up -d --force-recreate
+
+                docker image prune -af
+              " && break
+
+            echo "SSH failed, retrying in 20 seconds..."
+            sleep 20
+
+            if [ "$i" = "5" ]; then
+              echo "SSH deploy failed after 5 attempts"
+              exit 1
+            fi
+          done
