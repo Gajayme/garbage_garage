@@ -54,6 +54,15 @@ jobs:
           push: true
           tags: ${{ steps.image.outputs.image_name }}
 
+      - name: Debug runner network
+        run: |
+          echo "GitHub runner public IP:"
+          curl -s https://api.ipify.org || true
+          echo ""
+
+          echo "Check SSH port 22:"
+          timeout 15 bash -c "cat < /dev/null > /dev/tcp/${{ secrets.SERVER_IP }}/22" && echo "SSH port reachable" || echo "SSH port NOT reachable"
+
       - name: Deploy Frontend on server
         run: |
           set -e
