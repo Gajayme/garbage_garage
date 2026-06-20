@@ -1,5 +1,5 @@
 import "Styles/MainPages/CatalogItemPage/ItemModalWindow.scss";
-import { ModalWindowImage } from "./ModalWindowImage";
+import { ModalWindowImage } from "./ModalWindowImage.js";
 
 export const ItemModalWindow = ({ imageUrl, onClose }) => {
 

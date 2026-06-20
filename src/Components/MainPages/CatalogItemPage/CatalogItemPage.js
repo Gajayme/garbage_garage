@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { ItemPageBigScreen } from "./ItemPageBigScreen.js";
-import { ItemPageSmallScreen } from "./ItemPageSmallScreen.js";
-import { ItemModalWindow } from "./ItemModalWindow.js";
-import { validateItemData } from "./Utils.js";
-import { useItemDetails } from "./useItemDetails.js";
-import { useWhatsappLink } from "./useWhatsappLink.js";
-import { useHeightGreaterThanWidth } from "./useHeightGreaterThanWidth.js";
+import { ItemPageBigScreen } from "./layouts/ItemPageBigScreen.js";
+import { ItemPageSmallScreen } from "./layouts/ItemPageSmallScreen.js";
+import { ItemModalWindow } from "./modal/ItemModalWindow.js";
+import { validateItemData } from "./utils/Utils.js";
+import { useItemDetails } from "./hooks/useItemDetails.js";
+import { useWhatsappLink } from "./hooks/useWhatsappLink.js";
+import { useHeightGreaterThanWidth } from "./hooks/useHeightGreaterThanWidth.js";
 
 import "Styles/MainPages/CatalogItemPage/CatalogItemPage.scss";
 import "Styles/CenteredText.scss";

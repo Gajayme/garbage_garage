@@ -1,9 +1,9 @@
-import { ItemImageGrid } from "./ItemImageGrid.js";
-import { ItemTitle } from "./ItemTitle.js";
-import { ItemInfo } from "./ItemInfo.js";
-import { ItemDescription } from "./ItemDescription.js";
-import { BuyItemButton } from "./BuyItemButton.js";
-import { getItemData } from "./Utils.js";
+import { ItemImageGrid } from "../images/ItemImageGrid.js";
+import { ItemTitle } from "../content/ItemTitle.js";
+import { ItemInfo } from "../content/ItemInfo.js";
+import { ItemDescription } from "../content/ItemDescription.js";
+import { BuyItemButton } from "../content/BuyItemButton.js";
+import { getItemData } from "../utils/Utils.js";
 
 import "Styles/MainPages/CatalogItemPage/ItemPageBigScreen.scss";
 
