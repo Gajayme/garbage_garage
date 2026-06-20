@@ -1,8 +1,9 @@
+import { AboutUsPageBigScreen } from "./layouts/AboutUsPageBigScreen.js";
+import { AboutUsPageSmallScreen } from "./layouts/AboutUsPageSmallScreen.js";
+import { useHeightGreaterThanWidth } from "Components/hooks/useHeightGreaterThanWidth.js";
+
 
 export const AboutUsPage = () => {
-	return (
-		<div>
-			<h1>About Us</h1>
-		</div>
-	);
+	const tallNarrowViewport = useHeightGreaterThanWidth();
+	return tallNarrowViewport ? <AboutUsPageSmallScreen /> : <AboutUsPageBigScreen />;
 };

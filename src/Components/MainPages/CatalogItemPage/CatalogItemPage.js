@@ -7,7 +7,7 @@ import { ItemModalWindow } from "./modal/ItemModalWindow.js";
 import { validateItemData } from "./utils/Utils.js";
 import { useItemDetails } from "./hooks/useItemDetails.js";
 import { useWhatsappLink } from "./hooks/useWhatsappLink.js";
-import { useHeightGreaterThanWidth } from "./hooks/useHeightGreaterThanWidth.js";
+import { useHeightGreaterThanWidth } from "Components/hooks/useHeightGreaterThanWidth.js";
 
 import "Styles/MainPages/CatalogItemPage/CatalogItemPage.scss";
 import "Styles/CenteredText.scss";
