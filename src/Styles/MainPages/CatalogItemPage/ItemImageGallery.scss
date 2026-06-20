@@ -11,6 +11,26 @@
 	touch-action: pan-y;
 }
 
+.item-image-gallery__viewport {
+	overflow: hidden;
+	width: 100%;
+	touch-action: pan-y;
+}
+
+.item-image-gallery__track {
+	display: flex;
+	will-change: transform;
+
+	&--animating {
+		transition: transform 250ms ease-out;
+	}
+}
+
+.item-image-gallery__slide {
+	flex: 0 0 100%;
+	min-width: 0;
+}
+
 .item-image-gallery__image-button {
 	display: block;
 	padding: 0;
