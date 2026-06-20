@@ -6,9 +6,9 @@ import "Styles/MainPages/AboutUsPage/AboutUsPageSmallScreen.scss";
 
 import text_bubble from 'Assets/Images/text-bubble.png';
 import trash_bin from 'Assets/Images/trash_bin.png';
-import instagramIcon from 'Assets/Icons/instagram.svg';
-import telegramIcon from 'Assets/Icons/telegram.svg';
-import whatsappIcon from 'Assets/Icons/whatsapp.svg';
+import instagramIcon from 'Assets/Icons/SocialMedia/instagram.svg';
+import telegramIcon from 'Assets/Icons/SocialMedia/telegram.svg';
+import whatsappIcon from 'Assets/Icons/SocialMedia/whatsapp.svg';
 
 
 
