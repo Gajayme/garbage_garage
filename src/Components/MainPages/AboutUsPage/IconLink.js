@@ -6,7 +6,7 @@ export const IconLink = ({ icon, text, href, alt = "", className = "" }) => (
 		target="_blank"
 		rel="noopener noreferrer"
 		className={`icon-link ${className}`.trim()}>
-		<img src={icon} alt={alt} className="icon-link-icon" />
-		<span className="icon-link-text">{text}</span>
+		<img src={icon} alt={alt} className="icon-link__icon" />
+		<span className="icon-link__text">{text}</span>
 	</a>
 );

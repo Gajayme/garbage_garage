@@ -1,6 +1,5 @@
-
 @use "../../_layout" as layout;
 
 .about-us-page {
-	@include layout.page-margins(60px, 35px, 40px, 20px);
+	@include layout.page-margins(60px, 35px, 16px, 16px);
 }

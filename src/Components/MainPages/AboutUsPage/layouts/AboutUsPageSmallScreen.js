@@ -1,32 +1,22 @@
-import { TextBubble } from '../TextBubble.js';
 import { IconLink } from '../IconLink.js';
 
 import "Styles/MainPages/AboutUsPage/AboutUsPageSmallScreen.scss";
+import "Styles/ColoredText.scss";
 
-
-import text_bubble from 'Assets/Images/text-bubble.png';
 import trash_bin from 'Assets/Images/trash_bin.png';
 import instagramIcon from 'Assets/Icons/SocialMedia/instagram.svg';
 import telegramIcon from 'Assets/Icons/SocialMedia/telegram.svg';
 import whatsappIcon from 'Assets/Icons/SocialMedia/whatsapp.svg';
 
-
-
 export const AboutUsPageSmallScreen = () => {
 	return (
 		<div className="about-us-page-small-screen">
+			<p className="about-us-page-small-screen__text">Hi! We are trift shop located in Belgrade, Serbia. Please <span className="red-text">buy</span> something. We have <span className="red-text">charhartt</span>!</p>
 
-			{/* Бабл с текстром и картинка с маскотом */}
-			<div className="mascot-container">
-				<TextBubble
-					image={text_bubble}
-					text="Hi! We are garbage garage trift shop. Please buy something. We have charhartt"
-				/>
-				<img className="mascot-image" src={trash_bin} alt="Trash Bin" />
-			</div>
+			<img className="about-us-page-small-screen__mascot" src={trash_bin} alt="Trash Bin" />
 
 			{/* Ссылки на соцсети */}
-			<div className="icon-links-container">
+			<div className="about-us-page-small-screen__links">
 				<IconLink
 					icon={instagramIcon}
 					text="instagram"
@@ -43,7 +33,6 @@ export const AboutUsPageSmallScreen = () => {
 					href="https://www.instagram.com/garbage_garage_shop/"
 				/>
 			</div>
-
 		</div>
 	);
 };
