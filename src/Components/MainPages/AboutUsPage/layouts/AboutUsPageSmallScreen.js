@@ -20,7 +20,7 @@ export const AboutUsPageSmallScreen = () => {
 			<div className="mascot-container">
 				<TextBubble
 					image={text_bubble}
-					text="hi! we are garbage garage trift shop. please buy something. we have charhartt"
+					text="Hi! We are garbage garage trift shop. Please buy something. We have charhartt"
 				/>
 				<img className="mascot-image" src={trash_bin} alt="Trash Bin" />
 			</div>
