@@ -62,6 +62,10 @@ export const ItemImageGallery = ({ images, onImageClick, className }) => {
 		setIndex((i) => Math.min(last, Math.max(0, Math.min(last, i)) + 1));
 	};
 
+	const handleGestureStart = () => {
+		draggedRef.current = false;
+	};
+
 	const handleDragStart = () => {
 		draggedRef.current = true;
 	};
@@ -129,7 +133,10 @@ export const ItemImageGallery = ({ images, onImageClick, className }) => {
 		.join(" ");
 
 	return (
-		<div className={`item-image-gallery${className ? ` ${className}` : ""}`}>
+		<div
+			className={`item-image-gallery${className ? ` ${className}` : ""}`}
+			onTouchStart={handleGestureStart}
+		>
 			<SwipeArea
 				className="item-image-gallery__swipe-area"
 				onDragStart={handleDragStart}
