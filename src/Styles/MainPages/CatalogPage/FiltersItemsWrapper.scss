@@ -1,6 +1,17 @@
 
 .filters-items-wrapper {
+	// position: relative — containing block для .filters-overlay (выравнивание по сетке).
+	// Без z-index, чтобы не создавать stacking context: тогда .filters-overlay (z-index 10)
+	// и .filters-backdrop (z-index 9) сравниваются на уровне .catalog-page,
+	// а статичные карточки остаются ниже backdrop.
 	position: relative;
+}
+
+.filters-backdrop {
+	position: absolute;
+	inset: 0;
+	z-index: 9;
+	background: transparent;
 }
 
 .filters-overlay {

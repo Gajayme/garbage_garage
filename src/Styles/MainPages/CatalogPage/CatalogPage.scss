@@ -1,8 +1,12 @@
-// Внешние отступы всего контента страницы каталога.
-// Логика отступов вынесена в общий лейаут-помощник.
+// Внешние отступы контента страницы каталога вынесены на .catalog-page-content,
+// чтобы backdrop на .catalog-page мог использовать inset: 0 без отрицательных сдвигов.
 
 @use "../../_layout" as layout;
 
 .catalog-page {
+	position: relative;
+}
+
+.catalog-page-content {
 	@include layout.page-margins;
 }

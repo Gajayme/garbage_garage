@@ -46,39 +46,49 @@ export const CatalogPage = () => {
 	const items = data?.data ?? [];
 	return (
 		<div className="catalog-page">
-			<div className="filter-buttons-wrapper">
-				<DefaultButton
-					className="filter-activation-button"
-					labelText="FILTERS"
-					onClick={() => setIsFiltersVisible((prev) => !prev)}
-				/>
-				<DefaultButton
-					className="filter-reset-button"
-					labelText="RESET"
-					onClick={resetFilters}
-				/>
+			<div className="catalog-page-content">
+				<div className="filter-buttons-wrapper">
+					<DefaultButton
+						className="filter-activation-button"
+						labelText="FILTERS"
+						onClick={() => setIsFiltersVisible((prev) => !prev)}
+					/>
+					<DefaultButton
+						className="filter-reset-button"
+						labelText="RESET"
+						onClick={resetFilters}
+					/>
+				</div>
+
+				<div className="filters-items-wrapper">
+					{/* пока запрос идёт, отображаем загрузочный текст (только вместо карточек товаров)*/}
+					{isLoading ? (
+						<p className="centered-text">Loading...</p>
+					) : (
+						<Items catalogState={items} />
+					)}
+
+					{/* окно фильтров — поверх грида, его верхний-левый угол
+					    совпадает с верхним-левым углом первого изображения */}
+					{isFiltersVisible && (
+						<div className="filters-overlay">
+							<FiltersWindow
+								availableFilters={allFilters}
+								filtersState={filtersState}
+								onFilterStateChanged={(name) => (value) => setFilter(name, value)}
+							/>
+						</div>
+					)}
+				</div>
 			</div>
 
-			<div className="filters-items-wrapper">
-				{/* пока запрос идёт, отображаем загрузочный текст (только вместо карточек товаров)*/}
-				{isLoading ? (
-					<p className="centered-text">Loading...</p>
-				) : (
-					<Items catalogState={items} />
-				)}
-
-				{/* окно фильтров — поверх грида, его верхний-левый угол
-				    совпадает с верхним-левым углом первого изображения */}
-				{isFiltersVisible && (
-					<div className="filters-overlay">
-						<FiltersWindow
-							availableFilters={allFilters}
-							filtersState={filtersState}
-							onFilterStateChanged={(name) => (value) => setFilter(name, value)}
-						/>
-					</div>
-				)}
-			</div>
+			{isFiltersVisible && (
+				<div
+					className="filters-backdrop"
+					onClick={() => setIsFiltersVisible(false)}
+					aria-hidden="true"
+				/>
+			)}
 		</div>
 	);
 };

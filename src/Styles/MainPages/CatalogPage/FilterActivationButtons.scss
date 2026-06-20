@@ -1,6 +1,9 @@
 @use "../../../Styles/_breakpoints" as bp;
 
 .filter-buttons-wrapper {
+	position: relative;
+	z-index: 11;
+	width: fit-content;
 	display: flex;
 	gap: 10px;
 	margin-bottom: 32px;
