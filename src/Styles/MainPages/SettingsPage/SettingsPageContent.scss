@@ -64,6 +64,10 @@
 	margin-bottom: 6px;
 }
 
+.settings-params__item:hover {
+	background: var(--dark-grey);
+}
+
 .settings-params__key {
 	flex: 1;
 	min-width: 0;
