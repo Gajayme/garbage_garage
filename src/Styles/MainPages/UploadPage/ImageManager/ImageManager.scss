@@ -4,4 +4,10 @@
 	flex-direction: column;
 	justify-content: space-evenly;
 	gap: 20px;
+	transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+/* Визуальный отклик при перетаскивании файлов в зону */
+.image-manager--dragging {
+	background-color: var(--dark-grey);
 }

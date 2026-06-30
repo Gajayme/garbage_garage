@@ -330,22 +330,25 @@ export const UploadPageForm = ({
 		};
 	};
 
-	// обработать изменение превью изображений
-	const handleOnChangeImages = (key) => {
-		return (event) => {
-			if (event && event.target) {
-				const images = Array.from(event.target.files);
-				const newImages = images.map(image => ({
-					id: uuidv4(),
-					file: image,
-					src: URL.createObjectURL(image),
-				}));
-				setFormState((prevState) => ({
-						...prevState, [key]: [...prevState[key], ...newImages]} ))
-				}
-			event.target.value = null
-		}
-	}
+	// Общая логика добавления файлов изображений в форму.
+	// Принимает FileList/массив напрямую, чтобы переиспользоваться
+	// и для <input>, и для drag-and-drop.
+	const addImageFiles = (fileList) => {
+		const files = Array.from(fileList || []).filter(
+			(file) => file.type.startsWith("image/")
+		);
+		if (files.length === 0) return;
+
+		const newImages = files.map((file) => ({
+			id: uuidv4(),
+			file,
+			src: URL.createObjectURL(file),
+		}));
+		setFormState((prevState) => ({
+			...prevState,
+			images: [...prevState.images, ...newImages],
+		}));
+	};
 
 	// удалить все изображения
 	const handleOnDeleteAllImages = () => {
@@ -405,7 +408,7 @@ export const UploadPageForm = ({
 			<ImageManagerWindow
 				images={formState.images}
 				errors={errorState.images}
-				onChange={handleOnChangeImages('images')}
+				onAddFiles={addImageFiles}
 				onDelete={handleOnDeleteAllImages}
 				onDeleteSpecific={handleOnDeleteSpecificImage}
 			/>
