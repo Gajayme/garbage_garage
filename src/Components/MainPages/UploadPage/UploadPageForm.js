@@ -457,13 +457,15 @@ export const UploadPageForm = ({
 			</div>
 
 			<div className="upload-form-actions">
-				<DefaultButton
+				{!isEdit && (
+					<DefaultButton
 					className={"upload-page-button"}
-					labelText={isEdit ? UploadConstants.buttonUploadAsNew : UploadConstants.buttonUpload}
+					labelText={UploadConstants.buttonUpload}
 					disabled={isBusy}
 					type="submit"
 					onClick={handleOnSubmit}
 				/>
+				)}
 				{isEdit && (
 					<DefaultButton
 						className={"upload-page-button"}

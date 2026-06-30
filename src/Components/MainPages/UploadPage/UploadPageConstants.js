@@ -14,5 +14,4 @@ export const defaultID = ''
 
 // Подписи кнопок формы. Title Case как у остальных видимых строк (см. chooseX выше).
 export const buttonUpload = 'Upload'
-export const buttonUploadAsNew = 'Upload as New'
 export const buttonSave = 'Save'
