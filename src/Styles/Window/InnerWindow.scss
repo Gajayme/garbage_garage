@@ -7,14 +7,6 @@
 	overflow-y: auto;
 	overflow-x: hidden;
 
-	// Убираем «резинку» (overscroll bounce) у краёв скролла страницы.
-	// Держим именно здесь, на корневом скролл-контейнере: передавать скролл
-	// ему всё равно некуда, поэтому отключение scroll chaining ничего не ломает.
-	// Глобально (на `*`) это правило ставить нельзя — иначе нескроллящиеся
-	// элементы с `overflow: hidden` (напр. line-clamp у карточек) перехватывают
-	// тач-жест и не отдают его наверх, и страница перестаёт скроллиться.
-	overscroll-behavior: none;
-
 	background-color: var(--light-grey);
 	border-top: 2px solid var(--dark-grey);
 	border-left: 2px solid var(--dark-grey);

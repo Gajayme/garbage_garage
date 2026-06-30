@@ -9,6 +9,8 @@ import {ButtonLayer} from "Components/Window/ButtonLayer";
 import {InnerWindow} from "Components/Window/InnerWindow";
 import {DefaultNavButtons} from "Components/Navigation/DefaultNavButtons";
 
+import 'Styles/NoOverscroll.scss';
+
 const Layout = () => {
 	return (
 		<div>
@@ -17,7 +19,7 @@ const Layout = () => {
 			buttonLayer={<ButtonLayer className="button-layer">
 				<DefaultNavButtons className="default-nav-buttons" />
 			</ButtonLayer>}
-			innerWindow={<InnerWindow className="inner-window">
+			innerWindow={<InnerWindow className="inner-window no-overscroll">
 				<Outlet />
 			</InnerWindow>}
 			/>
