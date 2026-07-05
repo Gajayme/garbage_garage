@@ -1,5 +1,8 @@
+@use "../../../_layout" as layout;
 
 .image-manager {
+	// Margins
+	@include layout.page-margins(10px, 10px, 10px, 10px);
 	display: flex;
 	flex-direction: column;
 	justify-content: space-evenly;

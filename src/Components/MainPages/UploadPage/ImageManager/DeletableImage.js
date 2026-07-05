@@ -6,10 +6,27 @@ import "Styles/MainPages/UploadPage/ImageManager/DeletableImage.scss"
 import CrossIcon from "Assets/Icons/cross_gray.svg"
 
 
-export const DeletableImage = ({image, onCrossClick}) => {
+export const DeletableImage = ({
+	image,
+	onCrossClick,
+	isDragging,
+	isDropTarget,
+	setNodeRef,
+	style,
+	dragHandleProps,
+}) => {
+	const containerClassName = [
+		"deletable-image-container",
+		isDragging ? "deletable-image-container--dragging" : "",
+		isDropTarget ? "deletable-image-container--drop-target" : "",
+	].filter(Boolean).join(" ");
+
 	return (
 		<div
-			className={`deletable-image-container`}
+			ref={setNodeRef}
+			style={style}
+			className={containerClassName}
+			{...dragHandleProps}
 		>
 			<BorderedImage
 				className="deletable-image"

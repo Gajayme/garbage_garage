@@ -3,6 +3,25 @@
 
 .deletable-image-container {
 	position: relative;
+	cursor: grab;
+	/* pan-x: скролл списка; после активации drag dnd-kit ставит touch-action: none */
+	touch-action: pan-x;
+
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	user-select: none;
+}
+
+.deletable-image-container--dragging {
+	opacity: 0.4;
+	touch-action: none;
+}
+
+/* Индикатор места вставки — линия справа от картинки под курсором,
+   потому что перетаскиваемая картинка встаёт после неё */
+.deletable-image-container--drop-target {
+	box-shadow: 4px 0 0 0 #666;
+	margin-right: 10px;
 }
 
 .deletable-image {

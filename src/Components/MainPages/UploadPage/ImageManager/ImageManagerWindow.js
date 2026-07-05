@@ -10,14 +10,14 @@ import 'Styles/Window/ButtonLayer.scss'
 import 'Styles/Window/InnerWindow.scss'
 import 'Styles/Window/OuterWindow.scss'
 
-export const ImageManagerWindow = ({images, errors, onAddFiles, onDelete, onDeleteSpecific}) => {
+export const ImageManagerWindow = ({images, errors, onAddFiles, onDelete, onDeleteSpecific, onReorder}) => {
 
 	const buttonLayer = <ButtonLayer className="button-layer">
 		<span>images</span>
 	</ButtonLayer>
 
 	const innerWindow = <InnerWindow className="inner-window">
-		<ImageManager images={images} errors={errors} onAddFiles={onAddFiles} onDelete={onDelete} onDeleteSpecific={onDeleteSpecific}/>
+		<ImageManager images={images} errors={errors} onAddFiles={onAddFiles} onDelete={onDelete} onDeleteSpecific={onDeleteSpecific} onReorder={onReorder}/>
 	</InnerWindow>
 
 	return (
