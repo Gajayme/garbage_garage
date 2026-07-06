@@ -1,3 +1,5 @@
+import { buildTitle } from "Components/utils/buildTitile";
+
 export const validateItemData = (data) => {
 	if (!data || typeof data !== "object") return false;
 
@@ -15,7 +17,7 @@ export const validateItemData = (data) => {
 
 export const getItemData = (data) => {
 	return {
-		title: data.brand + " " + (data.model ? data.model : "") + " " + data.type,
+		title: buildTitle(data.brand.title, data.model, data.type.title),
 		size: data.size,
 		price: data.price,
 		description: data.description,

@@ -58,7 +58,7 @@ const VALIDATION_MAPPER = {
 	item_name: [NonEmpty],
 	bought_for: [NonEmpty],
 	price: [NonEmpty],
-	buyers_part: [NonEmpty],
+	buyers_part: [],
 	sold_for: [NonEmpty],
 	size: [],
 	buyer: [NonEmpty],

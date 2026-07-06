@@ -1,5 +1,6 @@
 
 import { BorderedImage } from "Components/BorderedImage.js"
+import { buildTitle } from "Components/utils/buildTitile";
 
 import "Styles/MainPages/CatalogPage/Items/CatalogItem.scss"
 import "Styles/TopAndLeftBorders.scss"
@@ -14,11 +15,11 @@ import "Styles/TopAndLeftBorders.scss"
 export const Item = ({ value, onClick }) => {
 	const imageSrc = value.images?.[0]?.image_url ?? null;
 
-	const brand = value.brand;
-	const model = value.model ? value.model : "";
-	const type = value.type;
+	const brand = value.brand.title;
+	const model = value.model;
+	const type = value.type.title;
 
-	const name = brand + " " + model + " " + type;
+	const name = buildTitle(brand, model, type);
 	const size = "size: " + value.size;
 	const price = "price: " + value.price;
 

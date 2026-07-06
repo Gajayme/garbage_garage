@@ -28,7 +28,6 @@ export const mapItemDetailFields = (d) => {
 			description: "",
 		};
 	}
-
 	return {
 		item_name: d.itemName != null ? String(d.itemName) : "",
 		bought_for: normalizeDigitString(d.boughtFor),
@@ -36,10 +35,10 @@ export const mapItemDetailFields = (d) => {
 		buyers_part: normalizeDigitString(d.buyersPart),
 		sold_for: normalizeDigitString(d.soldFor),
 		size: d.size != null && d.size !== "" ? String(d.size) : "",
-		buyer: normalizeFk(d.buyerId ?? d.buyer),
-		location: normalizeFk(d.locationId ?? d.location),
-		brand: normalizeFk(d.brandId ?? d.brand),
-		type: normalizeFk(d.typeId ?? d.type),
+		buyer: normalizeFk(d.buyer.id),
+		location: normalizeFk(d.location.id),
+		brand: normalizeFk(d.brand.id),
+		type: normalizeFk(d.type.id),
 		status: normalizeStatus(d.status),
 		description: d.description != null ? String(d.description) : "",
 	};
