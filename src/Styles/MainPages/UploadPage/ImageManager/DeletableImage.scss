@@ -1,6 +1,4 @@
 
-
-
 .deletable-image-container {
 	position: relative;
 	cursor: grab;
@@ -12,16 +10,10 @@
 	user-select: none;
 }
 
+// Перетаскивание
 .deletable-image-container--dragging {
 	opacity: 0.4;
 	touch-action: none;
-}
-
-/* Индикатор места вставки — линия справа от картинки под курсором,
-   потому что перетаскиваемая картинка встаёт после неё */
-.deletable-image-container--drop-target {
-	box-shadow: 4px 0 0 0 #666;
-	margin-right: 10px;
 }
 
 .deletable-image {

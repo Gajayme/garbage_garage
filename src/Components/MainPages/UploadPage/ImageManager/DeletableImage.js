@@ -10,7 +10,6 @@ export const DeletableImage = ({
 	image,
 	onCrossClick,
 	isDragging,
-	isDropTarget,
 	setNodeRef,
 	style,
 	dragHandleProps,
@@ -18,7 +17,6 @@ export const DeletableImage = ({
 	const containerClassName = [
 		"deletable-image-container",
 		isDragging ? "deletable-image-container--dragging" : "",
-		isDropTarget ? "deletable-image-container--drop-target" : "",
 	].filter(Boolean).join(" ");
 
 	return (

@@ -32,7 +32,6 @@ const SortableImageItem = ({ image, onDeleteSpecific }) => {
 		transform,
 		transition,
 		isDragging,
-		isOver,
 	} = useSortable({ id: image.id });
 
 	const style = {
@@ -48,7 +47,6 @@ const SortableImageItem = ({ image, onDeleteSpecific }) => {
 			image={image}
 			onCrossClick={onDeleteSpecific}
 			isDragging={isDragging}
-			isDropTarget={isOver && !isDragging}
 			setNodeRef={setNodeRef}
 			style={style}
 			dragHandleProps={{ ...attributes, ...listeners }}

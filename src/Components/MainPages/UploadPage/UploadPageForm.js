@@ -356,19 +356,17 @@ export const UploadPageForm = ({
 		setFormState((prev) => ({ ...prev, images: [] }));
 	};
 
-	// переставить изображение: fromId вставляется сразу после toId (drag-and-drop).
+	// переставить изображение: fromId вставляется в toId (drag-and-drop).
 	// Порядок в массиве определяет и порядок отправки файлов на сервер.
 	const handleOnReorderImages = (fromId, toId) => {
 		if (fromId === toId) return;
 		setFormState((prev) => {
 			const images = [...prev.images];
 			const fromIndex = images.findIndex((img) => img.id === fromId);
-			if (fromIndex === -1) return prev;
-			const [moved] = images.splice(fromIndex, 1);
-			// Индекс цели ищем после извлечения, чтобы не поправлять сдвиг вручную.
 			const toIndex = images.findIndex((img) => img.id === toId);
-			if (toIndex === -1) return prev;
-			images.splice(toIndex + 1, 0, moved);
+			if (fromIndex === -1 || toIndex === -1) return prev;
+			const [moved] = images.splice(fromIndex, 1);
+			images.splice(toIndex, 0, moved);
 			return { ...prev, images };
 		});
 	};
