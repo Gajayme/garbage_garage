@@ -1,70 +1,74 @@
-# Getting Started with Create React App
+# Garbage Garage
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Frontend for the **Garbage Garage** second-hand shop: a public storefront and an admin panel.
 
-## Available Scripts
+The public side is a product catalog with filters and item pages (purchase via WhatsApp). The private side covers uploading and editing listings, an internal inventory view, and dictionaries (brands, types, buyers, locations).
 
-In the project directory, you can run:
+API: [api.garbage-garage.com](https://api.garbage-garage.com/)
 
-### `npm start`
+## Stack
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- React 18 (Create React App)
+- React Router
+- TanStack Query
+- Sass
+- `@dnd-kit` — image reordering on upload
+- Docker + Nginx — production
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Pages
 
-### `npm test`
+| Path | Access | Purpose |
+|------|--------|---------|
+| `/` | public | Catalog with filters (state synced to the URL) |
+| `/catalog/:itemId` | public | Item page, gallery, BUY button → WhatsApp |
+| `/about-us` | public | About the shop |
+| `/login` | public | Admin login |
+| `/upload` | admin | Create a listing |
+| `/upload/edit/:itemId` | admin | Edit a listing |
+| `/database` | admin | Private list of all items |
+| `/database/:itemId` | admin | Item details (internal view) |
+| `/settings` | admin | Dictionaries: brands, types, buyers, locations |
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Admin routes are protected by `AdminRouteGuard` and only appear in the nav for authenticated users.
 
-### `npm run build`
+## Local development
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```bash
+npm install
+npm start
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+The app runs at [http://localhost:3000](http://localhost:3000).
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Other scripts:
 
-### `npm run eject`
+```bash
+npm run build   # production build → build/
+npm test        # tests
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Production
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Built and served with Nginx in Docker:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+```bash
+docker compose up -d
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+Image: `ghcr.io/gajayme/garbage_garage:latest` (host port `3000` → container `:80`).
 
-## Learn More
+On push to `main`, GitHub Actions builds the image, pushes it to GHCR, and deploys to the server over SSH.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## `src` layout
 
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+```
+src/
+├── Components/
+│   ├── Api/           # backend requests
+│   ├── Auth/          # login, context, route guard
+│   ├── MainPages/     # app pages
+│   ├── Navigation/    # routes and navbar
+│   └── Window/        # UI shell (window / header / buttons)
+├── Constants.js       # API URLs and query keys
+└── Styles/            # SCSS
+```
