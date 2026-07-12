@@ -1,5 +1,9 @@
 @use "../../_layout" as layout;
 
 .about-us-page {
-	@include layout.page-margins(60px, 35px, 16px, 16px);
+	@include layout.page-margins(27px, 35px, 16px, 16px);
+	box-sizing: border-box;
+	flex: 1;
+	min-height: 0;
+	display: flex;
 }

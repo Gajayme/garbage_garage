@@ -1,0 +1,27 @@
+.about-us-page-big-screen {
+	gap: 20px;
+	flex: 1;
+	min-height: 0;
+	display: flex;
+	flex-direction: row;
+}
+
+.about-us-page-big-screen__text-container,
+.about-us-page-big-screen__mascot {
+	flex: 1 1 0;
+	min-width: 0;
+}
+
+.about-us-page-big-screen__text-container {
+	font-size: 40px;
+	text-align: center;
+	font-weight: var(--font-weight-regular);
+}
+
+.about-us-page-big-screen__mascot {
+	min-height: 200px;
+	max-height: 100%;
+	height: auto;
+	width: 100%;
+	object-fit: contain;
+}
