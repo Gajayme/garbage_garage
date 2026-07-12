@@ -3,6 +3,8 @@
 .about-us-page {
 	@include layout.page-margins(27px, 35px, 16px, 16px);
 	box-sizing: border-box;
+	overscroll-behavior: none;
+	overflow: auto;
 	flex: 1;
 	min-height: 0;
 	display: flex;

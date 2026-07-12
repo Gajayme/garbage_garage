@@ -1,12 +1,9 @@
-import { IconLink } from '../IconLink.js';
+import { IconLinks } from '../IconLinks.js';
 
 import "Styles/MainPages/AboutUsPage/AboutUsPageSmallScreen.scss";
 import "Styles/ColoredText.scss";
 
 import mascot_small from 'Assets/Images/about_us_mascot_small.png';
-import instagramIcon from 'Assets/Icons/SocialMedia/instagram.svg';
-import telegramIcon from 'Assets/Icons/SocialMedia/telegram.svg';
-import whatsappIcon from 'Assets/Icons/SocialMedia/whatsapp.svg';
 
 export const AboutUsPageSmallScreen = () => {
 	return (
@@ -16,26 +13,12 @@ export const AboutUsPageSmallScreen = () => {
 			<img
 				className="about-us-page-small-screen__mascot"
 				src={mascot_small}
-				alt="mascot_small" />
+				alt="mascot_small"
+			/>
 
 			{/* Ссылки на соцсети */}
-			<div className="about-us-page-small-screen__links">
-				<IconLink
-					icon={instagramIcon}
-					text="instagram"
-					href="https://www.instagram.com/garbage_garage_shop/"
-				/>
-				<IconLink
-					icon={telegramIcon}
-					text="telegram"
-					href="https://www.instagram.com/garbage_garage_shop/"
-				/>
-				<IconLink
-					icon={whatsappIcon}
-					text="whatsapp"
-					href="https://www.instagram.com/garbage_garage_shop/"
-				/>
-			</div>
+			<IconLinks className="about-us-page-small-screen__links"/>
+
 		</div>
 	);
 };
