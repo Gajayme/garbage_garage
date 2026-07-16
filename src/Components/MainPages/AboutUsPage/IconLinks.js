@@ -1,4 +1,5 @@
 import { IconLink } from "Components/MainPages/AboutUsPage/IconLink";
+import { instagramLink, telegramLink, whatsappLink } from "Components/MainPages/AboutUsPage/Constants";
 
 import instagramIcon from "Assets/Icons/SocialMedia/instagram.svg";
 import telegramIcon from "Assets/Icons/SocialMedia/telegram.svg";
@@ -10,19 +11,19 @@ export const IconLinks = ({ className }) => {
 			<IconLink
 				icon={instagramIcon}
 				text="instagram"
-				href="https://www.instagram.com/garbage_garage_shop/"
+				href={instagramLink}
 			/>
 
 			<IconLink
 				icon={telegramIcon}
 				text="telegram"
-				href="https://www.instagram.com/garbage_garage_shop/"
+				href={telegramLink}
 			/>
 
 			<IconLink
 				icon={whatsappIcon}
 				text="whatsapp"
-				href="https://www.instagram.com/garbage_garage_shop/"
+				href={whatsappLink}
 			/>
 		</div>
 	);
