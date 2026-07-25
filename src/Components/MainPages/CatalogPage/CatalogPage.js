@@ -5,7 +5,7 @@ import { FiltersWindow } from "./Filters/FiltresWindow";
 import { DefaultButton } from "Components/Button.js";
 import { useUrlFilters } from "./useUrlFilters";
 import { useCatalogItems } from "./useCatalogItems";
-import { useRef } from "react";
+import { useCatalogScrollRestoration } from "./useCatalogScrollRestoration";
 
 import "Styles/MainPages/CatalogPage/CatalogPage.scss";
 import "Styles/MainPages/CatalogPage/Items/CatalogItems.scss";
@@ -14,9 +14,6 @@ import "Styles/MainPages/CatalogPage/FiltersItemsWrapper.scss";
 import "Styles/CenteredText.scss";
 
 export const CatalogPage = () => {
-
-	const scrollContainerRef = useRef(null);
-
 	// какие фильтры вообще существуют (приходят с бэка)
 	const [allFilters, setAllFilters] = useState([]);
 	// окно фильтров открыто/закрыто
@@ -26,6 +23,10 @@ export const CatalogPage = () => {
 	const { filtersState, setFilter, resetFilters, initialized } = useUrlFilters(allFilters);
 
 	const { data, error, isLoading } = useCatalogItems(filtersState);
+
+	useCatalogScrollRestoration({
+		ready: initialized && !error && !isLoading,
+	});
 
 	// один раз берём filters с бэка и сохраняем в allFilters
 	useEffect(() => {
@@ -47,19 +48,11 @@ export const CatalogPage = () => {
 		);
 	}
 
-	const handleClick = () => {
-		console.log(scrollContainerRef.current.scrollTop);
-	};
-
 	const items = data?.data ?? [];
 	return (
-		<div
-			className="catalog-page"
-
-
-		>
+		<div className="catalog-page">
 			<div className="catalog-page-content">
-				<div className="filter-buttons-wrapper" ref={scrollContainerRef} onClick={handleClick}>
+				<div className="filter-buttons-wrapper">
 					<DefaultButton
 						className="filter-activation-button"
 						labelText="FILTERS"
