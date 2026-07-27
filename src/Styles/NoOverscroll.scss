@@ -1,4 +1,5 @@
 
 .no-overscroll {
-	overscroll-behavior: none;
+	/* Только по Y, чтобы не ломать горизонтальный жест навигации назад/вперёд на тачпаде. */
+	overscroll-behavior-y: none;
 }
