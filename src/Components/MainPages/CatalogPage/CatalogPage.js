@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import { Items } from "Components/MainPages/CatalogPage/Items/Items.js";
 import { FiltersWindow } from "./Filters/FiltresWindow";
+import { ScrollToTopButton } from "./ScrollToTopButton";
 import { DefaultButton } from "Components/Button.js";
 import { useUrlFilters } from "./useUrlFilters";
 import { useCatalogItems } from "./useCatalogItems";
@@ -94,6 +95,8 @@ export const CatalogPage = () => {
 					aria-hidden="true"
 				/>
 			)}
+
+			<ScrollToTopButton />
 		</div>
 	);
 };

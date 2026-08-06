@@ -1,0 +1,32 @@
+.scroll-to-top-button {
+	position: fixed;
+	bottom: 24px;
+	left: 50%;
+	transform: translateX(-50%);
+	z-index: 12;
+
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+
+	padding: 6px 24px 10px 24px;
+	cursor: pointer;
+	font-size: 33px;
+	line-height: 1;
+	font-weight: var(--font-weight-bold);
+
+	color: var(--white);
+	background-color: var(--black);
+	border: 3px solid var(--dark-grey);
+
+	opacity: 0.5;
+	transition: opacity 0.15s ease;
+}
+
+.scroll-to-top-button:hover {
+	opacity: 1;
+}
+
+.scroll-to-top-button:active {
+	scale: 0.97;
+}

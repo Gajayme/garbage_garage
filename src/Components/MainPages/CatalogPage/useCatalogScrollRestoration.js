@@ -1,15 +1,14 @@
 import { useLayoutEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 
+import { useScrollContainerRef } from "Components/Window/ScrollContainerContext.js";
+
 /** @type {Map<string, number>} */
 const savedScrollByKey = new Map();
 
-const getScrollContainer = () =>
-	document.querySelector(".inner-window.no-overscroll");
-
 /**
- * Сохраняет scrollTop `.inner-window` и восстанавливает его при возврате,
- * когда список товаров уже отрисован (`ready`).
+ * Сохраняет scrollTop контейнера прокрутки и восстанавливает его при возврате,
+ *  когда список товаров уже отрисован (`ready`).
  *
  * Обработчик scroll навешиваем только после готовности контента — так мы
  * физически не можем сохранить позицию до восстановления (иначе затёрли бы
@@ -24,12 +23,13 @@ const getScrollContainer = () =>
  * @param {boolean} params.ready — контент готов к восстановлению скролла
  */
 export const useCatalogScrollRestoration = ({ ready }) => {
+	const scrollContainerRef = useScrollContainerRef();
 	const location = useLocation();
 	const scrollKey = location.key;
 	const restoredKeyRef = useRef(null);
 
 	useLayoutEffect(() => {
-		const container = ready ? getScrollContainer() : null;
+		const container = ready ? scrollContainerRef.current : null;
 		if (!container) {
 			return undefined;
 		}
@@ -71,5 +71,5 @@ export const useCatalogScrollRestoration = ({ ready }) => {
 		}
 
 		return () => cleanups.forEach((fn) => fn());
-	}, [ready, scrollKey]);
+	}, [ready, scrollKey, scrollContainerRef]);
 };
