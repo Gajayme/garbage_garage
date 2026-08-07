@@ -3,7 +3,9 @@ import React, { useEffect, useState } from "react";
 import { Items } from "Components/MainPages/CatalogPage/Items/Items.js";
 import { FiltersWindow } from "./Filters/FiltresWindow";
 import { ScrollToTopButton } from "./ScrollToTopButton";
-import { DefaultButton } from "Components/Button.js";
+import { FilterActivationButton } from "./FilterActivationButton";
+import { FilterResetButton } from "./FilterResetButton";
+import { isAnyFilterActive } from "./Filters/FilterActivity";
 import { useUrlFilters } from "./useUrlFilters";
 import { useCatalogItems } from "./useCatalogItems";
 import { useCatalogScrollRestoration } from "./useCatalogScrollRestoration";
@@ -50,20 +52,15 @@ export const CatalogPage = () => {
 	}
 
 	const items = data?.data ?? [];
+	const hasActiveFilters = isAnyFilterActive(allFilters, filtersState);
 	return (
 		<div className="catalog-page">
 			<div className="catalog-page-content">
 				<div className="filter-buttons-wrapper">
-					<DefaultButton
-						className="filter-activation-button"
-						labelText="FILTERS"
+					<FilterActivationButton
 						onClick={() => setIsFiltersVisible((prev) => !prev)}
 					/>
-					<DefaultButton
-						className="filter-reset-button"
-						labelText="RESET"
-						onClick={resetFilters}
-					/>
+					{hasActiveFilters && <FilterResetButton onClick={resetFilters} />}
 				</div>
 
 				<div className="filters-items-wrapper">

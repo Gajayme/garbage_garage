@@ -5,6 +5,10 @@ import 'Styles/MainPages/CatalogPage/Filters/SpecificFilters/FilterCheckbox.scss
 import 'Styles/MainPages/CatalogPage/Filters/SpecificFilters/CheckboxMultiFilter.scss'
 
 
+// активен, если выбран хотя бы один чекбокс
+export const isCheckboxMultiFilterActive = (value) =>
+	Array.isArray(value) && value.length > 0;
+
 // фильтр с чекбоксами с доступным мультивыбором
 export const CheckboxMultiFilter = ({ allValues, checkedOptions, onChange, checkmarkImg}) => {
 
