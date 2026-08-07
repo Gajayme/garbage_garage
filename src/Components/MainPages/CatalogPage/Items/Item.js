@@ -1,6 +1,7 @@
 
 import { BorderedImage } from "Components/BorderedImage.js"
 import { buildTitle } from "Components/utils/buildTitile";
+import { currency } from "Constants.js";
 
 import "Styles/MainPages/CatalogPage/Items/CatalogItem.scss"
 import "Styles/TopAndLeftBorders.scss"
@@ -20,8 +21,7 @@ export const Item = ({ value, onClick }) => {
 	const type = value.type.title;
 
 	const name = buildTitle(brand, model, type);
-	const size = "size: " + value.size;
-	const price = "price: " + value.price;
+	const details = value.size + ", " + value.price + " " + currency;
 
 	return (
 		<div className="catalog-page-item" onClick={onClick}>
@@ -33,8 +33,7 @@ export const Item = ({ value, onClick }) => {
 
 			<div className="catalog-item-info">
 				<p className="catalog-item-name"	title={name}>	{name}</p>
-				<p className="catalog-item-size"	title={size}>	{size}</p>
-				<p className="catalog-item-price"	title={price}>	{price}</p>
+				<p className="catalog-item-details"	title={details}>	{details}</p>
 			</div>
 
 		</div>

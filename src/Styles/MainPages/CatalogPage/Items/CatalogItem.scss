@@ -25,10 +25,6 @@
 	}
 }
 
-.catalog-item-price {
-	color: var(--red);
-}
-
 @mixin line-clamp($lines) {
 	display: -webkit-box;
 	-webkit-box-orient: vertical;
@@ -45,10 +41,6 @@
 .catalog-item-name {
 	@include line-clamp(2);
 }
-.catalog-item-size {
+.catalog-item-details {
 	@include line-clamp(1);
-}
-.catalog-item-price {
-	@include line-clamp(1);
-	color: var(--red);
 }

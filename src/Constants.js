@@ -15,6 +15,9 @@ export const type = "typeId"
 export const status = "status"
 export const description = "description"
 
+// Валюта, в которой отображаются цены
+export const currency = "RSD"
+
 export const base_server_url = "https://api.garbage-garage.com/"
 
 // API для загрузки вещи на сервер
