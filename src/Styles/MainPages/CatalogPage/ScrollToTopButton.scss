@@ -11,13 +11,18 @@
 
 	padding: 6px 24px 10px 24px;
 	cursor: pointer;
-	font-size: 33px;
+	font-size: 25px;
 	line-height: 1;
 	font-weight: var(--font-weight-bold);
 
-	color: var(--white);
-	background-color: var(--black);
-	border: 3px solid var(--dark-grey);
+	color: var(--black);
+	background-color: var(--middle-grey);
+
+	border-top: 3px solid var(--dark-grey);
+	border-left: 3px solid var(--dark-grey);
+	border-right: none;
+	border-bottom: none;
+
 
 	opacity: 0.5;
 	transition: opacity 0.15s ease;

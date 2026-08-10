@@ -1,5 +1,7 @@
 import { DefaultButton } from "Components/Button.js";
 
+import resetFilters from "Assets/Icons/Filters/reset_filters.svg";
+
 /**
  * Кнопка «RESET», сбрасывающая выбранные фильтры.
  *
@@ -11,6 +13,8 @@ export const FilterResetButton = ({ onClick }) => {
 			className="filter-reset-button"
 			labelText="reset"
 			onClick={onClick}
+			iconSrc={resetFilters}
+			iconClassName="filter-button-icon"
 		/>
 	);
 };

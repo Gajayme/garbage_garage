@@ -1,5 +1,7 @@
 import { DefaultButton } from "Components/Button.js";
 
+import filterSign from "Assets/Icons/Filters/filter_sign.svg";
+
 /**
  * Кнопка «FILTERS», открывающая/закрывающая окно фильтров.
  *
@@ -14,6 +16,8 @@ export const FilterActivationButton = ({ onClick, isActive = false }) => {
 				: "filter-activation-button"}
 			labelText="filters"
 			onClick={onClick}
+			iconSrc={filterSign}
+			iconClassName="filter-button-icon"
 		/>
 	);
 };
