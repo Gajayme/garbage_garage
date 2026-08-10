@@ -51,7 +51,7 @@
 	flex-direction: row;
 	align-items: center;
 	justify-content: center;
-	gap: 80px;
+	gap: 70px;
 }
 
 .item-image-gallery__nav-button {
@@ -82,7 +82,7 @@
 }
 
 .item-image-gallery__counter {
-	color: var(--red);
+	color: var(--black);
 	font-size: 25px;
 	font-weight: var(--font-weight-bold);
 	white-space: nowrap;
