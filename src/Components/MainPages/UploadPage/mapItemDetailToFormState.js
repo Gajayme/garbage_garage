@@ -15,6 +15,7 @@ export const mapItemDetailFields = (d) => {
 	if (!d || typeof d !== "object") {
 		return {
 			item_name: "",
+			item_model: "",
 			bought_for: "",
 			price: "",
 			buyers_part: "",
@@ -30,6 +31,7 @@ export const mapItemDetailFields = (d) => {
 	}
 	return {
 		item_name: d.itemName != null ? String(d.itemName) : "",
+		item_model: d.model != null ? String(d.model) : "",
 		bought_for: normalizeDigitString(d.boughtFor),
 		price: normalizeDigitString(d.price),
 		buyers_part: normalizeDigitString(d.buyersPart),
