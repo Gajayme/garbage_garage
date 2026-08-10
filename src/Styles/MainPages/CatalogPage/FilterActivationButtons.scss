@@ -13,32 +13,40 @@
 	}
 }
 
-.filter-activation-button {
-	padding: 2px 20px 2px 20px;
+// Кнопки над каталогом различаются только цветом фона.
+@mixin filter-button($background-color) {
+	padding: 2px 20px;
 	cursor: pointer;
-	font-size: 33px;
 
-	color: var(--white);
-	background-color: var(--black);
-	border: 3px solid var(--dark-grey);
+	font-weight: var(--font-weight-bold);
+	font-size: 25px;
+
+	color: var(--black);
+	background-color: $background-color;
+	border: none;
+	border-top: 3px solid var(--dark-grey);
+	border-left: 3px solid var(--dark-grey);
+
+	&:active {
+		scale: 0.97;
+	}
 }
 
-.filter-activation-button:active {
-	scale: 0.97;
+.filter-activation-button {
+	@include filter-button(var(--light-grey));
+
+	&:hover {
+		background-color: var(--middle-grey);
+	}
+}
+
+/* нажатая кнопка (окно фильтров открыто) */
+.filter-activation-button--selected {
+	background-color: var(--middle-grey);
 }
 
 .filter-reset-button {
-	padding: 2px 20px 2px 20px;
-	cursor: pointer;
-	font-size: 33px;
-
-	color: var(--white);
-	background-color: var(--red);
-	border: 3px solid var(--dark-grey);
-}
-
-.filter-reset-button:active {
-	scale: 0.97;
+	@include filter-button(var(--pink));
 }
 
 

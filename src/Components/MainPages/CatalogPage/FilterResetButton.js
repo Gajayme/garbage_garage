@@ -9,7 +9,7 @@ export const FilterResetButton = ({ onClick }) => {
 	return (
 		<DefaultButton
 			className="filter-reset-button"
-			labelText="RESET"
+			labelText="reset"
 			onClick={onClick}
 		/>
 	);

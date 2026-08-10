@@ -59,6 +59,7 @@ export const CatalogPage = () => {
 				<div className="filter-buttons-wrapper">
 					<FilterActivationButton
 						onClick={() => setIsFiltersVisible((prev) => !prev)}
+						isActive={isFiltersVisible}
 					/>
 					{hasActiveFilters && <FilterResetButton onClick={resetFilters} />}
 				</div>

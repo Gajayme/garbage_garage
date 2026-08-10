@@ -1,3 +1,5 @@
+@use "../../Styles/_breakpoints" as bp;
+
 .window-header {
 	background-color: var(--black);
 	flex-shrink: 0;
@@ -19,13 +21,19 @@
 }
 
 .window-header__logo {
-	width: 28px;
-	height: 28px;
+	width: 40px;
+	height: 40px;
 	flex-shrink: 0;
+
+	@include bp.up-to(bp.$bp-small) {
+		width: 35px;
+		height: 35px;
+	}
 }
 
 .window-header__title {
-	font-size: 25px;
+	font-size: 33px;
+	padding-bottom: 6px;
 	white-space: nowrap;
 }
 
