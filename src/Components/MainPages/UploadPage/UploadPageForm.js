@@ -382,6 +382,16 @@ export const UploadPageForm = ({
 		});
 	};
 
+	// Первое реальное (не плейсхолдер) значение дропдауна. Хардкодить id нельзя:
+	// справочники живут на сервере, и записи с конкретным id может не быть —
+	// тогда <select> не найдёт подходящий <option> и поле останется пустым.
+	const firstDropdownValue = (name) => {
+		const options = dropdownFields.find((field) => field.name === name)?.options ?? {};
+		return (
+			Object.values(options).find((value) => value !== UploadConstants.defaultID) ?? null
+		);
+	};
+
 	// Автозаполнение всех полей для теста
 	const handleOnTestAutofill = async () => {
 
@@ -400,11 +410,11 @@ export const UploadPageForm = ({
 			buyers_part: '50',
 			sold_for: '8000',
 			size: '42',
-			buyer: 1,
-			location: 1,
-			brand: 1,
-			type: 1,
-			status: "Initiated",
+			buyer: firstDropdownValue("buyer"),
+			location: firstDropdownValue("location"),
+			brand: firstDropdownValue("brand"),
+			type: firstDropdownValue("type"),
+			status: firstDropdownValue("status"),
 			description: 'Почти кархарт но вообще не совсем кархарт поэтому конечно кал вонючий',
 			images: [imageObject]
 		});
