@@ -8,7 +8,6 @@ import { FormDataLogger } from "Components/FormDataLogger.js";
 import { UploadFormValidation } from './Validations/Validations.js'
 import { NonEmpty, NonEmptyImages } from './Validations/Validations.js'
 import { ImageManagerWindow } from "./ImageManager/ImageManagerWindow.js"
-import { UploadNotificationState } from './UploadPageNotificationWindow.js'
 import { LabeledInput } from "Components/MainPages/UploadPage/LabeledInput.js"
 import { LabeledTextArea } from "Components/MainPages/UploadPage/LabeledTextArea.js"
 import { LabeledDropdown } from "Components/MainPages/UploadPage/LabeledDropDown.js"
@@ -109,10 +108,14 @@ const TEXT_AREA_DEFS = [
 	},
 ];
 
+// Тексты уведомлений о результате отправки формы.
+const mainTextSucess = "sucess"
+const mainTextError = "upload failed"
+
 
 
 export const UploadPageForm = ({
-	notificationStateSetter,
+	notificationSetter,
 	editItemId,
 }) => {
 
@@ -157,17 +160,17 @@ export const UploadPageForm = ({
 	const [formState, setFormState] = useState(INITIAL_FORM);
 	const [errorState, setErrorState] = useState(INITIAL_ERRORS);
 
-	// Локальные хелперы «покажи ошибку / покажи успех». Прячут конкретный enum
-	// нотификаций (UploadNotificationState) — места вызова описывают намерение,
-	// а не способ. Обёрнуты в useCallback, чтобы ссылки были стабильны и их
-	// можно было передавать в кастомные хуки без перезапуска их useEffect.
+	// Локальные хелперы «покажи ошибку / покажи успех». Прячут форму состояния
+	// уведомления — места вызова описывают намерение, а не способ. Обёрнуты
+	// в useCallback, чтобы ссылки были стабильны и их можно было передавать
+	// в кастомные хуки без перезапуска их useEffect.
 	const showError = useCallback(
-		() => notificationStateSetter(UploadNotificationState.ERROR),
-		[notificationStateSetter]
+		() => notificationSetter({ isError: true, text: mainTextError }),
+		[notificationSetter]
 	);
 	const showSuccess = useCallback(
-		() => notificationStateSetter(UploadNotificationState.SUCCESS),
-		[notificationStateSetter]
+		() => notificationSetter({ isError: false, text: mainTextSucess }),
+		[notificationSetter]
 	);
 
 	// Гидрация формы данными вещи в edit-режиме — целиком в кастомном хуке.
