@@ -6,7 +6,7 @@ import { fetchItemDetails } from "Components/Api/fetchItemDetails.js";
 const fetchItemDetailsPrivate = async ({ queryKey, signal }) => {
 	const [, itemID] = queryKey;
 	return fetchItemDetails({
-		endpointPath: GlobalConstants.post_detail_private,
+		buildPath: GlobalConstants.postDetailPrivate,
 		itemID,
 		signal,
 	});

@@ -18,7 +18,7 @@ export const DatabaseItemPage = () => {
 	const { itemId } = useParams();
 	const [modalImageUrl, setModalImageUrl] = useState(null);
 	const { notification, actions } = useItemActions(itemId);
-	const { data, isPending, error } = useItemDetailsPrivate(itemId);
+	const { data, isPending, isFetching, error } = useItemDetailsPrivate(itemId);
 
 	const renderContent = () => {
 		if (isPending) {
@@ -35,7 +35,7 @@ export const DatabaseItemPage = () => {
 		const images = data ? data.data.images : null;
 
 		return (
-			<div className="database-item-page-layout">
+			<div className="database-item-page-layout" aria-busy={isFetching}>
 				<ItemImageGrid images={images} onImageClick={setModalImageUrl} />
 				<div className="database-item-detail-column">
 					<ItemDescription data={itemData} />

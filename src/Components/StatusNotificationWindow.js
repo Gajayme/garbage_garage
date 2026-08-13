@@ -15,19 +15,21 @@ const headerTextError = "nooooooo";
  *   `null` означает, что показывать нечего.
  */
 export const StatusNotificationWindow = ({ notification }) => {
-	if (!notification) return null;
-
-	const notificationData = {
+	const notificationData = notification && {
 		headerText: notification.isError ? headerTextError : headerTextSucess,
 		mainText: notification.text,
 		mainTextColorClassName: notification.isError ? "red-text" : "green-text",
 	};
 
 	return (
-		<NotificationWindow
-			className="status-notification-window"
-			mainTextClassName="status-notification-main-text"
-			notificationData={notificationData}
-		/>
+		<div role="status" aria-live="polite">
+			{notificationData && (
+				<NotificationWindow
+					className="status-notification-window"
+					mainTextClassName="status-notification-main-text"
+					notificationData={notificationData}
+				/>
+			)}
+		</div>
 	);
 };

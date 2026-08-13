@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 /**
  * Действие, требующее подтверждения пользователя: confirm → запрос → успех/ошибка.
@@ -22,6 +22,16 @@ export const useConfirmedAction = ({
 	disabled = false,
 }) => {
 	const [isBusy, setIsBusy] = useState(false);
+
+	// Действие способно пережить свой компонент: успех может увести на другую
+	// страницу, а перепроверка сессии на 401 роняет всё поддерево под гардом.
+	const isMountedRef = useRef(true);
+	useEffect(() => {
+		isMountedRef.current = true;
+		return () => {
+			isMountedRef.current = false;
+		};
+	}, []);
 
 	const run = async () => {
 		if (disabled || isBusy) return;
@@ -49,7 +59,8 @@ export const useConfirmedAction = ({
 				console.error("onSuccess failed:", err);
 			}
 		} finally {
-			setIsBusy(false);
+			// Размораживать нечего, если компонента уже нет.
+			if (isMountedRef.current) setIsBusy(false);
 		}
 	};
 

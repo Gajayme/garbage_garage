@@ -5,7 +5,7 @@ import { fetchItemDetails } from "Components/Api/fetchItemDetails.js";
 const fetchItemDetailsQueryFn = async ({ queryKey, signal }) => {
 	const [, itemID] = queryKey;
 	return fetchItemDetails({
-		endpointPath: GlobalConstants.post_detail,
+		buildPath: GlobalConstants.postDetail,
 		itemID,
 		signal,
 	});

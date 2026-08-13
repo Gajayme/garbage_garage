@@ -251,7 +251,7 @@ export const UploadPageForm = ({
 		if (!isEdit) return;
 
 		await submitForm({
-			url: `${Constants.base_server_url}${Constants.post_update}/${editItemId}`,
+			url: `${Constants.base_server_url}${Constants.postUpdate(editItemId)}`,
 			method: Constants.http_methods.PUT,
 			setBusy: setIsUpdating,
 			onSuccess: async () => {

@@ -83,7 +83,7 @@ export const useItemActions = (itemId) => {
 
 	const handleEditItem = () => {
 		if (!itemId) return;
-		navigate(`/${Nav.upload}/edit/${encodeURIComponent(itemId)}`);
+		navigate(Nav.uploadEdit(itemId));
 	};
 
 	// Действия взаимоисключающие: пока одно в полёте, остальные заблокированы —

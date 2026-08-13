@@ -1,7 +1,7 @@
 import * as GlobalConstants from "Constants.js";
 
 const sendItem = async ({ itemID, pathBuilder }) => {
-	const url = `${GlobalConstants.base_server_url}${pathBuilder(encodeURIComponent(itemID))}`;
+	const url = `${GlobalConstants.base_server_url}${pathBuilder(itemID)}`;
 
 	const resp = await fetch(url, {
 		method: GlobalConstants.http_methods.POST,

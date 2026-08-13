@@ -2,7 +2,7 @@ import * as GlobalConstants from "Constants.js";
 
 export const updateSettingRequest = async ({ apiPath, id, title }) => {
 	const response = await fetch(
-		`${GlobalConstants.base_server_url}${apiPath}/${encodeURIComponent(id)}`,
+		`${GlobalConstants.base_server_url}${GlobalConstants.withId(apiPath, id)}`,
 		{
 			method: GlobalConstants.http_methods.PUT,
 			headers: { "Content-Type": "application/json" },

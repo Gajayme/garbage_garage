@@ -16,15 +16,18 @@ const checkSession = async () => {
 
 export const AuthProvider = ({ children }) => {
 	const [isAdmin, setIsAdmin] = useState(false);
-	const [isLoading, setIsLoading] = useState(true);
+	// Отличает «мы ещё ни разу не спрашивали сервер, кто это» от «перепроверяем
+	// уже известное». Первое требует придержать рендер, второе — нет.
+	const [hasChecked, setHasChecked] = useState(false);
 
 	const checkAuth = useCallback(async () => {
-		setIsLoading(true);
 		try {
 			const { isAdmin: ok } = await checkSession();
 			setIsAdmin(ok);
 		} finally {
-			setIsLoading(false);
+			// В finally, а не после запроса: если сеть отвалилась, приложение
+			// должно уйти на логин, а не остаться с пустым экраном навсегда.
+			setHasChecked(true);
 		}
 	}, []);
 
@@ -32,7 +35,7 @@ export const AuthProvider = ({ children }) => {
 		checkAuth();
 	}, [checkAuth]);
 
-	const value = { isAdmin, isLoading, checkAuth };
+	const value = { isAdmin, hasChecked, checkAuth };
 
 	return (
 		<AuthContext.Provider value={value}>

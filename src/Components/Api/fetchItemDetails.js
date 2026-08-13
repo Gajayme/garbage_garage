@@ -2,19 +2,16 @@ import * as GlobalConstants from "Constants.js";
 
 /**
  * Общий запрос на получение данных о вещи.
- * Использует переданный endpoint из Constants.js (`post_detail` или `post_detail_private`).
+ * Путь собирает билдер из Constants.js (`postDetail` или `postDetailPrivate`).
  *
  * @param {{
- * 	endpointPath: string,
+ * 	buildPath: (itemID: string|number) => string,
  * 	itemID: string|number,
  * 	signal?: AbortSignal
  * }} params
  */
-export const fetchItemDetails = async ({ endpointPath, itemID, signal }) => {
-	// endpointPath обычно уже содержит trailing slash: "post/detail/".
-	const path = `${endpointPath}${itemID}`;
-
-	const url = `${GlobalConstants.base_server_url}${path}`;
+export const fetchItemDetails = async ({ buildPath, itemID, signal }) => {
+	const url = `${GlobalConstants.base_server_url}${buildPath(itemID)}`;
 
 	const resp = await fetch(url, {
 		method: GlobalConstants.http_methods.GET,

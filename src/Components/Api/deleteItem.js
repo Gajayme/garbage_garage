@@ -7,7 +7,7 @@ import * as GlobalConstants from "Constants.js";
  * @param {{ itemID: string|number }} params
  */
 export const deleteItem = async ({ itemID }) => {
-	const url = `${GlobalConstants.base_server_url}${GlobalConstants.post_delete}/${encodeURIComponent(itemID)}`;
+	const url = `${GlobalConstants.base_server_url}${GlobalConstants.postDelete(itemID)}`;
 
 	const resp = await fetch(url, {
 		method: GlobalConstants.http_methods.DELETE,
