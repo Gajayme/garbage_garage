@@ -220,7 +220,7 @@ export const UploadPageForm = ({
 
 			response.ok ? showSuccess() : showError();
 			if (!response.ok) {
-				throw new Error(`Ошибка сервера: ${response.status}`);
+				throw new Error(`Server error: ${response.status}`);
 			}
 
 			await onSuccess?.(response);
@@ -406,7 +406,7 @@ export const UploadPageForm = ({
 		};
 
 		setFormState({
-			item_name: 'Кроссовки Adidas',
+			item_name: 'Adidas Sneakers',
 			item_model: 'Superstar',
 			bought_for: '5000',
 			price: '8500',
@@ -418,7 +418,7 @@ export const UploadPageForm = ({
 			brand: firstDropdownValue("brand"),
 			type: firstDropdownValue("type"),
 			status: firstDropdownValue("status"),
-			description: 'Почти кархарт но вообще не совсем кархарт поэтому конечно кал вонючий',
+			description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
 			images: [imageObject]
 		});
 	};

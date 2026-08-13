@@ -11,7 +11,7 @@ const loginRequest = async ({ login, password }) => {
 
 	if (!response.ok) {
 		const data = await response.json().catch(() => ({}));
-		throw new Error(data.message || `Ошибка: ${response.status}`);
+		throw new Error(data.message || `Error: ${response.status}`);
 	}
 	return response.json();
 };

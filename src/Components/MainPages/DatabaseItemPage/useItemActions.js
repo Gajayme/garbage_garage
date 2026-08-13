@@ -46,7 +46,7 @@ export const useItemActions = (itemId) => {
 	};
 
 	const deleteAction = useConfirmedAction({
-		confirmText: "Удалить эту вещь?",
+		confirmText: "Delete this item?",
 		disabled: !itemId,
 		request: () => deleteItem({ itemID: itemId }),
 		onSuccess: async () => {
@@ -66,7 +66,7 @@ export const useItemActions = (itemId) => {
 		setNotification({ isError: false, text: `posted to ${channelLabel}` });
 
 	const instagramAction = useConfirmedAction({
-		confirmText: "Опубликовать эту вещь в Instagram?",
+		confirmText: "Post this item to Instagram?",
 		disabled: !itemId,
 		request: () => sendItemToInstagram({ itemID: itemId }),
 		onSuccess: () => notifySent("Instagram"),
@@ -74,7 +74,7 @@ export const useItemActions = (itemId) => {
 	});
 
 	const telegramAction = useConfirmedAction({
-		confirmText: "Опубликовать эту вещь в Telegram?",
+		confirmText: "Post this item to Telegram?",
 		disabled: !itemId,
 		request: () => sendItemToTelegram({ itemID: itemId }),
 		onSuccess: () => notifySent("Telegram"),

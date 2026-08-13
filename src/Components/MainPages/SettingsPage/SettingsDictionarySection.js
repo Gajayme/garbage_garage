@@ -90,7 +90,7 @@ export const SettingsDictionarySection = ({
 		if (!editingItemId || updateMutation.isPending) return;
 		const trimmed = draftTitle.trim();
 		if (!trimmed) {
-			setUpdateError("Введите название");
+			setUpdateError("Enter a title");
 			return;
 		}
 		const original = items?.find((i) => i.id === editingItemId)?.title ?? "";
@@ -104,7 +104,7 @@ export const SettingsDictionarySection = ({
 
 	const handleDeleteItem = (id, itemTitle) => {
 		if (deleteMutation.isPending) return;
-		if (!window.confirm(`Удалить «${itemTitle}»?`)) return;
+		if (!window.confirm(`Delete "${itemTitle}"?`)) return;
 		setDeleteError(null);
 		if (editingItemId === id) {
 			setEditingItemId(null);

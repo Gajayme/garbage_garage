@@ -13,7 +13,7 @@ export const updateSettingRequest = async ({ apiPath, id, title }) => {
 
 	if (!response.ok) {
 		const data = await response.json().catch(() => ({}));
-		throw new Error(data.message || `Ошибка: ${response.status}`);
+		throw new Error(data.message || `Error: ${response.status}`);
 	}
 	if (response.status === 204 || response.headers.get("content-length") === "0") {
 		return null;
