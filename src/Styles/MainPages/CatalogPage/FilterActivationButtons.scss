@@ -38,8 +38,12 @@
 .filter-activation-button {
 	@include filter-button(var(--light-grey));
 
-	&:hover {
-		background-color: var(--middle-grey);
+	// hover только на устройствах с настоящим наведением:
+	// на телефоне :hover залипает после тапа и кнопка выглядит выделенной
+	@media (hover: hover) {
+		&:hover {
+			background-color: var(--middle-grey);
+		}
 	}
 }
 
