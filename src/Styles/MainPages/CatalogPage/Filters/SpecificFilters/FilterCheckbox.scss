@@ -15,8 +15,8 @@
 }
 
 .checkbox-box {
-	width: 1.0em;
-	height: 1.0em;
+	width: 0.8em;
+	height: 0.8em;
 	border: 3px solid var(--dark-grey);
 	background-color: transparent;
 	display: flex;
@@ -26,6 +26,6 @@
 }
 
 .checkmark {
-	min-width: 1em;
-	max-width: 1em;
+	min-width: 0.8em;
+	max-width: 0.8em;
 }
