@@ -9,12 +9,15 @@
  * @param {boolean} disabled - Флаг, определяющий, является ли кнопка неактивной.
  * @param {string} iconSrc - src декоративной иконки слева от заголовка.
  * @param {string} iconClassName - Имя класса для стилей иконки.
+ * @param {string} labelClassName - Имя класса для стилей заголовка.
  */
-export const DefaultButton = ({className, labelText, type = "button", onClick, disabled, iconSrc, iconClassName}) => {
+export const DefaultButton = ({ className, labelText, type = "button", onClick, disabled, iconSrc, iconClassName, labelClassName }) => {
 	return (
 		<button className={className} onClick={onClick} type={type} disabled={disabled}>
 			{iconSrc && <img className={iconClassName} src={iconSrc} alt="" aria-hidden={true} />}
-			{labelText}
+			{labelText && <span className={labelClassName}>
+				{labelText}
+			</span>}
 		</button>
 	)
 }

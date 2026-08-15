@@ -4,13 +4,14 @@
 	text-decoration: none;
 	padding: 2px 80px 2px 80px;
 	cursor: pointer;
-	
+
 	font-size: 33px;
 	font-weight: var(--font-weight-bold);
 
-	color: var(--white);
-	background-color: var(--red);
+	color: var(--black);
+	background-color: var(--pink);
 	border: 3px solid var(--dark-grey);
+
 }
 
 .buy-item-button:active {

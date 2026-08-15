@@ -18,6 +18,7 @@ export const FilterActivationButton = ({ onClick, isActive = false }) => {
 			onClick={onClick}
 			iconSrc={filterSign}
 			iconClassName="filter-button-icon"
+			labelClassName="filter-button-label"
 		/>
 	);
 };

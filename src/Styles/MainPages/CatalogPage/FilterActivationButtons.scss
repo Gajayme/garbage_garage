@@ -51,7 +51,10 @@
 	@include filter-button(var(--pink));
 }
 
-// Размер иконки задаём в em, чтобы она масштабировалась вместе с подписью.
+.filter-button-label {
+	margin-bottom: 3px;
+}
+
 .filter-button-icon {
 	height: 0.5em;
 	width: auto;

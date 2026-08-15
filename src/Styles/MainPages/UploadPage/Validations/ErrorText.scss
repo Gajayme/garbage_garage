@@ -1,5 +1,6 @@
 .error-text {
-    color: red;
-    text-align: center;
-    margin: 0;
+	color: var(--red);
+	text-align: center;
+	margin: 0;
+	font-weight: var(--font-weight-bold);
 }

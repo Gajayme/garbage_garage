@@ -15,6 +15,7 @@ export const FilterResetButton = ({ onClick }) => {
 			onClick={onClick}
 			iconSrc={resetFilters}
 			iconClassName="filter-button-icon"
+			labelClassName="filter-button-label"
 		/>
 	);
 };

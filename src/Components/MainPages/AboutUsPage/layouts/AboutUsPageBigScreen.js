@@ -2,6 +2,7 @@
 import { IconLinks } from '../IconLinks.js';
 
 import "Styles/MainPages/AboutUsPage/AboutUsPageBigScreen.scss";
+import "Styles/TextWeight.scss";
 import "Styles/ColoredText.scss";
 
 import mascot_big from 'Assets/Images/about_us_mascot_big.png';
@@ -13,11 +14,11 @@ export const AboutUsPageBigScreen = () => {
 			<div className="about-us-page-big-screen__text-container">
 				{/* Текст */}
 				<p >
-					Hi! We are trift shop located in Belgrade, Serbia. Please <span className="red-text">buy</span> something. We have <span className="red-text">charhartt</span>!
+					Hi! We are thrift shop located in Belgrade, Serbia. Please <span className="bold-text pink-text">buy</span> something. We have <span className="bold-text pink-text">charhartt</span>!
 				</p>
 
 				<p>
-					<span className="red-text">follow us</span> on:
+					<span className="bold-text pink-text">follow us</span> on:
 				</p>
 
 				{/* Ссылки на соцсети */}
