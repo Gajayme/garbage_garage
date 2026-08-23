@@ -1,5 +1,6 @@
 .database-item-page-image-grid {
-	flex: 2 1 0;
+	// половина строки, вторая половина — .database-item-detail-column
+	flex: 1 1 0;
 	min-width: 0;
 
 	display: grid;

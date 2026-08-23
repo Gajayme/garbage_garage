@@ -1,11 +1,8 @@
 
 .database-item-page-description {
-	flex: 1 1 0;
+	// ширину и прилипание задаёт .database-item-detail-column
 	min-width: 0;
-
-	position: sticky;
-	top: 0;
-	align-self: flex-start;
+	width: 100%;
 }
 
 .database-item-page-description-field {
