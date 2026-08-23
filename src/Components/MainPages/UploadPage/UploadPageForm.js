@@ -3,10 +3,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { useQueryClient } from "@tanstack/react-query";
 
 import { DefaultButton } from "Components/Button.js"
-import { NumbersOnly } from 'Components/utils/inputFilters.js'
 import { FormDataLogger } from "Components/FormDataLogger.js";
 import { UploadFormValidation } from './Validations/Validations.js'
-import { NonEmpty, NonEmptyImages } from './Validations/Validations.js'
 import { ImageManagerWindow } from "./ImageManager/ImageManagerWindow.js"
 import { LabeledInput } from "Components/MainPages/UploadPage/LabeledInput.js"
 import { LabeledTextArea } from "Components/MainPages/UploadPage/LabeledTextArea.js"
@@ -14,12 +12,19 @@ import { LabeledDropdown } from "Components/MainPages/UploadPage/LabeledDropDown
 import { useInputParams } from "Components/hooks/useInputParams.js";
 import { useAuth } from "Components/Auth/AuthContext.js";
 import * as UploadConstants from "Components/MainPages/UploadPage/UploadPageConstants.js";
-import { buildDropdownState, buildStatusDropdownState } from "Components/MainPages/UploadPage/buildDropdownState.js";
 import { useHydrateUploadForm } from "Components/MainPages/UploadPage/useHydrateUploadForm.js";
 import { normalizeFk, normalizeStatus } from "Components/MainPages/UploadPage/uploadFormNormalize.js";
 import { revokeBlobImage, revokeBlobImages } from "Components/MainPages/UploadPage/imageBlobs.js";
 import { urlToFile } from "Components/utils/urlToFile.js";
-import { itemFieldLabel } from "Components/utils/itemFieldLabels.js";
+import {
+	INPUT_DEFS,
+	DROPDOWN_DEFS,
+	TEXT_AREA_DEFS,
+	FIELD_DEFS,
+	INITIAL_FORM,
+	INITIAL_ERRORS,
+	VALIDATION_MAPPER,
+} from "Components/MainPages/UploadPage/uploadFormFields.js";
 import {
 	invalidateItemLists,
 	invalidateItem,
@@ -31,83 +36,6 @@ import 'Styles/MainPages/UploadPage/UploadPageForm.scss'
 import 'Styles/MainPages/UploadPage/UploadPageButton.scss'
 import DefaultImg from "Assets/Images/default.jpg"
 
-
-const toInt = (value) => parseInt(value, 10);
-
-// Декларативный конфиг дропдаунов. Статическая часть (имя поля формы, лейбл,
-// id, плейсхолдер, билдер опций, ключ источника данных в useInputParams)
-// Опции (`options`) добавляются внутри компонента через useMemo поверх этого
-// конфига, потому что зависят от ответа useInputParams.
-const DROPDOWN_DEFS = [
-	{ name: Constants.brand,    label: itemFieldLabel(Constants.brand),    id: "brand_dropdown",
-		apiField: Constants.brandId,    serialize: toInt,
-		dataKey: "brands",    placeholder: UploadConstants.chooseBrand,    builder: buildDropdownState },
-	{ name: Constants.type,     label: itemFieldLabel(Constants.type),     id: "type_dropdown",
-		apiField: Constants.typeId,     serialize: toInt,
-		dataKey: "types",     placeholder: UploadConstants.chooseType,     builder: buildDropdownState },
-	{ name: Constants.buyer,    label: itemFieldLabel(Constants.buyer),    id: "buyer_dropdown",
-		apiField: Constants.buyerId,    serialize: toInt,
-		dataKey: "buyers",    placeholder: UploadConstants.chooseBuyer,    builder: buildDropdownState },
-	{ name: Constants.location, label: itemFieldLabel(Constants.location), id: "location_dropdown",
-		apiField: Constants.locationId, serialize: toInt,
-		dataKey: "locations", placeholder: UploadConstants.chooseLocation, builder: buildDropdownState },
-	{ name: Constants.status, label: itemFieldLabel(Constants.status), id: "status_dropdown",
-		apiField: Constants.status,     serialize: (value) => value ?? "",
-		dataKey: "statuses",  placeholder: UploadConstants.chooseStatus,   builder: buildStatusDropdownState },
-];
-
-// Описание полей-инпутов (рендер ниже идёт через .map)
-const INPUT_DEFS = [
-	{ name: Constants.itemName,   label: itemFieldLabel(Constants.itemName),   id: "item_name_input",  maxLength: 50 },
-	{ name: Constants.model,      label: itemFieldLabel(Constants.model),      id: "item_model_input", maxLength: 50 },
-	{ name: Constants.buyersPart, label: itemFieldLabel(Constants.buyersPart), id: "buyer_part_input", maxLength: 10, inputValidator: NumbersOnly, serialize: toInt },
-	{ name: Constants.boughtFor,  label: itemFieldLabel(Constants.boughtFor),  id: "bought_for_input", maxLength: 10, inputValidator: NumbersOnly, serialize: toInt },
-	{ name: Constants.price,      label: itemFieldLabel(Constants.price),      id: "price_input",      maxLength: 10, inputValidator: NumbersOnly, serialize: toInt },
-	{ name: Constants.soldFor,    label: itemFieldLabel(Constants.soldFor),    id: "sold_for_input",   maxLength: 10, inputValidator: NumbersOnly, serialize: toInt },
-	{ name: Constants.size,       label: itemFieldLabel(Constants.size),       id: "size_input",       maxLength: 10 },
-];
-
-// Многострочные поля (textarea)
-const TEXT_AREA_DEFS = [
-	{
-		name: Constants.description,
-		label: itemFieldLabel(Constants.description),
-		id: "description_textarea",
-		maxLength: 2000,
-		rows: 5,
-	},
-];
-
-// Все поля формы, кроме картинок: у тех своя ветка и в стейте, и в FormData.
-const FIELD_DEFS = [...INPUT_DEFS, ...DROPDOWN_DEFS, ...TEXT_AREA_DEFS];
-
-const INITIAL_FORM = {
-	...Object.fromEntries(
-		[...INPUT_DEFS, ...TEXT_AREA_DEFS].map(({ name }) => [name, ''])
-	),
-	...Object.fromEntries(DROPDOWN_DEFS.map(({ name }) => [name, null])),
-	images: [],
-};
-
-const INITIAL_ERRORS = Object.fromEntries(
-	Object.keys(INITIAL_FORM).map((k) => [k, []])
-);
-
-const VALIDATION_MAPPER = {
-	[Constants.itemName]: [NonEmpty],
-	[Constants.boughtFor]: [NonEmpty],
-	[Constants.price]: [NonEmpty],
-	[Constants.buyersPart]: [],
-	[Constants.soldFor]: [],
-	[Constants.size]: [],
-	[Constants.buyer]: [NonEmpty],
-	[Constants.location]: [NonEmpty],
-	[Constants.brand]: [NonEmpty],
-	[Constants.type]: [NonEmpty],
-	[Constants.status]: [NonEmpty],
-	[Constants.description]: [NonEmpty],
-	images: [NonEmptyImages],
-};
 
 // Тексты уведомлений о результате отправки формы.
 const mainTextSucess = "sucess"
