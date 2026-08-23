@@ -8,7 +8,6 @@ import "Styles/MainPages/CatalogItemPage/ItemDescriptionCatalog.scss";
  */
 export const ItemDescription = ({ description, className }) => {
 	if (description == null || description === "") return null;
-	console.log(description);
 	return (
 		<div className={`item-description-catalog ${className ? ` ${className}` : ""}`}>
 			<p>{String(description)}</p>

@@ -15,6 +15,7 @@ export const useItemDetails = (itemID) => {
 	return useQuery({
 		queryKey: [GlobalConstants.itemDetailsQueryKey, itemID],
 		queryFn: fetchItemDetailsQueryFn,
+		staleTime: GlobalConstants.staleTimes.details,
 		enabled: itemID != null && itemID !== "",
 	});
 };

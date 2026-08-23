@@ -12,8 +12,24 @@ const fetchItemDetailsPrivate = async ({ queryKey, signal }) => {
 	});
 };
 
-export const useItemDetailsPrivate = (itemID) => {
+/**
+ * Детали вещи для приватных страниц.
+ *
+ * Хук не принимает опции useQuery целиком: ключ должен совпадать с тем, что
+ * инвалидируют invalidateItem/removeItem и разбирает fetchItemDetailsPrivate,
+ * queryFn несёт обработку 401, а enabled охраняет запрос от пустого id. Наружу
+ * вынесено только то, что вызывающему действительно нужно менять; если
+ * понадобится ещё опция — её добавляют сюда явным параметром.
+ *
+ * @param {string} itemID - Id вещи.
+ * @param {object|null} [options] - Настройки запроса; `null` и `undefined`
+ *   означают «настроек нет».
+ * @param {boolean|"always"} [options.refetchOnMount] - Как обновлять данные при
+ *   маунте; "always" — всегда идти на сервер, не считаясь со свежестью кеша.
+ */
+export const useItemDetailsPrivate = (itemID, options) => {
 	const { checkAuth } = useAuth();
+	const { refetchOnMount } = options ?? {};
 
 	return useQuery({
 		queryKey: [GlobalConstants.itemDetailsPrivateQueryKey, itemID],
@@ -29,6 +45,8 @@ export const useItemDetailsPrivate = (itemID) => {
 				throw e;
 			}
 		},
+		staleTime: GlobalConstants.staleTimes.details,
+		refetchOnMount,
 		enabled: itemID != null && itemID !== "",
 	});
 };

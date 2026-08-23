@@ -186,7 +186,7 @@ export const ItemImageGallery = ({ images, onImageClick, className }) => {
 				</button>
 
 				{/* счетчик изображений */}
-				<span className="item-image-gallery__counter" aria-live="polite">
+				<span className="item-image-gallery__counter" role="status" aria-live="polite">
 					{safeIndex + 1}/{count}
 				</span>
 

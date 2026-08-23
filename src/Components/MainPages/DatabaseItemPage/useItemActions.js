@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -9,8 +10,11 @@ import {
 	sendItemToInstagram,
 	sendItemToTelegram,
 } from "Components/Api/sendItemToSocial.js";
+import {
+	invalidateItemLists,
+	removeItem,
+} from "Components/utils/itemCache.js";
 import * as Nav from "Components/Navigation/paths.js";
-import * as Constants from "Constants.js";
 
 const notificationWindowLifetime = 2000;
 
@@ -45,23 +49,51 @@ export const useItemActions = (itemId) => {
 		setNotification({ isError: true, text: `${actionLabel} failed` });
 	};
 
+	// Чистим кеш удалённой вещи не в onSuccess, а в cleanup этого хука.
+	//
+	// navigate() только ставит смену маршрута в очередь: страница вещи в той
+	// же функции ещё смонтирована, useItemDetailsPrivate подписан на ключ.
+	// removeItem в этот момент бьёт по активному запросу — observer не узнаёт
+	// об удалении записи, а следующий рендер (например setIsBusy(false) в
+	// finally useConfirmedAction) пересоздаёт ключ и уходит на сервер за
+	// уже удалённым id.
+	//
+	// Cleanup здесь бежит РАНЬШЕ отписки: React запускает чистки в порядке
+	// объявления эффектов, а useItemDetailsPrivate вызван на странице ниже
+	// (DatabaseItemPage.js:20-21). Безопасно это не поэтому, а потому что между
+	// двумя cleanup'ами одного размонтирования React не рендерит: пересоздать
+	// запись в кеше и уйти за удалённым id может только рендер. Отсюда же
+	// единственный реальный способ сломать — перенести вызов обратно в onSuccess,
+	// где рендер будет гарантированно.
+	//
+	// Флаг нужен, чтобы обычный уход со страницы (назад, каталог) не выбрасывал
+	// живую карточку из кеша: pendingRemoveIdRef заполняется только после
+	// успешного DELETE. useRef, а не стейт — запись не рендерит, значение
+	// доживает до cleanup.
+	const pendingRemoveIdRef = useRef(null);
+	useEffect(() => {
+		return () => {
+			if (pendingRemoveIdRef.current == null) return;
+			removeItem(queryClient, pendingRemoveIdRef.current);
+			pendingRemoveIdRef.current = null;
+		};
+	}, [queryClient]);
+
 	const deleteAction = useConfirmedAction({
 		confirmText: "Delete this item?",
 		disabled: !itemId,
 		request: () => deleteItem({ itemID: itemId }),
 		onSuccess: async () => {
-			// Инвалидируем все в бд и в каталоге
-			await queryClient.invalidateQueries({ queryKey: [Constants.itemsQueryKey] });
-			await queryClient.invalidateQueries({
-				queryKey: [Constants.itemsPrivateQueryKey],
-			});
+			pendingRemoveIdRef.current = itemId;
+			await invalidateItemLists(queryClient);
 			navigate(`/${Nav.database}`);
 		},
 		onError: (err) => notifyFailure("Delete", err),
 	});
 
 	// Публикация в соцсеть: отличается от удаления только тем, что после успеха
-	// показывает уведомление, а не уходит со страницы.
+	// показывает уведомление, а не уходит со страницы. Кеш не трогает — статуса
+	// публикации в данных вещи нет, см. док-комментарий itemCache.js.
 	const notifySent = (channelLabel) =>
 		setNotification({ isError: false, text: `posted to ${channelLabel}` });
 

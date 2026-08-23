@@ -19,6 +19,10 @@ import { useHydrateUploadForm } from "Components/MainPages/UploadPage/useHydrate
 import { normalizeFk, normalizeStatus } from "Components/MainPages/UploadPage/uploadFormNormalize.js";
 import { revokeBlobImage, revokeBlobImages } from "Components/MainPages/UploadPage/imageBlobs.js";
 import { urlToFile } from "Components/utils/urlToFile.js";
+import {
+	invalidateItemLists,
+	invalidateItem,
+} from "Components/utils/itemCache.js";
 
 import * as Constants from 'Constants.js'
 
@@ -241,6 +245,7 @@ export const UploadPageForm = ({
 				const responseJson = await response.json();
 				console.log("upload response:", responseJson);
 				resetForm();
+				await invalidateItemLists(queryClient);
 			},
 			errorLogPrefix: "upload error:",
 		});
@@ -254,17 +259,16 @@ export const UploadPageForm = ({
 			url: `${Constants.base_server_url}${Constants.postUpdate(editItemId)}`,
 			method: Constants.http_methods.PUT,
 			setBusy: setIsUpdating,
-			onSuccess: async () => {
-				await queryClient.invalidateQueries({
-					queryKey: [Constants.itemsQueryKey],
-				});
-				await queryClient.invalidateQueries({
-					queryKey: [Constants.itemsPrivateQueryKey],
-				});
-				await queryClient.invalidateQueries({
-					queryKey: [Constants.itemDetailsPrivateQueryKey, editItemId],
-				});
-			},
+			// Инвалидации независимы — запускаем параллельно. Ждём их обе
+			// намеренно: пока идёт догрузка деталей, кнопка Update остаётся
+			// заблокированной. Сети касается только invalidateItem — список
+			// каталога и базы отсюда неактивны, для них инвалидация сводится
+			// к синхронной пометке «протухло».
+			onSuccess: () =>
+				Promise.all([
+					invalidateItemLists(queryClient),
+					invalidateItem(queryClient, editItemId),
+				]),
 			errorLogPrefix: "update error:",
 		});
 	};

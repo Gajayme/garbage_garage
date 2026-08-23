@@ -25,7 +25,7 @@ export const CatalogPage = () => {
 	// хук, который занимается URL ↔ filtersState
 	const { filtersState, setFilter, resetFilters, initialized } = useUrlFilters(allFilters);
 
-	const { data, error, isLoading } = useCatalogItems(filtersState);
+	const { data, error, isLoading, isPlaceholderData } = useCatalogItems(filtersState);
 
 	useCatalogScrollRestoration({
 		ready: initialized && !error && !isLoading,
@@ -38,16 +38,12 @@ export const CatalogPage = () => {
 		}
 	}, [data, allFilters.length]);
 
-	// пока фильтры ещё не инициализированы, отображаем загрузочный текст вместо всего контента
+	// Пока состав фильтров не пришёл, показывать каркас не из чего: кнопка Filters
+	// открыла бы пустое окно. Ошибка попадает сюда только на самом первом запросе —
+	// после успешного ответа initialized уже true, и ошибка рисуется внутри списка.
 	if (!initialized) {
 		return (
-			<p className="centered-text">Loading...</p>
-		);
-	}
-	// если произошла ошибка, отображаем текст ошибки
-	else if (error) {
-		return (
-			<p className="centered-text">Error happened</p>
+			<p className="centered-text">{error ? "Error happened" : "Loading..."}</p>
 		);
 	}
 
@@ -65,11 +61,20 @@ export const CatalogPage = () => {
 				</div>
 
 				<div className="filters-items-wrapper">
-					{/* пока запрос идёт, отображаем загрузочный текст (только вместо карточек товаров)*/}
-					{isLoading ? (
-						<p className="centered-text">Loading...</p>
+					{error ? (
+						/* Запрос по новому фильтру упал: списка нет, но кнопки фильтров
+						   выше остались — иначе сломавший фильтр нечем сбросить.
+						   Плейсхолдер тут не спасает: на ошибке react-query его
+						   отбрасывает вместе со старым списком. */
+						<p className="centered-text">Error happened</p>
 					) : (
-						<Items catalogState={items} />
+						/* Смена фильтра: старый список становится полупрозрачным */
+						<div
+							className={isPlaceholderData ? "catalog-items-pane--pending" : undefined}
+							aria-busy={isPlaceholderData}
+						>
+							<Items catalogState={items} />
+						</div>
 					)}
 
 					{/* окно фильтров — поверх грида, его верхний-левый угол

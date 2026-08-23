@@ -104,6 +104,20 @@ export const buyersQueryKey = "uploadBuyers" // all buyers
 export const locationsQueryKey = "uploadLocations" // all locations
 export const statusesQueryKey = "uploadStatus" // all statuses
 
+// Сколько данные считаются свежими. Значение lists стоит дефолтом на всех
+// запросах в index.js, остальные пороги хуки задают себе сами.
+export const staleTimes = {
+	// Списки каталога и базы: после собственных действий свежесть обеспечивает
+	// точечная инвалидация, таймер нужен только против рефетчей на каждый маунт.
+	lists: 60_000,
+	// Карточка вещи. Держим ниже дефолтного gcTime в 5 минут: иначе неактивный
+	// запрос выгрузится из кеша раньше, чем устареет, и вместо мгновенного
+	// показа будет полная загрузка.
+	details: 2 * 60_000,
+	// Словари: меняются только через страницу настроек, которая их инвалидирует.
+	dictionaries: Infinity,
+};
+
 export const http_methods = {
 	GET: 'GET',
 	POST: 'POST',

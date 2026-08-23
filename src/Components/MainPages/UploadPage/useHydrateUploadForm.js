@@ -31,8 +31,9 @@ export const useHydrateUploadForm = ({
 	initialErrors,
 	onError,
 }) => {
+	// refetchOnMount: "always" — чтобы перед гидрацией форма запросила свежие данные.
 	const { data: detailData, isFetching: detailFetching } =
-		useItemDetailsPrivate(editItemId ?? "");
+		useItemDetailsPrivate(editItemId ?? "", { refetchOnMount: "always" });
 
 	// Сторож от повторной гидрации одного и того же id.
 	// Хранит editItemId, для которого форма уже была заполнена. Сравниваем
