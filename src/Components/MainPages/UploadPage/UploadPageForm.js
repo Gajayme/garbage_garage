@@ -19,6 +19,7 @@ import { useHydrateUploadForm } from "Components/MainPages/UploadPage/useHydrate
 import { normalizeFk, normalizeStatus } from "Components/MainPages/UploadPage/uploadFormNormalize.js";
 import { revokeBlobImage, revokeBlobImages } from "Components/MainPages/UploadPage/imageBlobs.js";
 import { urlToFile } from "Components/utils/urlToFile.js";
+import { itemFieldLabel } from "Components/utils/itemFieldLabels.js";
 import {
 	invalidateItemLists,
 	invalidateItem,
@@ -31,23 +32,60 @@ import 'Styles/MainPages/UploadPage/UploadPageButton.scss'
 import DefaultImg from "Assets/Images/default.jpg"
 
 
-// Стабильные пустые значения формы и ошибок — выносим на module scope,
-// чтобы ссылки не пересоздавались на каждом рендере и можно было передавать
-// в кастомные хуки без триггера их useEffect.
+const toInt = (value) => parseInt(value, 10);
+
+// Декларативный конфиг дропдаунов. Статическая часть (имя поля формы, лейбл,
+// id, плейсхолдер, билдер опций, ключ источника данных в useInputParams)
+// Опции (`options`) добавляются внутри компонента через useMemo поверх этого
+// конфига, потому что зависят от ответа useInputParams.
+const DROPDOWN_DEFS = [
+	{ name: Constants.brand,    label: itemFieldLabel(Constants.brand),    id: "brand_dropdown",
+		apiField: Constants.brandId,    serialize: toInt,
+		dataKey: "brands",    placeholder: UploadConstants.chooseBrand,    builder: buildDropdownState },
+	{ name: Constants.type,     label: itemFieldLabel(Constants.type),     id: "type_dropdown",
+		apiField: Constants.typeId,     serialize: toInt,
+		dataKey: "types",     placeholder: UploadConstants.chooseType,     builder: buildDropdownState },
+	{ name: Constants.buyer,    label: itemFieldLabel(Constants.buyer),    id: "buyer_dropdown",
+		apiField: Constants.buyerId,    serialize: toInt,
+		dataKey: "buyers",    placeholder: UploadConstants.chooseBuyer,    builder: buildDropdownState },
+	{ name: Constants.location, label: itemFieldLabel(Constants.location), id: "location_dropdown",
+		apiField: Constants.locationId, serialize: toInt,
+		dataKey: "locations", placeholder: UploadConstants.chooseLocation, builder: buildDropdownState },
+	{ name: Constants.status, label: itemFieldLabel(Constants.status), id: "status_dropdown",
+		apiField: Constants.status,     serialize: (value) => value ?? "",
+		dataKey: "statuses",  placeholder: UploadConstants.chooseStatus,   builder: buildStatusDropdownState },
+];
+
+// Описание полей-инпутов (рендер ниже идёт через .map)
+const INPUT_DEFS = [
+	{ name: Constants.itemName,   label: itemFieldLabel(Constants.itemName),   id: "item_name_input",  maxLength: 50 },
+	{ name: Constants.model,      label: itemFieldLabel(Constants.model),      id: "item_model_input", maxLength: 50 },
+	{ name: Constants.buyersPart, label: itemFieldLabel(Constants.buyersPart), id: "buyer_part_input", maxLength: 10, inputValidator: NumbersOnly, serialize: toInt },
+	{ name: Constants.boughtFor,  label: itemFieldLabel(Constants.boughtFor),  id: "bought_for_input", maxLength: 10, inputValidator: NumbersOnly, serialize: toInt },
+	{ name: Constants.price,      label: itemFieldLabel(Constants.price),      id: "price_input",      maxLength: 10, inputValidator: NumbersOnly, serialize: toInt },
+	{ name: Constants.soldFor,    label: itemFieldLabel(Constants.soldFor),    id: "sold_for_input",   maxLength: 10, inputValidator: NumbersOnly, serialize: toInt },
+	{ name: Constants.size,       label: itemFieldLabel(Constants.size),       id: "size_input",       maxLength: 10 },
+];
+
+// Многострочные поля (textarea)
+const TEXT_AREA_DEFS = [
+	{
+		name: Constants.description,
+		label: itemFieldLabel(Constants.description),
+		id: "description_textarea",
+		maxLength: 2000,
+		rows: 5,
+	},
+];
+
+// Все поля формы, кроме картинок: у тех своя ветка и в стейте, и в FormData.
+const FIELD_DEFS = [...INPUT_DEFS, ...DROPDOWN_DEFS, ...TEXT_AREA_DEFS];
+
 const INITIAL_FORM = {
-	item_name: '',
-	item_model: '',
-	bought_for: '',
-	price: '',
-	buyers_part: '',
-	sold_for: '',
-	size: '',
-	buyer: null,
-	location: null,
-	brand: null,
-	type: null,
-	status: null,
-	description: '',
+	...Object.fromEntries(
+		[...INPUT_DEFS, ...TEXT_AREA_DEFS].map(({ name }) => [name, ''])
+	),
+	...Object.fromEntries(DROPDOWN_DEFS.map(({ name }) => [name, null])),
 	images: [],
 };
 
@@ -55,62 +93,21 @@ const INITIAL_ERRORS = Object.fromEntries(
 	Object.keys(INITIAL_FORM).map((k) => [k, []])
 );
 
-// Маппер «поле → массив валидаторов». Зависит только от чистых функций-валидаторов,
-// поэтому тоже выносим на module scope.
 const VALIDATION_MAPPER = {
-	item_name: [NonEmpty],
-	bought_for: [NonEmpty],
-	price: [NonEmpty],
-	buyers_part: [],
-	sold_for: [],
-	size: [],
-	buyer: [NonEmpty],
-	location: [NonEmpty],
-	brand: [NonEmpty],
-	type: [NonEmpty],
-	status: [NonEmpty],
-	description: [NonEmpty],
+	[Constants.itemName]: [NonEmpty],
+	[Constants.boughtFor]: [NonEmpty],
+	[Constants.price]: [NonEmpty],
+	[Constants.buyersPart]: [],
+	[Constants.soldFor]: [],
+	[Constants.size]: [],
+	[Constants.buyer]: [NonEmpty],
+	[Constants.location]: [NonEmpty],
+	[Constants.brand]: [NonEmpty],
+	[Constants.type]: [NonEmpty],
+	[Constants.status]: [NonEmpty],
+	[Constants.description]: [NonEmpty],
 	images: [NonEmptyImages],
 };
-
-// Декларативный конфиг дропдаунов. Статическая часть (имя поля формы, лейбл,
-// id, плейсхолдер, билдер опций, ключ источника данных в useInputParams)
-// Опции (`options`) добавляются внутри компонента через useMemo поверх этого
-// конфига, потому что зависят от ответа useInputParams.
-const DROPDOWN_DEFS = [
-	{ name: "brand",    label: "Brand",    id: "brand_dropdown",
-		dataKey: "brands",    placeholder: UploadConstants.chooseBrand,    builder: buildDropdownState },
-	{ name: "type",     label: "Type",     id: "type_dropdown",
-		dataKey: "types",     placeholder: UploadConstants.chooseType,     builder: buildDropdownState },
-	{ name: "buyer",    label: "Buyer",    id: "buyer_dropdown",
-		dataKey: "buyers",    placeholder: UploadConstants.chooseBuyer,    builder: buildDropdownState },
-	{ name: "location", label: "Location", id: "location_dropdown",
-		dataKey: "locations", placeholder: UploadConstants.chooseLocation, builder: buildDropdownState },
-	{ name: "status",   label: "Status",   id: "status_dropdown",
-		dataKey: "statuses",  placeholder: UploadConstants.chooseStatus,   builder: buildStatusDropdownState },
-];
-
-// Описание полей-инпутов (рендер ниже идёт через .map)
-const INPUT_DEFS = [
-	{ name: "item_name",   label: "Item Name",  id: "item_name_input",  maxLength: 50 },
-	{ name: "item_model",  label: "Item Model", id: "item_model_input", maxLength: 50 },
-	{ name: "buyers_part", label: "Buyer Part", id: "buyer_part_input", maxLength: 10, inputValidator: NumbersOnly },
-	{ name: "bought_for",  label: "Bought for", id: "bought_for_input", maxLength: 10, inputValidator: NumbersOnly },
-	{ name: "price",       label: "Price",      id: "price_input",      maxLength: 10, inputValidator: NumbersOnly },
-	{ name: "sold_for",    label: "Sold for",   id: "sold_for_input",   maxLength: 10, inputValidator: NumbersOnly },
-	{ name: "size",        label: "Size",       id: "size_input",       maxLength: 10 },
-];
-
-// Многострочные поля (textarea)
-const TEXT_AREA_DEFS = [
-	{
-		name: "description",
-		label: "Description",
-		id: "description_textarea",
-		maxLength: 2000,
-		rows: 5,
-	},
-];
 
 // Тексты уведомлений о результате отправки формы.
 const mainTextSucess = "sucess"
@@ -288,19 +285,10 @@ export const UploadPageForm = ({
 	// компоновка данных для отправки на сервер
 	const buildFormData = () => {
 		const formData = new FormData();
-		formData.append(Constants.item_name, formState.item_name);
-		formData.append(Constants.item_model, formState.item_model);
-		formData.append(Constants.bought_for, parseInt(formState.bought_for, 10));
-		formData.append(Constants.price, parseInt(formState.price, 10));
-		formData.append(Constants.buyer_part, parseInt(formState.buyers_part, 10));
-		formData.append(Constants.sold_for, parseInt(formState.sold_for, 10));
-		formData.append(Constants.item_size, formState.size);
-		formData.append(Constants.buyer, parseInt(formState.buyer, 10));
-		formData.append(Constants.location, parseInt(formState.location, 10));
-		formData.append(Constants.brand, parseInt(formState.brand, 10));
-		formData.append(Constants.type, parseInt(formState.type, 10));
-		formData.append(Constants.status, formState.status ?? "");
-		formData.append(Constants.description, formState.description);
+		FIELD_DEFS.forEach(({ name, apiField, serialize }) => {
+			const value = formState[name];
+			formData.append(apiField ?? name, serialize ? serialize(value) : value);
+		});
 		formState.images.forEach((image) => {
 			if (image?.file) {
 				formData.append(Constants.files, image.file);
@@ -328,7 +316,7 @@ export const UploadPageForm = ({
 	}
 
 	const handleOnChangeDropDown = (key) => {
-		const normalize = key === "status" ? normalizeStatus : normalizeFk;
+		const normalize = key === Constants.status ? normalizeStatus : normalizeFk;
 		return (newVal) => {
 			setFormState((prevState) => ({
 				...prevState,
@@ -410,19 +398,19 @@ export const UploadPageForm = ({
 		};
 
 		setFormState({
-			item_name: 'Adidas Sneakers',
-			item_model: 'Superstar',
-			bought_for: '5000',
-			price: '8500',
-			buyers_part: '50',
-			sold_for: '8000',
-			size: '42',
-			buyer: firstDropdownValue("buyer"),
-			location: firstDropdownValue("location"),
-			brand: firstDropdownValue("brand"),
-			type: firstDropdownValue("type"),
-			status: firstDropdownValue("status"),
-			description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+			[Constants.itemName]: 'Adidas Sneakers',
+			[Constants.model]: 'Superstar',
+			[Constants.boughtFor]: '5000',
+			[Constants.price]: '8500',
+			[Constants.buyersPart]: '50',
+			[Constants.soldFor]: '8000',
+			[Constants.size]: '42',
+			[Constants.buyer]: firstDropdownValue(Constants.buyer),
+			[Constants.location]: firstDropdownValue(Constants.location),
+			[Constants.brand]: firstDropdownValue(Constants.brand),
+			[Constants.type]: firstDropdownValue(Constants.type),
+			[Constants.status]: firstDropdownValue(Constants.status),
+			[Constants.description]: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
 			images: [imageObject]
 		});
 	};

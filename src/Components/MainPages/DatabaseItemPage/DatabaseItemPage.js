@@ -31,8 +31,8 @@ export const DatabaseItemPage = () => {
 			);
 		}
 
-		const itemData = buildItemData(data ? data.data : null);
-		const images = data ? data.data.images : null;
+		const itemData = buildItemData(data?.data ?? null);
+		const images = data?.data?.images ?? null;
 
 		return (
 			<div className="database-item-page-layout" aria-busy={isFetching}>

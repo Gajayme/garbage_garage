@@ -12,9 +12,14 @@ export const ItemDescription = ({data, delimiter = ": " }) => {
 			<p>{title}</p>
 
 			{/* Остальная информация */}
-			{Object.entries(restData).map(([key, value], index) => (
-				<p key={index}>
-					{key}{delimiter}{String(value)}
+			{restData.map(({ key, label, value }) => (
+				<p key={key} className="database-item-page-description-field">
+					<span className="database-item-page-description-label">
+						{label}{delimiter}
+					</span>
+					<span>
+						{value}
+					</span>
 				</p>
 			))}
 		</div>

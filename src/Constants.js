@@ -1,19 +1,29 @@
 
-// Названия полей для формы загрузки вещей (такие же, как в API)
+// Названия полей вещи в API. Имя константы совпадает со значением, чтобы не
+// было двух алфавитов: ключи формы на UploadPage называются так же.
 export const files = "files"
-export const item_name = "itemName"
-export const item_model = "model"
-export const buyer_part = "buyersPart"
-export const bought_for = "boughtFor"
+export const itemName = "itemName"
+export const model = "model"
+export const buyersPart = "buyersPart"
+export const boughtFor = "boughtFor"
 export const price = "price"
-export const sold_for = "soldFor"
-export const item_size = "size"
-export const buyer = "buyerId"
-export const location = "locationId"
-export const brand = "brandId"
-export const type = "typeId"
+export const soldFor = "soldFor"
+export const size = "size"
 export const status = "status"
 export const description = "description"
+
+// Справочники — единственные поля, у которых чтение и запись зовутся по-разному.
+// В ответе detail это вложенный объект { id, title }:
+export const brand = "brand"
+export const type = "type"
+export const buyer = "buyer"
+export const location = "location"
+// а на запись уходит только id, и имя поля другое. Не перепутать с парой выше:
+// в дефах UploadPage эти имена стоят рядом как `name` и `apiField`.
+export const brandId = "brandId"
+export const typeId = "typeId"
+export const buyerId = "buyerId"
+export const locationId = "locationId"
 
 // Валюта, в которой отображаются цены
 export const currency = "rsd"

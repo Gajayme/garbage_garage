@@ -7,3 +7,13 @@
 	top: 0;
 	align-self: flex-start;
 }
+
+.database-item-page-description-field {
+	// описание приходит многострочным, переносы нужно сохранить
+	white-space: pre-wrap;
+	overflow-wrap: anywhere;
+}
+
+.database-item-page-description-label {
+	font-weight: var(--font-weight-bold);
+}
