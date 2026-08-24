@@ -6,6 +6,35 @@
 	gap: 25px;
 }
 
+/* Все поля и кнопки формы. Отдельный fieldset нужен ради disabled на время
+   отправки, поэтому раскладку колонки держит именно он: display: contents
+   был бы короче, но у fieldset он до сих пор поддержан неровно. */
+.upload-form-fields {
+	display: flex;
+	flex-direction: column;
+	gap: 25px;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	/* у fieldset по умолчанию min-width: min-content — иначе грид полей не сжимается */
+	min-width: 0;
+}
+
+/* Отправка формы: полупрозрачный слой на всю страницу — интерфейс гаснет
+   и не принимает указатель, пока запрос не вернёт результат.
+   z-index ниже уведомления (9999), чтобы результат отправки был виден поверх.
+   Блокировка держится на перекрытии, поэтому предкам формы нельзя заводить
+   containing block для fixed (transform / filter / will-change) — слой
+   молча съедет на форму вместо вьюпорта. Клавиатуру он не закрывает,
+   это работа fieldset[disabled] в UploadPageForm.js. */
+.upload-page-pending-backdrop {
+	position: fixed;
+	inset: 0;
+	z-index: 9998;
+	background-color: rgba(30, 37, 38, 0.45); /* --black с прозрачностью */
+	cursor: progress;
+}
+
 .upload-form-actions {
 	display: flex;
 	flex-direction: row;

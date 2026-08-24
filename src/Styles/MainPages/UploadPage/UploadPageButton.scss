@@ -3,11 +3,11 @@
 	padding: 10px 20px 10px 20px;
 	align-self: center;
 	color: var(--white);
-	background-color: var(--red);
+	background-color: var(--pink);
 	border: 2px solid var(--dark-grey);
 	cursor: pointer;
 }
 
 .upload-page-button:active {
-	border: 2px solid var(--dark-grey);
+	scale: 0.97;
 }

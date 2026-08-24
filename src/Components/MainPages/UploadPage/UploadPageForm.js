@@ -37,6 +37,18 @@ import 'Styles/MainPages/UploadPage/UploadPageButton.scss'
 import DefaultImg from "Assets/Images/default.jpg"
 
 
+// Слой отправки лежит поверх всего, поэтому drag-события во время запроса
+// приходят в него, а не в .image-manager с его preventDefault. Без отмены
+// дефолта браузер считает, что drop-зоны на странице нет, и открывает
+// брошенный файл — то есть уводит со страницы посреди запроса.
+// dropEffect — не защита, а курсор «сюда нельзя» вместо «копировать».
+const swallowDragOver = (event) => {
+	event.preventDefault();
+	event.dataTransfer.dropEffect = "none";
+};
+const swallowDrop = (event) => event.preventDefault();
+
+
 // Тексты уведомлений о результате отправки формы.
 const mainTextSucess = "sucess"
 const mainTextError = "upload failed"
@@ -351,82 +363,99 @@ export const UploadPageForm = ({
 
 	return (
 
-		<form className="upload-page-form" onSubmit={handleOnSubmit}>
+		<form className="upload-page-form" onSubmit={handleOnSubmit} aria-busy={isBusy}>
 
-			<ImageManagerWindow
-				images={formState.images}
-				errors={errorState.images}
-				onAddFiles={addImageFiles}
-				onDelete={handleOnDeleteAllImages}
-				onDeleteSpecific={handleOnDeleteSpecificImage}
-				onReorder={handleOnReorderImages}
-			/>
+			{/* Один disabled на весь fieldset выключает все поля и кнопки формы
+			   на время запроса — нативно, без прокидывания disabled в каждый компонент. */}
+			<fieldset className="upload-form-fields" disabled={isBusy}>
 
-			<div className="upload-form-inputs">
-				{INPUT_DEFS.map(({ name, label, id, maxLength, inputValidator }) => (
-					<LabeledInput
-						key={name}
-						value={formState[name]}
-						errors={errorState[name]}
-						onChange={handleOnChangeInput(name)}
-						className="upload-form-item"
-						labelText={label}
-						id={id}
-						maxLength={maxLength}
-						inputValidator={inputValidator}
-					/>
-				))}
-				{dropdownFields.map(({ name, label, id, options }) => (
-					<LabeledDropdown
-						key={name}
-						value={formState[name]}
-						errors={errorState[name]}
-						onChange={handleOnChangeDropDown(name)}
-						className="upload-form-item"
-						labelText={label}
-						id={id}
-						options={options}
-					/>
-				))}
-				{TEXT_AREA_DEFS.map(({ name, label, id, maxLength, rows, inputValidator, placeholder }) => (
-					<LabeledTextArea
-						key={name}
-						value={formState[name]}
-						errors={errorState[name]}
-						onChange={handleOnChangeInput(name)}
-						className="upload-form-item"
-						labelText={label}
-						id={id}
-						maxLength={maxLength}
-						rows={rows}
-						inputValidator={inputValidator}
-						placeholder={placeholder}
-					/>
-				))}
-			</div>
-
-			<div className="upload-form-actions">
-				{!isEdit && (
-					<DefaultButton
-					className={"upload-page-button"}
-					labelText={UploadConstants.buttonUpload}
-					disabled={isBusy}
-					type="submit"
-					onClick={handleOnSubmit}
+				<ImageManagerWindow
+					images={formState.images}
+					errors={errorState.images}
+					onAddFiles={addImageFiles}
+					onDelete={handleOnDeleteAllImages}
+					onDeleteSpecific={handleOnDeleteSpecificImage}
+					onReorder={handleOnReorderImages}
 				/>
-				)}
-				{isEdit && (
-					<DefaultButton
-						className={"upload-page-button"}
-						labelText={UploadConstants.buttonSave}
-						disabled={isBusy}
-						type="button"
-						onClick={handleUpdateSubmit}
-					/>
-				)}
-			</div>
 
-			<DefaultButton labelText={'TEST AUTO FILL'} type="button" onClick={handleOnTestAutofill}/>
+				<div className="upload-form-inputs">
+					{INPUT_DEFS.map(({ name, label, id, maxLength, inputValidator }) => (
+						<LabeledInput
+							key={name}
+							value={formState[name]}
+							errors={errorState[name]}
+							onChange={handleOnChangeInput(name)}
+							className="upload-form-item"
+							labelText={label}
+							id={id}
+							maxLength={maxLength}
+							inputValidator={inputValidator}
+						/>
+					))}
+					{dropdownFields.map(({ name, label, id, options }) => (
+						<LabeledDropdown
+							key={name}
+							value={formState[name]}
+							errors={errorState[name]}
+							onChange={handleOnChangeDropDown(name)}
+							className="upload-form-item"
+							labelText={label}
+							id={id}
+							options={options}
+						/>
+					))}
+					{TEXT_AREA_DEFS.map(({ name, label, id, maxLength, rows, inputValidator, placeholder }) => (
+						<LabeledTextArea
+							key={name}
+							value={formState[name]}
+							errors={errorState[name]}
+							onChange={handleOnChangeInput(name)}
+							className="upload-form-item"
+							labelText={label}
+							id={id}
+							maxLength={maxLength}
+							rows={rows}
+							inputValidator={inputValidator}
+							placeholder={placeholder}
+						/>
+					))}
+				</div>
+
+				<div className="upload-form-actions">
+					{!isEdit && (
+						<DefaultButton
+						className={"upload-page-button"}
+						labelText={UploadConstants.buttonUpload}
+						disabled={isBusy}
+						type="submit"
+						onClick={handleOnSubmit}
+					/>
+					)}
+					{isEdit && (
+						<DefaultButton
+							className={"upload-page-button"}
+							labelText={UploadConstants.buttonSave}
+							disabled={isBusy}
+							type="button"
+							onClick={handleUpdateSubmit}
+						/>
+					)}
+				</div>
+
+				<DefaultButton labelText={'TEST AUTO FILL'} type="button" onClick={handleOnTestAutofill}/>
+
+			</fieldset>
+
+			{/* Слой, появляющийся поверх всего, пока пользователь ждет ответ от бекенда
+			после нажания на кнопку "загрузить" */}
+			{isBusy && (
+				<div
+					className="upload-page-pending-backdrop"
+					aria-hidden="true"
+					onDragOver={swallowDragOver}
+					onDrop={swallowDrop}
+				/>
+			)}
 
 		</form>
 	)
