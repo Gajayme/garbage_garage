@@ -1,5 +1,8 @@
 
+import { useMemo } from "react";
+
 import { Checkbox } from "Components/Checkbox";
+import { compareLabels } from "Components/utils/labelCollator.js";
 
 import 'Styles/MainPages/CatalogPage/Filters/SpecificFilters/FilterCheckbox.scss'
 import 'Styles/MainPages/CatalogPage/Filters/SpecificFilters/CheckboxMultiFilter.scss'
@@ -12,6 +15,10 @@ export const isCheckboxMultiFilterActive = (value) =>
 // фильтр с чекбоксами с доступным мультивыбором
 export const CheckboxMultiFilter = ({ allValues, checkedOptions, onChange, checkmarkImg}) => {
 
+	const sortedValues = useMemo(
+		() => Object.entries(allValues).sort(([, nameA], [, nameB]) => compareLabels(nameA, nameB)),
+		[allValues]
+	);
 
 	const handleOnChange = (newVal) => {
 		const updatedOptions = checkedOptions.includes(newVal)
@@ -23,7 +30,7 @@ export const CheckboxMultiFilter = ({ allValues, checkedOptions, onChange, check
 
 	return (
 		<div className="checkbox-multifilter">
-			{Object.entries(allValues).map(([id, name]) => (
+			{sortedValues.map(([id, name]) => (
 				<div key={id}>
 					<Checkbox
 						className = {'filter-checkbox'}

@@ -1,4 +1,4 @@
-import { useId, useState } from "react";
+import { useId, useMemo, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { SettingsAddRow } from "Components/MainPages/SettingsPage/SettingsAddRow.js";
 import { SettingsOptionsList } from "Components/MainPages/SettingsPage/SettingsOptionsList.js";
@@ -6,6 +6,7 @@ import { addSettingRequest } from "Components/MainPages/SettingsPage/addSettingR
 import { deleteSettingRequest } from "Components/MainPages/SettingsPage/deleteSettingRequest.js";
 import { updateSettingRequest } from "Components/MainPages/SettingsPage/updateSettingRequest.js";
 import { ToggleIconButton } from "Components/ToggleIconButton.js";
+import { compareLabels } from "Components/utils/labelCollator.js";
 
 import arrowUp from "Assets/Icons/Filters/arrow_up.svg";
 import arrowDown from "Assets/Icons/Filters/arrow_down.svg";
@@ -30,6 +31,11 @@ export const SettingsDictionarySection = ({
 	const [updateError, setUpdateError] = useState(null);
 	const [editingItemId, setEditingItemId] = useState(null);
 	const [draftTitle, setDraftTitle] = useState("");
+
+	const sortedItems = useMemo(
+		() => [...(items ?? [])].sort((a, b) => compareLabels(a?.title, b?.title)),
+		[items]
+	);
 
 	// Мутация для добавления нового значения в словарь
 	const mutation = useMutation({
@@ -72,7 +78,7 @@ export const SettingsDictionarySection = ({
 	});
 
 	const editingOriginalTitle =
-		items?.find((i) => i.id === editingItemId)?.title ?? "";
+		sortedItems.find((i) => i.id === editingItemId)?.title ?? "";
 
 	const handleStartEdit = (id, itemTitle) => {
 		setUpdateError(null);
@@ -93,7 +99,7 @@ export const SettingsDictionarySection = ({
 			setUpdateError("Enter a title");
 			return;
 		}
-		const original = items?.find((i) => i.id === editingItemId)?.title ?? "";
+		const original = sortedItems.find((i) => i.id === editingItemId)?.title ?? "";
 		if (trimmed === original.trim()) {
 			handleCancelEdit();
 			return;
@@ -156,7 +162,7 @@ export const SettingsDictionarySection = ({
 					</p>
 				) : null}
 				<SettingsOptionsList
-					items={items}
+					items={sortedItems}
 					onDeleteItem={handleDeleteItem}
 					isDeletePending={deleteMutation.isPending}
 					isAddPending={mutation.isPending}
