@@ -118,7 +118,7 @@ export const VALIDATION_MAPPER = {
 	[Constants.brand]: [NonEmpty],
 	[Constants.type]: [NonEmpty],
 	[Constants.status]: [NonEmpty],
-	[Constants.description]: [NonEmpty],
+	[Constants.description]: [],
 	images: [NonEmptyImages],
 };
 
