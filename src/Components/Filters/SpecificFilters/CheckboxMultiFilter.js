@@ -4,8 +4,8 @@ import { useMemo } from "react";
 import { Checkbox } from "Components/Checkbox";
 import { compareLabels } from "Components/utils/labelCollator.js";
 
-import 'Styles/MainPages/CatalogPage/Filters/SpecificFilters/FilterCheckbox.scss'
-import 'Styles/MainPages/CatalogPage/Filters/SpecificFilters/CheckboxMultiFilter.scss'
+import 'Styles/Filters/SpecificFilters/FilterCheckbox.scss'
+import 'Styles/Filters/SpecificFilters/CheckboxMultiFilter.scss'
 
 
 // активен, если выбран хотя бы один чекбокс

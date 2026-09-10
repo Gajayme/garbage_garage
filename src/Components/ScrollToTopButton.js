@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { DefaultButton } from "Components/Button.js";
 import { useScrollContainerRef } from "Components/Window/ScrollContainerContext.js";
 
-import "Styles/MainPages/CatalogPage/ScrollToTopButton.scss";
+import "Styles/ScrollToTopButton.scss";
 
 /**
  * Кнопка «UP», всплывающая над списком вещей в нижней части.

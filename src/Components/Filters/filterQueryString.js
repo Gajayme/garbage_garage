@@ -1,6 +1,6 @@
 
 
-import * as FilterConstants from "./Filters/Constants.js"
+import * as FilterConstants from "./Constants.js"
 
 
 // ------------------------------------------------------------

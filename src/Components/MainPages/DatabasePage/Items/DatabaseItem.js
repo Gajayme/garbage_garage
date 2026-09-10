@@ -7,6 +7,7 @@ export const DatabaseItem = ({ value, onClick }) => {
 	const imageSrc = value.images?.[0]?.image_url ?? null;
 	const name = value.itemName;
 	const price = value.price;
+	const status = value.status;
 
 	return (
 		<div className="database-page-item" onClick={onClick}>
@@ -18,6 +19,9 @@ export const DatabaseItem = ({ value, onClick }) => {
 
 			<p className="database-page-item-name" title={name}>{name}</p>
 			<p className="database-page-item-price" title={price}>{price}</p>
+			{status && (
+				<p className="database-page-item-status" title={status}>{status}</p>
+			)}
 		</div>
 	);
 };

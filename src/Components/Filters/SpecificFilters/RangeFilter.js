@@ -4,7 +4,7 @@ import {NumbersOnly} from 'Components/utils/inputFilters.js'
 import {CustomInput} from 'Components/CustomInput.js';
 import {priceMaxLength} from './Constants.js'
 
-import 'Styles/MainPages/CatalogPage/Filters/SpecificFilters/PriceRangeFilter.scss'
+import 'Styles/Filters/SpecificFilters/PriceRangeFilter.scss'
 
 
 // активен, если введено значение хотя бы в одно из полей

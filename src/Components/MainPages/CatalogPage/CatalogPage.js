@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from "react";
 
 import { Items } from "Components/MainPages/CatalogPage/Items/Items.js";
-import { FiltersWindow } from "./Filters/FiltresWindow";
-import { ScrollToTopButton } from "./ScrollToTopButton";
-import { FilterActivationButton } from "./FilterActivationButton";
-import { FilterResetButton } from "./FilterResetButton";
-import { isAnyFilterActive } from "./Filters/FilterActivity";
-import { useUrlFilters } from "./useUrlFilters";
+import { FiltersWindow } from "Components/Filters/FiltersWindow";
+import { ScrollToTopButton } from "Components/ScrollToTopButton";
+import { FilterActivationButton } from "Components/Filters/FilterActivationButton";
+import { FilterResetButton } from "Components/Filters/FilterResetButton";
+import { isAnyFilterActive } from "Components/Filters/FilterActivity";
+import { useUrlFilters } from "Components/Filters/useUrlFilters";
 import { useCatalogItems } from "./useCatalogItems";
-import { useCatalogScrollRestoration } from "./useCatalogScrollRestoration";
+import { useListScrollRestoration } from "Components/hooks/useListScrollRestoration";
 
 import "Styles/MainPages/CatalogPage/CatalogPage.scss";
 import "Styles/MainPages/CatalogPage/Items/CatalogItems.scss";
-import "Styles/MainPages/CatalogPage/FilterActivationButtons.scss";
-import "Styles/MainPages/CatalogPage/FiltersItemsWrapper.scss";
+import "Styles/Filters/FilterActivationButtons.scss";
+import "Styles/Filters/FiltersItemsWrapper.scss";
 import "Styles/CenteredText.scss";
 
 export const CatalogPage = () => {
@@ -27,7 +27,7 @@ export const CatalogPage = () => {
 
 	const { data, error, isLoading, isPlaceholderData } = useCatalogItems(filtersState);
 
-	useCatalogScrollRestoration({
+	useListScrollRestoration({
 		ready: initialized && !error && !isLoading,
 	});
 
@@ -70,7 +70,7 @@ export const CatalogPage = () => {
 					) : (
 						/* Смена фильтра: старый список становится полупрозрачным */
 						<div
-							className={isPlaceholderData ? "catalog-items-pane--pending" : undefined}
+							className={isPlaceholderData ? "list-items-pane--pending" : undefined}
 							aria-busy={isPlaceholderData}
 						>
 							<Items catalogState={items} />

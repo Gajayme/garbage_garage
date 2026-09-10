@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { parseFiltersFromUrl, buildQueryString } from "./Utils"
-import * as FilterConstants from "./Filters/Constants";
+import { parseFiltersFromUrl, buildQueryString } from "./filterQueryString"
+import * as FilterConstants from "./Constants";
 
 
 // ------------------------------------------------------------

@@ -21,3 +21,19 @@
 	-webkit-line-clamp: 2;
 	line-height: 20px;
 }
+
+.database-page-item-status {
+	margin-top: 0;
+	margin-bottom: 10px;
+
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	line-clamp: 1;
+	-webkit-line-clamp: 1;
+	line-height: 20px;
+
+	color: var(--black);
+	opacity: 0.55;
+}

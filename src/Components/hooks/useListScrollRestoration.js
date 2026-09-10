@@ -8,7 +8,8 @@ const savedScrollByKey = new Map();
 
 /**
  * Сохраняет scrollTop контейнера прокрутки и восстанавливает его при возврате,
- *  когда список товаров уже отрисован (`ready`).
+ *  когда список вещей уже отрисован (`ready`). Общий хук для страниц-списков
+ *  (каталог, база).
  *
  * Обработчик scroll навешиваем только после готовности контента — так мы
  * физически не можем сохранить позицию до восстановления (иначе затёрли бы
@@ -22,7 +23,7 @@ const savedScrollByKey = new Map();
  * @param {{ ready: boolean }} params
  * @param {boolean} params.ready — контент готов к восстановлению скролла
  */
-export const useCatalogScrollRestoration = ({ ready }) => {
+export const useListScrollRestoration = ({ ready }) => {
 	const scrollContainerRef = useScrollContainerRef();
 	const location = useLocation();
 	const scrollKey = location.key;
@@ -36,7 +37,7 @@ export const useCatalogScrollRestoration = ({ ready }) => {
 
 		const cleanups = [];
 
-		// Непрерывно запоминаем позицию, пока каталог готов и смонтирован.
+		// Непрерывно запоминаем позицию, пока список готов и смонтирован.
 		const save = () => savedScrollByKey.set(scrollKey, container.scrollTop);
 		container.addEventListener("scroll", save, { passive: true });
 		cleanups.push(() => container.removeEventListener("scroll", save));

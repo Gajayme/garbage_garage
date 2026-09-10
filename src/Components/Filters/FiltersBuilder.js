@@ -10,7 +10,7 @@ import rangeArrow from 'Assets/Icons/Filters/price_range_arrow.svg';
 
 import * as Constants from './Constants';
 
-import 'Styles/MainPages/CatalogPage/Filters/FiltersContent.scss'
+import 'Styles/Filters/FiltersContent.scss'
 
 
 export const FilterBuilder = ({

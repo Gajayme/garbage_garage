@@ -1,8 +1,18 @@
-// Внешние отступы всего контента страницы базы данных.
-// Логика отступов вынесена в общий лейаут-помощник.
+// Внешние отступы контента страницы базы вынесены на .database-page-content,
+// чтобы backdrop на .database-page мог использовать inset: 0 без отрицательных
+// сдвигов (как на странице каталога).
 
 @use "../../_layout" as layout;
 
 .database-page {
+	position: relative;
+}
+
+.database-page-content {
 	@include layout.page-margins;
+}
+
+// «Add new» — отдельным рядом над кнопками фильтров.
+.database-page-actions {
+	margin-bottom: 16px;
 }

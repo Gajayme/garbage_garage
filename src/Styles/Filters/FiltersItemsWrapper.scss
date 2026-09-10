@@ -2,8 +2,8 @@
 .filters-items-wrapper {
 	// position: relative — containing block для .filters-overlay (выравнивание по сетке).
 	// Без z-index, чтобы не создавать stacking context: тогда .filters-overlay (z-index 10)
-	// и .filters-backdrop (z-index 9) сравниваются на уровне .catalog-page,
-	// а статичные карточки остаются ниже backdrop.
+	// и .filters-backdrop (z-index 9) сравниваются на уровне страницы (.catalog-page /
+	// .database-page), а статичные карточки остаются ниже backdrop.
 	position: relative;
 }
 
@@ -22,6 +22,7 @@
 }
 
 // Смена фильтра: старый грид остаётся полупрозрачным, пока грузится новый ключ.
+// Общий класс для каталога и базы.
 //
 // opacity < 1 заводит stacking context — в отличие от .filters-items-wrapper выше,
 // здесь это безопасно: блок непозиционирован, поэтому рисуется на уровне z-index 0,
@@ -30,7 +31,7 @@
 // окном фильтров, — он окажется заперт, причём только на время смены фильтра.
 // Менять opacity на filter/will-change без нужды не стоит: они, в отличие от неё,
 // делают блок ещё и containing block для position: fixed.
-.catalog-items-pane--pending {
+.list-items-pane--pending {
 	opacity: 0.45;
 	pointer-events: none;
 }

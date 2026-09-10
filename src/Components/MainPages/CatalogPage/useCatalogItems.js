@@ -1,7 +1,7 @@
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import * as GlobalConstants from "Constants.js";
 import { fetchItems as fetchItemsRequest } from "Components/Api/fetchItems.js";
-import { buildQueryString } from "./Utils.js";
+import { buildQueryString } from "Components/Filters/filterQueryString.js";
 
 // Строку запроса берём из ключа, а не из замыкания: так ключ и запрос
 // не могут разойтись.
