@@ -8,6 +8,7 @@ import { validateItemData } from "./utils/Utils.js";
 import { useItemDetails } from "./hooks/useItemDetails.js";
 import { useWhatsappLink } from "./hooks/useWhatsappLink.js";
 import { useHeightGreaterThanWidth } from "Components/hooks/useHeightGreaterThanWidth.js";
+import { isValidPostId } from "Components/utils/isValidPostId.js";
 
 import "Styles/MainPages/CatalogItemPage/CatalogItemPage.scss";
 import "Styles/CenteredText.scss";
@@ -16,15 +17,34 @@ export const CatalogItemPage = () => {
 	const { itemId } = useParams();
 	const [modalImageUrl, setModalImageUrl] = useState(null);
 	const tallNarrowViewport = useHeightGreaterThanWidth();
-	const { data, isFetching, error } = useItemDetails(itemId);
+	const { data, isPending, isPaused, error } = useItemDetails(itemId);
 	const { data: whatsappData } = useWhatsappLink(itemId);
 	const whatsappLink = whatsappData?.data?.url ?? null;
 
-	if (isFetching) {
-		return <p className="centered-text">Loading...</p>;
+	// Несуществующий id и id, которого больше нет в каталоге, для посетителя
+	// означают одно: такого товара нет. Проверка id стоит до гейта загрузки,
+	// потому что ответ на неё известен без запроса: без сети ошибки, по
+	// которой виден 404, ждать неоткуда, и мусорный id залипнет на «No
+	// connection».
+	if (!isValidPostId(itemId) || error?.status === 404) {
+		return <p className="centered-text">Item not found</p>;
 	}
 
-	if (error) {
+	// Гейт на отсутствие данных: ниже data читается напрямую. Пауза без сети
+	// попадает сюда же — она не даёт ни данных, ни ошибки, status остаётся
+	// pending, поэтому отличить её от загрузки можно только по isPaused.
+	if (isPending) {
+		return (
+			<p className="centered-text">
+				{isPaused ? "No connection" : "Loading..."}
+			</p>
+		);
+	}
+
+	// Сообщение о сбое занимает страницу, только когда показывать больше
+	// нечего: упавшее обновление оставляет данные прошлого успеха, и они
+	// посетителю полезнее сообщения об ошибке.
+	if (error && !data) {
 		return (
 			<p className="centered-text">Error while loading item details</p>
 		);

@@ -14,6 +14,7 @@ import {
 	invalidateItemLists,
 	removeItem,
 } from "Components/utils/itemCache.js";
+import { isValidPostId } from "Components/utils/isValidPostId.js";
 import * as Nav from "Components/Navigation/paths.js";
 
 const notificationWindowLifetime = 2000;
@@ -30,6 +31,11 @@ const notificationWindowLifetime = 2000;
  *   одного действия.
  */
 export const useItemActions = (itemId) => {
+	// Действия ходят на сервер по id из URL, поэтому им нужен именно валидный
+	// id, а не просто непустой: кодирование пути в Constants.js оставляет ".."
+	// нетронутым, и URL-нормализация схлопывает сегмент на родительский путь.
+	const hasValidId = isValidPostId(itemId);
+
 	const navigate = useNavigate();
 	const queryClient = useQueryClient();
 	const { checkAuth } = useAuth();
@@ -59,11 +65,11 @@ export const useItemActions = (itemId) => {
 	// уже удалённым id.
 	//
 	// Cleanup здесь бежит РАНЬШЕ отписки: React запускает чистки в порядке
-	// объявления эффектов, а useItemDetailsPrivate вызван на странице ниже
-	// (DatabaseItemPage.js:20-21). Безопасно это не поэтому, а потому что между
+	// объявления эффектов, а DatabaseItemPage вызывает useItemDetailsPrivate
+	// после этого хука. Безопасно это не поэтому, а потому что между
 	// двумя cleanup'ами одного размонтирования React не рендерит: пересоздать
 	// запись в кеше и уйти за удалённым id может только рендер. Отсюда же
-	// единственный реальный способ сломать — перенести вызов обратно в onSuccess,
+	// единственный реальный способ сломать — перенести вызов в onSuccess,
 	// где рендер будет гарантированно.
 	//
 	// Флаг нужен, чтобы обычный уход со страницы (назад, каталог) не выбрасывал
@@ -81,7 +87,7 @@ export const useItemActions = (itemId) => {
 
 	const deleteAction = useConfirmedAction({
 		confirmText: "Delete this item?",
-		disabled: !itemId,
+		disabled: !hasValidId,
 		request: () => deleteItem({ itemID: itemId }),
 		onSuccess: async () => {
 			pendingRemoveIdRef.current = itemId;
@@ -99,7 +105,7 @@ export const useItemActions = (itemId) => {
 
 	const instagramAction = useConfirmedAction({
 		confirmText: "Post this item to Instagram?",
-		disabled: !itemId,
+		disabled: !hasValidId,
 		request: () => sendItemToInstagram({ itemID: itemId }),
 		onSuccess: () => notifySent("Instagram"),
 		onError: (err) => notifyFailure("Instagram", err),
@@ -107,14 +113,14 @@ export const useItemActions = (itemId) => {
 
 	const telegramAction = useConfirmedAction({
 		confirmText: "Post this item to Telegram?",
-		disabled: !itemId,
+		disabled: !hasValidId,
 		request: () => sendItemToTelegram({ itemID: itemId }),
 		onSuccess: () => notifySent("Telegram"),
 		onError: (err) => notifyFailure("Telegram", err),
 	});
 
 	const handleEditItem = () => {
-		if (!itemId) return;
+		if (!hasValidId) return;
 		navigate(Nav.uploadEdit(itemId));
 	};
 
@@ -129,7 +135,11 @@ export const useItemActions = (itemId) => {
 			onClick: deleteAction.run,
 			disabled: deleteAction.disabled || isAnyBusy,
 		},
-		{ label: "Edit", onClick: handleEditItem, disabled: !itemId || isAnyBusy },
+		{
+			label: "Edit",
+			onClick: handleEditItem,
+			disabled: !hasValidId || isAnyBusy,
+		},
 		{
 			label: "Instagram",
 			onClick: instagramAction.run,

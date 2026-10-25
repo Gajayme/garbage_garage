@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import * as GlobalConstants from "Constants.js";
 import { useAuth } from "Components/Auth/AuthContext.js";
 import { fetchItemDetails } from "Components/Api/fetchItemDetails.js";
+import { isValidPostId } from "Components/utils/isValidPostId.js";
 
 const fetchItemDetailsPrivate = async ({ queryKey, signal }) => {
 	const [, itemID] = queryKey;
@@ -17,7 +18,7 @@ const fetchItemDetailsPrivate = async ({ queryKey, signal }) => {
  *
  * Хук не принимает опции useQuery целиком: ключ должен совпадать с тем, что
  * инвалидируют invalidateItem/removeItem и разбирает fetchItemDetailsPrivate,
- * queryFn несёт обработку 401, а enabled охраняет запрос от пустого id. Наружу
+ * queryFn несёт обработку 401, а enabled охраняет запрос от невалидного id. Наружу
  * вынесено только то, что вызывающему действительно нужно менять; если
  * понадобится ещё опция — её добавляют сюда явным параметром.
  *
@@ -47,6 +48,11 @@ export const useItemDetailsPrivate = (itemID, options) => {
 		},
 		staleTime: GlobalConstants.staleTimes.details,
 		refetchOnMount,
-		enabled: itemID != null && itemID !== "",
+		// Запрос приватный, с куками, поэтому мусорный id не должен доходить
+		// до сети вовсе. Пустая строка приходит из формы загрузки в режиме
+		// создания и так же отсекается. Страницы, использующие хук, выходят
+		// по невалидному id до гейта загрузки, поэтому отключённый запрос
+		// в «Loading...» не превращается.
+		enabled: isValidPostId(itemID),
 	});
 };
