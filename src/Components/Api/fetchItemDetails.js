@@ -26,6 +26,19 @@ export const fetchItemDetails = async ({ buildPath, itemID, signal }) => {
 		throw err;
 	}
 
-	return resp.json();
+	const json = await resp.json();
+
+	// Отсутствие вещи приходит кодом 200 и телом `{status: false}`, поэтому
+	// распознать его можно только по конверту. Пустое `data` трактуем так же:
+	// у успешного ответа детали вещь есть всегда, и как бы её отсутствие
+	// ни было названо в конверте, означает оно одно. Приводим к ошибке 404,
+	// чтобы у вызывающей стороны был один признак «вещи нет», а не три.
+	if (json?.status === false || json?.data == null) {
+		const err = new Error(json?.message ?? "Not found");
+		err.status = 404;
+		throw err;
+	}
+
+	return json;
 };
 
