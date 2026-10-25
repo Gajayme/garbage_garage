@@ -32,6 +32,7 @@ import {
 
 import * as Constants from 'Constants.js'
 
+import 'Styles/CenteredText.scss'
 import 'Styles/MainPages/UploadPage/UploadPageForm.scss'
 import 'Styles/MainPages/UploadPage/UploadPageButton.scss'
 import DefaultImg from "Assets/Images/default.jpg"
@@ -115,7 +116,7 @@ export const UploadPageForm = ({
 	);
 
 	// Гидрация формы данными вещи в edit-режиме — целиком в кастомном хуке.
-	useHydrateUploadForm({
+	const { isHydrating, error: detailError } = useHydrateUploadForm({
 		editItemId,
 		paramsLoading: isLoading,
 		setFormState,
@@ -123,6 +124,19 @@ export const UploadPageForm = ({
 		initialErrors: INITIAL_ERRORS,
 		onError: showError,
 	});
+
+	// Данные вещи не загрузились — редактировать нечего. Без этой ветки форма
+	// покажет пустые поля и рабочую кнопку Save, которая отправит их поверх
+	// вещи. Ранний return — после всех хуков, ниже только обычные функции.
+	if (detailError) {
+		return (
+			<p className="centered-text">
+				{detailError.status === 404
+					? "Item not found"
+					: "Error while loading item details"}
+			</p>
+		);
+	}
 
 	// Общий каркас отправки формы: гонка-гард, isAdmin, валидация, fetch, 401, нотификации, finally.
 	// Параметры различия между upload/update:
@@ -355,7 +369,10 @@ export const UploadPageForm = ({
 		});
 	};
 
-	if (isLoading) {
+	// Форма не рендерится, пока не пришло всё, чем её наполняют: справочники
+	// и, в режиме редактирования, сама вещь. Иначе поля доступны для ввода
+	// до гидрации, и пришедшие данные затирают уже напечатанное.
+	if (isLoading || isHydrating) {
 		return (
 			<p className="centered-text">{"Loading..."}</p>
 		);

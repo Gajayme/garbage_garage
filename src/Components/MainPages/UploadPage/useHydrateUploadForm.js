@@ -21,7 +21,10 @@ import {
  *  - `initialErrors` — стабильная ссылка (module-scope константа) на «пустые» ошибки;
  *  - `onError` — стабильный (через `useCallback`) обработчик ошибок гидрации.
  *
- * @returns {{ isHydrating: boolean }} — true пока запрос деталей идёт.
+ * @returns {{ isHydrating: boolean, error: (Error & {status?: number})|null }}
+ *   `isHydrating` — true пока запрос деталей идёт; `error` — провал запроса,
+ *   со `.status === 404`, если вещи с таким id нет. Ошибка приходит только
+ *   когда данных нет вовсе, поэтому форму можно отдать ей целиком.
  */
 export const useHydrateUploadForm = ({
 	editItemId,
@@ -32,8 +35,11 @@ export const useHydrateUploadForm = ({
 	onError,
 }) => {
 	// refetchOnMount: "always" — чтобы перед гидрацией форма запросила свежие данные.
-	const { data: detailData, isFetching: detailFetching } =
-		useItemDetailsPrivate(editItemId ?? "", { refetchOnMount: "always" });
+	const {
+		data: detailData,
+		isFetching: detailFetching,
+		error,
+	} = useItemDetailsPrivate(editItemId ?? "", { refetchOnMount: "always" });
 
 	// Сторож от повторной гидрации одного и того же id.
 	// Хранит editItemId, для которого форма уже была заполнена. Сравниваем
@@ -84,5 +90,12 @@ export const useHydrateUploadForm = ({
 		onError,
 	]);
 
-	return { isHydrating: detailFetching };
+	// Провал запроса отдаётся наружу отдельно от isHydrating: без него форма
+	// не отличит «данные не пришли» от «данные пришли пустыми» и предложит
+	// сохранить пустые поля поверх вещи.
+	//
+	// Но только пока показывать нечего: упавшее обновление при уже загруженной
+	// вещи форму не касается — иначе рефетч по возврату на вкладку стёр бы
+	// правки, которые админ успел внести и не сохранил.
+	return { isHydrating: detailFetching, error: detailData ? null : error };
 };
