@@ -128,6 +128,33 @@ export const staleTimes = {
 	dictionaries: Infinity,
 };
 
+// Коды 4xx, которые сами просят повторить позже: таймаут, «слишком рано»
+// и ограничение частоты. Последнее приходит не только от бэкенда — запросы
+// идут через Cloudflare, и он отвечает 429 сам.
+const retryableClientErrors = new Set([408, 425, 429]);
+
+// Политика повторов, общая для всех запросов: подключена дефолтом в index.js.
+// Прочие 4xx окончательны — сервер разобрал запрос и отказал по его
+// содержимому, ни 404 на удалённую вещь, ни 422 на кривой id повтором
+// не исправить, а дефолтный бэкофф задержал бы отказ на семь секунд. Отдельно
+// это важно для 401: обработчики истёкшей сессии живут в queryFn приватных
+// запросов, и без этой политики каждый из них четырежды дёргал бы checkAuth.
+// Повторяем то, что может пройти со второй попытки: сетевые сбои (у них нет
+// `.status`), 5xx и перечисленные выше — столько же раз, сколько TanStack
+// Query повторяет по умолчанию.
+export const retryExceptClientError = (failureCount, err) => {
+	const status = err?.status;
+	if (
+		typeof status === "number" &&
+		status >= 400 &&
+		status < 500 &&
+		!retryableClientErrors.has(status)
+	) {
+		return false;
+	}
+	return failureCount < 3;
+};
+
 export const http_methods = {
 	GET: 'GET',
 	POST: 'POST',
