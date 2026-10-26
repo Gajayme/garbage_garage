@@ -58,22 +58,24 @@ export const mapItemDetailFields = (d) => {
  * Картинки из detail.images → элементы формы { id, src, file }.
  */
 export const mapDetailImagesToFormImages = async (images) => {
-	if (!Array.isArray(images) || images.length === 0) return [];
+	if (!Array.isArray(images)) return [];
 
-	const out = [];
-	let index = 0;
-	for (const img of images) {
-		const url = img?.image_url;
-		if (!url || typeof url !== "string") continue;
-		const extMatch = url.split("?")[0].match(/\.([a-zA-Z0-9]+)$/);
-		const ext = extMatch ? extMatch[1] : "jpg";
-		const file = await urlToFile(url, `existing-${index}.${ext}`, "image/jpeg");
-		out.push({
-			id: uuidv4(),
-			src: url,
-			file,
-		});
-		index += 1;
-	}
-	return out;
+	const urls = images
+		.map((img) => img?.image_url)
+		.filter((url) => typeof url === "string" && url !== "");
+
+	// Загрузки независимы друг от друга, поэтому идут разом: у вещи бывает
+	// с десяток картинок по полмегабайта, и последовательный цикл складывал
+	// бы их время. Promise.all сохраняет порядок, так что галерея не поедет.
+	return Promise.all(
+		urls.map(async (url, index) => {
+			const extMatch = url.split("?")[0].match(/\.([a-zA-Z0-9]+)$/);
+			const ext = extMatch ? extMatch[1] : "jpg";
+			return {
+				id: uuidv4(),
+				src: url,
+				file: await urlToFile(url, `existing-${index}.${ext}`, "image/jpeg"),
+			};
+		})
+	);
 };

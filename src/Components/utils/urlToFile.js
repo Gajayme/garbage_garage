@@ -19,10 +19,11 @@
  *          из тела ошибки.
  */
 export const urlToFile = async (url, filename, mimeType) => {
+	// Кешу доверяем: адреса картинок — хеши содержимого, по одному адресу
+	// всегда лежит одно и то же, а сервер отдаёт их с max-age на год.
 	const res = await fetch(url, {
 		mode: 'cors',
 		credentials: 'omit',
-		cache: 'reload',
 	});
 
 	if (!res.ok) {
