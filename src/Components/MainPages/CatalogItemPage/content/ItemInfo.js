@@ -1,4 +1,5 @@
 import "Styles/MainPages/CatalogItemPage/ItemInfo.scss";
+import { currency } from "Constants.js";
 
 /**
  * Компонент с данными о вещи (размер, цена) — без заголовка и описания.
@@ -19,7 +20,7 @@ export const ItemInfo = ({ size, price, delimiter = ": ", className }) => {
 
 			{/* Цена */}
 			<p className="item-info__row">
-				price{delimiter}{String(price)}
+				price{delimiter}{String(price)}{delimiter}{currency}
 			</p>
 		</div>
 	);
