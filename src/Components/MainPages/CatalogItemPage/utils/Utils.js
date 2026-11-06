@@ -7,7 +7,6 @@ export const validateItemData = (data) => {
 		data.itemName === undefined ||
 		data.size === undefined ||
 		data.price === undefined ||
-		data.description === undefined ||
 		data.images === undefined
 	) {
 		return false;
