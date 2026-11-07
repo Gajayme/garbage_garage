@@ -5,7 +5,6 @@ const sendItem = async ({ itemID, pathBuilder }) => {
 
 	const resp = await fetch(url, {
 		method: GlobalConstants.http_methods.POST,
-		headers: { "Content-Type": "application/json" },
 		credentials: "include",
 	});
 

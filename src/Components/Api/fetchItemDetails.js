@@ -15,7 +15,6 @@ export const fetchItemDetails = async ({ buildPath, itemID, signal }) => {
 
 	const resp = await fetch(url, {
 		method: GlobalConstants.http_methods.GET,
-		headers: { "Content-Type": "application/json" },
 		credentials: "include",
 		signal,
 	});

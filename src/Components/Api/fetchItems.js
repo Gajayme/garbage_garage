@@ -16,7 +16,6 @@ export async function fetchItems({ path, query = "", signal }) {
 
 	const init = {
 		method: Constants.http_methods.GET,
-		headers: { "Content-Type": "application/json" },
 		signal,
 		credentials: "include",
 	};

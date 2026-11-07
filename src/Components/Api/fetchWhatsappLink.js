@@ -12,7 +12,6 @@ export const fetchWhatsappLink = async ({ itemID, signal }) => {
 
 	const resp = await fetch(url, {
 		method: GlobalConstants.http_methods.GET,
-		headers: { "Content-Type": "application/json" },
 		credentials: "include",
 		signal,
 	});
