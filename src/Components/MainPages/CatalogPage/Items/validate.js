@@ -19,7 +19,7 @@ export const validateItem = (value) => {
 		return false;
 	}
 
-	const hasItemName = value.itemName.length > 0;
+	const hasItemName = typeof value.itemName === "string" && value.itemName.length > 0;
 	if (!hasItemName) {
 		console.log("no item name for item:", value.id, value.itemName);
 		return false;
