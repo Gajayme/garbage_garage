@@ -140,10 +140,12 @@ export const UploadPageForm = ({
 
 	// Общий каркас отправки формы: гонка-гард, isAdmin, валидация, fetch, 401, нотификации, finally.
 	// Параметры различия между upload/update:
-	//   - url            — куда отправлять POST с multipart-телом;
+	//   - url            — куда отправлять multipart-тело;
+	//   - method         — HTTP-метод: POST при создании, PUT при редактировании;
 	//   - setBusy        — какой флаг загрузки переключать;
 	//   - onSuccess      — что сделать с успешным ответом (reset формы / invalidate кеша);
-	//   - errorLogPrefix — префикс для console.error в catch-ветке.
+	//   - errorLogPrefix — префикс для console.error: отказ fetch, ответ не ok и
+	//                      исключения. Отказ по isAdmin, ошибки валидации и 401 не логируются.
 	const submitForm = async ({
 		url,
 		setBusy,
@@ -161,11 +163,23 @@ export const UploadPageForm = ({
 
 			if (!validateForm()) return;
 
-			const response = await fetch(url, {
-				method,
-				body: buildFormData(),
-				credentials: "include",
-			});
+			// fetch отклоняется, когда ответа нет или его нельзя прочитать: сеть,
+			// обрыв соединения, CORS — в том числе страница ошибки прокси без
+			// CORS-заголовков. Дошёл ли запрос до сервера, отсюда не узнать.
+			// Сюда же попадает исключение из buildFormData: оно вычисляется
+			// в аргументах fetch, и в этом случае запрос точно не ушёл.
+			let response;
+			try {
+				response = await fetch(url, {
+					method,
+					body: buildFormData(),
+					credentials: "include",
+				});
+			} catch (error) {
+				console.error(errorLogPrefix, error);
+				showError();
+				return;
+			}
 
 			if (response.status === 401) {
 				await checkAuth();
@@ -173,13 +187,19 @@ export const UploadPageForm = ({
 				return;
 			}
 
-			response.ok ? showSuccess() : showError();
 			if (!response.ok) {
-				throw new Error(`Server error: ${response.status}`);
+				console.error(errorLogPrefix, `Server error: ${response.status}`);
+				showError();
+				return;
 			}
 
+			showSuccess();
 			await onSuccess?.(response);
 		} catch (error) {
+			// Об ошибке не уведомляем из-за сбоя постобработки в onSuccess: сервер
+			// запрос уже принял, и «upload failed» заставит повторить загрузку —
+			// то есть создать дубликат. Так же молча уходят в лог исключения из
+			// validateForm и из checkAuth в ветке 401, хотя там запрос не прошёл.
 			console.error(errorLogPrefix, error);
 		} finally {
 			setBusy(false);
@@ -192,11 +212,14 @@ export const UploadPageForm = ({
 		await submitForm({
 			url: `${Constants.base_server_url}${Constants.post_upload}`,
 			setBusy: setIsSubmitting,
+			// Сброс формы — первым: разбор ответа нужен только для лога и падает
+			// на теле без JSON, а не сброшенная после «sucess» форма подталкивает
+			// загрузить ту же вещь ещё раз.
 			onSuccess: async (response) => {
-				const responseJson = await response.json();
-				console.log("upload response:", responseJson);
 				resetForm();
 				await invalidateItemLists(queryClient);
+				const responseJson = await response.json();
+				console.log("upload response:", responseJson);
 			},
 			errorLogPrefix: "upload error:",
 		});
