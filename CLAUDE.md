@@ -28,6 +28,10 @@ Frontend for **Garbage Garage**, a second-hand shop: a public storefront (catalo
 - Code comments and working notes (`src/CodeReview.md`, `TODOS.md`) are written in Russian by convention; don't switch them to English when editing nearby code.
 - A code comment explains why the current code is the way it is, on its own terms. It must not reference the edit history — how the code used to be, what some change moved or fixed ("раньше было", "теперь", "обратно", "перенесено", "исправлено"); that belongs in the commit message. The test: the comment should read identically to someone opening the file for the first time. Naming an alternative is fine when it is a standing temptation rather than a past state — the block above `pendingRemoveIdRef` in `useItemActions.js` explains why cache cleanup belongs in the effect cleanup and not in `onSuccess`, and that warning stays useful forever. (Cite code by name, not by line number: line numbers rot.) Notes files (`src/CodeReview.md` and friends) are the exception: tracking history is their job.
 
+### Explanations
+
+- When explaining code, a bug or a change, don't invent terms. Use either established terminology (React, TanStack Query, HTTP, …) or the names the project already uses: identifiers from the code (`AdminRouteGuard`, `retryExceptClientError`, `staleTimes`) and terms from this file or `src/CodeReview.md`. If something has no name in either, describe it in plain words instead of coining a label for it.
+
 ## Commands
 
 ```bash
