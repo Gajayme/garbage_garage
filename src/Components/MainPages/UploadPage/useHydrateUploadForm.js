@@ -109,7 +109,12 @@ export const useHydrateUploadForm = ({
 	//
 	// isHydrating зависит только от того, заполнена ли форма: рефетчи после
 	// заполнения идут фоном, форма остаётся на экране и не теряет фокус.
-	const fillError = hydrateError?.id === editItemId ? hydrateError.error : null;
+	//
+	// Проверка hydrateError на null обязательна: в create-режиме editItemId —
+	// undefined, и `hydrateError?.id === editItemId` при пустом hydrateError
+	// дало бы true.
+	const fillError =
+		hydrateError != null && hydrateError.id === editItemId ? hydrateError.error : null;
 	const failure = fillError ?? (detailData ? null : error);
 	return {
 		isHydrating: Boolean(editItemId) && hydratedFor !== editItemId && !failure,
