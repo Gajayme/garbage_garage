@@ -1,6 +1,3 @@
-
-import React from 'react';
-
 /**
  * Кастомный инпут с опциональным валидатором.
  *
@@ -10,7 +7,7 @@ import React from 'react';
  * @param {string} id - id для input.
  * @param {string} className - Классы для input.
  * @param {number} maxLength - Максимальная длина текста.
- * @param {Function|null} inputValidator - Кастомный валидатор (event, onChange) => void.
+ * @param {Function|null} inputValidator - Кастомный валидатор (event) => boolean.
  * @param {string} type - Тип поля (по умолчанию text).
  * @param {string} placeholder - Подсказка внутри поля.
  * @param {string} [name] - Имя поля для формы.
@@ -33,7 +30,7 @@ export const CustomInput = ({
 		if (!inputValidator || inputValidator(event)) {
 			onChange(event);
 		}
-};
+	};
 
 	return (
 		<input

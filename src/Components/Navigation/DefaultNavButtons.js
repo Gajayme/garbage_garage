@@ -2,7 +2,6 @@ import { NavButton } from "./NavButton";
 import { routes } from "./routes.js";
 import { AuthChecker } from "Components/Auth/AuthChecker.js";
 
-import 'Styles/Navigation/NavButton.scss'
 import 'Styles/Navigation/DefaultNavButtons.scss'
 
 
@@ -20,7 +19,6 @@ export const DefaultNavButtons = ({ className }) => {
 					const button = (
 						<NavButton
 							key={route.path}
-							className="nav-button"
 							labelText={route.label}
 							destination={route.path}
 						/>

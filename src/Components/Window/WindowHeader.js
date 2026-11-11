@@ -1,6 +1,8 @@
 import { AdminLabel } from './AdminLabel.js';
 import headerLogo from 'Assets/Images/header_logo.png';
 
+import 'Styles/Window/WindowHeader.scss';
+
 /**
  * Компонент хедера базового окна страницы.
  *

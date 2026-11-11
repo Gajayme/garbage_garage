@@ -1,5 +1,7 @@
 import { forwardRef } from "react";
 
+import "Styles/Window/InnerWindow.scss";
+
 /**
  * Компонент внутренней части базового окна страницы.
  *

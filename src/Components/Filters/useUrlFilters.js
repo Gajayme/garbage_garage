@@ -4,6 +4,21 @@ import { parseFiltersFromUrl, buildQueryString } from "./filterQueryString"
 import * as FilterConstants from "./Constants";
 
 
+// Пустое состояние фильтров: ключи идут в порядке filtersDefinition,
+// на этом порядке держится стабильность строки запроса (см. useCatalogItems).
+const buildDefaultState = (filtersDefinition) => {
+	const defaultState = {};
+	filtersDefinition.forEach(f => {
+		if (f.type === FilterConstants.FilterType.multiCheckbox) {
+			defaultState[f.name] = [];
+		}
+		if (f.type === FilterConstants.FilterType.range) {
+			defaultState[f.name] = { min: "", max: "" };
+		}
+	});
+	return defaultState;
+};
+
 // ------------------------------------------------------------
 // ХУК useUrlFilters
 // ------------------------------------------------------------
@@ -21,16 +36,7 @@ export const useUrlFilters = (filtersDefinition) => {
 		if (initialized) return;
 		if (!filtersDefinition?.length) return;
 
-		const defaultState = {};
-		filtersDefinition.forEach(f => {
-			if (f.type === FilterConstants.FilterType.multiCheckbox) {
-				defaultState[f.name] = [];
-			}
-			if (f.type === FilterConstants.FilterType.range) {
-				defaultState[f.name] = { min: "", max: "" };
-			}
-		});
-
+		const defaultState = buildDefaultState(filtersDefinition);
 		const params = new URLSearchParams(location.search);
 		const restored = parseFiltersFromUrl(params, filtersDefinition);
 
@@ -42,7 +48,6 @@ export const useUrlFilters = (filtersDefinition) => {
 	// --------------------------------------------------------
 	// 2. STATE → URL (пользователь меняет фильтры)
 	// --------------------------------------------------------
-	// eslint-disable-next-line react-hooks/exhaustive-deps
 	useEffect(() => {
 		if (!initialized) return;
 
@@ -88,16 +93,7 @@ export const useUrlFilters = (filtersDefinition) => {
 
 	const resetFilters = () => {
 		if (!filtersDefinition?.length) return;
-		const defaultState = {};
-		filtersDefinition.forEach(f => {
-			if (f.type === FilterConstants.FilterType.multiCheckbox) {
-				defaultState[f.name] = [];
-			}
-			if (f.type === FilterConstants.FilterType.range) {
-				defaultState[f.name] = { min: "", max: "" };
-			}
-		});
-		setFiltersState(defaultState);
+		setFiltersState(buildDefaultState(filtersDefinition));
 	};
 
 	return {

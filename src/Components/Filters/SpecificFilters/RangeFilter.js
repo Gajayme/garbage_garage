@@ -1,5 +1,3 @@
-import React from 'react';
-
 import {NumbersOnly} from 'Components/utils/inputFilters.js'
 import {CustomInput} from 'Components/CustomInput.js';
 import {priceMaxLength} from './Constants.js'
@@ -38,7 +36,7 @@ export const RangeFilter = ({image, onChange, currentValues}) => {
 		/>
 
 		<img
-			className='price-icon '
+			className='price-icon'
 			src={image}
 			alt="to"
 		/>

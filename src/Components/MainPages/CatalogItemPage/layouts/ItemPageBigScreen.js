@@ -12,8 +12,8 @@ import "Styles/MainPages/CatalogItemPage/ItemPageBigScreen.scss";
  *
  * Слева — сетка изображений, справа — колонка с данными о вещи и описанием.
  *
- * @param {{ title: string, size: any, price: any, description: string }} itemData
- * @param {Array} images - массив изображений вещи
+ * @param {object} itemData - данные вещи из ответа detail; поля для показа
+ *   (заголовок, размер, цена, описание, картинки) достаёт getItemData
  * @param {Function} onImageClick - обработчик клика по изображению (открытие модалки)
  * @param {string|null} whatsappLink - ссылка на WhatsApp для кнопки BUY
  */

@@ -49,7 +49,7 @@ const preventNativeSubmit = (event) => event.preventDefault();
 
 
 // Тексты уведомлений о результате отправки формы.
-const mainTextSucess = "sucess"
+const mainTextSuccess = "success"
 const mainTextError = "upload failed"
 
 
@@ -59,12 +59,8 @@ export const UploadPageForm = ({
 	editItemId,
 }) => {
 
-	// Если editItemId не null, то режим редактирования, иначе создание.
-	const mode =
-		editItemId != null && editItemId !== ""
-			? UploadConstants.uploadModeEdit
-			: UploadConstants.uploadModeCreate;
-	const isEdit = mode === UploadConstants.uploadModeEdit;
+	// Есть editItemId — режим редактирования, иначе создание.
+	const isEdit = Boolean(editItemId);
 
 
 	// хук, который занимается загрузкой инпут параметров с сервера
@@ -92,7 +88,7 @@ export const UploadPageForm = ({
 	const showError = () =>
 		notificationSetter({ isError: true, text: mainTextError });
 	const showSuccess = () =>
-		notificationSetter({ isError: false, text: mainTextSucess });
+		notificationSetter({ isError: false, text: mainTextSuccess });
 
 	// Гидрация (заполнение формы) данными вещи в edit-режиме.
 	const { isHydrating, error: detailError } = useHydrateUploadForm({
@@ -327,7 +323,7 @@ export const UploadPageForm = ({
 			</fieldset>
 
 			{/* Слой, появляющийся поверх всего, пока пользователь ждет ответ от бекенда
-			после нажания на кнопку "загрузить" */}
+			после нажатия на кнопку "загрузить" */}
 			{isBusy && (
 				<div
 					className="upload-page-pending-backdrop"

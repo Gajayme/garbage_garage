@@ -9,7 +9,7 @@ const activityCheckers = {
 };
 
 // активен ли конкретный фильтр
-export const isFilterActive = (filterDefinition, filtersState) => {
+const isFilterActive = (filterDefinition, filtersState) => {
 	const checker = activityCheckers[filterDefinition.type];
 	return checker ? checker(filtersState[filterDefinition.name]) : false;
 };

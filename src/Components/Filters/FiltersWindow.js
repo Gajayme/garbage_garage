@@ -1,19 +1,16 @@
-
-import React, {useState} from 'react';
+import {useState} from 'react';
 
 import {OuterWindow} from "Components/Window/OuterWindow.js"
 import {InnerWindow} from "Components/Window/InnerWindow.js"
 
 import 'Styles/Filters/FilterButton.scss'
 import 'Styles/Filters/FilterWithButton.scss'
-import 'Styles/Window/OuterWindow.scss'
-import 'Styles/Window/InnerWindow.scss'
 
 
 import { FilterBuilder } from './FiltersBuilder.js';
 
 
-// Компонет со всеми фильтрами
+// Компонент со всеми фильтрами
 export const FiltersWindow = ({availableFilters, filtersState, onFilterStateChanged}) => {
 
 	// начальный стейт активности фильтров

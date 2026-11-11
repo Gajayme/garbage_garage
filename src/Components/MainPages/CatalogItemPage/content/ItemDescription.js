@@ -9,7 +9,7 @@ import "Styles/MainPages/CatalogItemPage/ItemDescriptionCatalog.scss";
 export const ItemDescription = ({ description, className }) => {
 	if (description == null || description === "") return null;
 	return (
-		<div className={`item-description-catalog ${className ? ` ${className}` : ""}`}>
+		<div className={`item-description-catalog${className ? ` ${className}` : ""}`}>
 			<p>{String(description)}</p>
 		</div>
 	);

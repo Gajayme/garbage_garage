@@ -4,9 +4,9 @@ import 'Styles/Hidden.scss';
 import 'Styles/MainPages/UploadPage/ImageManager/ImageUploader.scss'
 import 'Styles/MainPages/UploadPage/ImageManager/ImageUploaderButton.scss'
 
-// Часть костыля, перенаправляющего нажатие кнопки на теальный (но скрытый) инпут.
+// Часть костыля, перенаправляющего нажатие кнопки на реальный (но скрытый) инпут.
 const redirectToFileInput = () => {
-    document.getElementById('fileInput').click(); // Программно открыть диалог выбора файлов
+	document.getElementById('fileInput').click(); // Программно открыть диалог выбора файлов
 };
 
 export const ImageUploader = ({onChange, onDelete}) => {
@@ -16,8 +16,6 @@ export const ImageUploader = ({onChange, onDelete}) => {
 			<input className="hidden" id="fileInput" type="file" accept="image/*" multiple onChange={onChange} />
 			<DefaultButton className={"image-uploader-button"}	labelText={'Upload'}		onClick={redirectToFileInput}/>
 			<DefaultButton className={"image-uploader-button"}	labelText={'Delete all'}	onClick={onDelete}/>
-	  </div>
+		</div>
 	);
-  };
-
-
+};

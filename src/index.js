@@ -1,9 +1,8 @@
-import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App'
 
 import './index.scss'
-import "./Styles/Fonts.scss";
+import "Styles/Fonts.scss";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { staleTimes, retryExceptClientError } from "Constants.js";

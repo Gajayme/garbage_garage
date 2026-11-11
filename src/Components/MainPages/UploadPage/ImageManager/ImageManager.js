@@ -1,9 +1,8 @@
-import React, {useRef, useState} from "react";
+import {useRef, useState} from "react";
 import {ImageUploader} from "./ImageUploader.js";
 import {ImageViewer} from "./ImageViewer.js";
 import {ErrorMessage} from "Components/MainPages/UploadPage/Validations/ErrorMessage.js"
 
-import 'Styles/MainPages/UploadPage/Validations/ErrorText.scss'
 import 'Styles/MainPages/UploadPage/ImageManager/ImageManager.scss'
 
 export const ImageManager = ({images, errors, onAddFiles, onDelete, onDeleteSpecific, onReorder}) => {
@@ -65,7 +64,7 @@ export const ImageManager = ({images, errors, onAddFiles, onDelete, onDeleteSpec
 		>
 			<ImageViewer onDeleteSpecific={onDeleteSpecific} onReorder={onReorder} images={images}/>
 			<ImageUploader onChange={handleInputChange} onDelete={onDelete}/>
-			<ErrorMessage className={"error-text"} errors={errors}/>
+			<ErrorMessage errors={errors}/>
 		</div>
 	)
 }

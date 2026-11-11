@@ -1,16 +1,15 @@
 import { BorderedImage } from "Components/BorderedImage.js";
 
 import "Styles/MainPages/DatabasePage/Items/DatabaseItem.scss";
-import "Styles/TopAndLeftBorders.scss";
 
-export const DatabaseItem = ({ value, onClick }) => {
+export const DatabaseItem = ({ value }) => {
 	const imageSrc = value.images?.[0]?.image_url ?? null;
 	const name = value.itemName;
 	const price = value.price;
 	const status = value.status;
 
 	return (
-		<div className="database-page-item" onClick={onClick}>
+		<div className="database-page-item">
 			<BorderedImage
 				className="database-page-item-image"
 				imageSrc={imageSrc}

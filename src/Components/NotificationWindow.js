@@ -1,13 +1,6 @@
-import React from "react";
 import {OuterWindow} from "Components/Window/OuterWindow.js"
 import {InnerWindow} from "Components/Window/InnerWindow.js"
 import {ButtonLayer} from "Components/Window/ButtonLayer.js"
-
-import 'Styles/Window/WindowHeader.scss'
-import 'Styles/Window/ButtonLayer.scss'
-import 'Styles/Window/InnerWindow.scss'
-import 'Styles/Window/OuterWindow.scss'
-
 
 export const NotificationWindow = ({className, mainTextClassName, notificationData}) => {
 

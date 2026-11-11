@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { CustomInput } from 'Components/CustomInput.js'
 import { DefaultButton } from 'Components/Button.js'
@@ -7,6 +7,7 @@ import { useAuth } from 'Components/Auth/AuthContext.js'
 import * as Nav from "Components/Navigation/paths.js";
 
 import 'Styles/MainPages/LoginPage/LoginPage.scss'
+import 'Styles/TopAndLeftBorders.scss'
 
 export const LoginPage = () => {
 	const [login, setLogin] = useState('')
@@ -35,7 +36,7 @@ export const LoginPage = () => {
 
 	return (
 		<div className="login-page">
-			<form className="login-window " onSubmit={handleSubmit}>
+			<form className="login-window" onSubmit={handleSubmit}>
 				<p
 					className="login-window__text">
 					Emm... to be honest, it's only for us.

@@ -1,4 +1,3 @@
-import React from 'react';
 import { CheckboxMultiFilter } from './SpecificFilters/CheckboxMultiFilter';
 import { RangeFilter } from './SpecificFilters/RangeFilter';
 import { FilterWithButton } from './FilterWithButton';
@@ -57,7 +56,6 @@ export const FilterBuilder = ({
 					iconInactive={arrowDown}
 					iconActive={arrowUp}
 					onClick={() => toggleFilterVisibility(filterData.name)}
-					altImg={filterData.name}
 					isActive={filtersVisibility[filterData.name]}
 				/>
 			))}

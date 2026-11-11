@@ -3,7 +3,7 @@ import { NotificationWindow } from "Components/NotificationWindow.js";
 import "Styles/StatusNotificationWindow.scss";
 import "Styles/ColoredText.scss";
 
-const headerTextSucess = "yessssss";
+const headerTextSuccess = "yessssss";
 const headerTextError = "nooooooo";
 
 /**
@@ -16,7 +16,7 @@ const headerTextError = "nooooooo";
  */
 export const StatusNotificationWindow = ({ notification }) => {
 	const notificationData = notification && {
-		headerText: notification.isError ? headerTextError : headerTextSucess,
+		headerText: notification.isError ? headerTextError : headerTextSuccess,
 		mainText: notification.text,
 		mainTextColorClassName: notification.isError ? "red-text" : "green-text",
 	};

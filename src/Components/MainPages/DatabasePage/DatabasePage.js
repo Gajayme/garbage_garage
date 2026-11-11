@@ -13,7 +13,6 @@ import { useUrlFilters } from "Components/Filters/useUrlFilters";
 import { ScrollToTopButton } from "Components/ScrollToTopButton";
 import { useListScrollRestoration } from "Components/hooks/useListScrollRestoration";
 
-import "Styles/Navigation/NavButton.scss";
 import "Styles/Filters/FilterActivationButtons.scss";
 import "Styles/Filters/FiltersItemsWrapper.scss";
 import "Styles/CenteredText.scss";

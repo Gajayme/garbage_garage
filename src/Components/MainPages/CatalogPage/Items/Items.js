@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { Item } from 'Components/MainPages/CatalogPage/Items/Item';
 import { validateItem } from 'Components/MainPages/CatalogPage/Items/validate';
@@ -10,20 +9,20 @@ export const Items = ({catalogState}) => {
 
 	if (catalogState.length === 0) {
 		return (
-			<p className="centered-text">{"Nothing here ..."}</p>
+			<p className="centered-text">Nothing here ...</p>
 		);
 	}
 
 	return (
-		<div className="catalog-page-items"> {
-			catalogState.map((value, index) => {
+		<div className="catalog-page-items">
+			{catalogState.map((value) => {
 				if (!validateItem(value)) {
 					return null;
 				}
 
 				return (
 					<Link
-						key={index}
+						key={value.id}
 						className="no-decoration-text-link"
 						to={`/${NavigationConstants.catalog}/${value.id}`}>
 
@@ -31,7 +30,7 @@ export const Items = ({catalogState}) => {
 
 					</Link>
 				)
-			})
-		} </div>
+			})}
+		</div>
 	)
 }

@@ -19,8 +19,8 @@ import * as Constants from "Constants.js";
 
 const toInt = (value) => parseInt(value, 10);
 
-// Декларативный конфиг дропдаунов. Статическая часть (имя поля формы, лейбл,
-// id, плейсхолдер, билдер опций, ключ источника данных в useInputParams)
+// Декларативный конфиг дропдаунов: здесь статическая часть (имя поля формы,
+// лейбл, id, плейсхолдер, билдер опций, ключ источника данных в useInputParams).
 // Опции (`options`) добавляет компонент через useMemo поверх этого конфига,
 // потому что зависят от ответа useInputParams.
 export const DROPDOWN_DEFS = [
@@ -78,7 +78,8 @@ export const TEXT_AREA_DEFS = [
  *   отправкой. Нет — значение уходит как есть.
  * @property {any} [empty] - Пустое значение поля. Нет — пустая строка.
  * @property {number} [maxLength] - Инпуты и textarea.
- * @property {(value: string) => boolean} [inputValidator] - Фильтр ввода.
+ * @property {(event: Event) => any} [inputValidator] - Фильтр ввода: ложное
+ *   значение отклоняет ввод (см. inputFilters.js).
  * @property {number} [rows] - Только textarea.
  * @property {string} [dataKey] - Дропдауны: ключ справочника в useInputParams.
  * @property {string} [placeholder] - Дропдауны: подпись пустого варианта.

@@ -20,7 +20,7 @@ export const ItemInfo = ({ size, price, delimiter = ": ", className }) => {
 
 			{/* Цена */}
 			<p className="item-info__row">
-				price{delimiter}{String(price)}{delimiter}{currency}
+				price{delimiter}{String(price)} {currency}
 			</p>
 		</div>
 	);

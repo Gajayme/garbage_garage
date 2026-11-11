@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Items } from "Components/MainPages/CatalogPage/Items/Items.js";
 import { FiltersWindow } from "Components/Filters/FiltersWindow";

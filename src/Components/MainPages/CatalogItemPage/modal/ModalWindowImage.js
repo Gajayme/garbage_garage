@@ -1,5 +1,3 @@
-import React from 'react';
-
 import {BorderedImage} from "Components/BorderedImage.js"
 
 import "Styles/MainPages/CatalogItemPage/ModalWindowImageCatalog.scss"

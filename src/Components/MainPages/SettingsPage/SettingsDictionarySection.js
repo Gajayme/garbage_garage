@@ -99,8 +99,7 @@ export const SettingsDictionarySection = ({
 			setUpdateError("Enter a title");
 			return;
 		}
-		const original = sortedItems.find((i) => i.id === editingItemId)?.title ?? "";
-		if (trimmed === original.trim()) {
+		if (trimmed === editingOriginalTitle.trim()) {
 			handleCancelEdit();
 			return;
 		}
@@ -141,7 +140,6 @@ export const SettingsDictionarySection = ({
 					isActive={isExpanded}
 					disclosure
 					aria-controls={panelId}
-					altImg=""
 				/>
 			</h2>
 			<div id={panelId} hidden={!isExpanded} className="settings-params__section-body">

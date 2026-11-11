@@ -1,3 +1,4 @@
+import "Styles/Window/ButtonLayer.scss";
 
 /**
  * Компонент слоя навигационных кнопок страницы.

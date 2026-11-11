@@ -42,9 +42,9 @@ export const parseFiltersFromUrl = (searchParams, filterDefinitions) => {
 	filterDefinitions.forEach(filter => {
 		const { name, type } = filter;
 
-		// multichackbox фильтры
+		// multicheckbox фильтры
 		if (type === FilterConstants.FilterType.multiCheckbox) {
-			state[name] = searchParams.getAll(name) || [];
+			state[name] = searchParams.getAll(name);
 		}
 
 		// range фильтр цены

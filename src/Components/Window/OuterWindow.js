@@ -1,3 +1,4 @@
+import "Styles/Window/OuterWindow.scss";
 
 /**
  * Компонент внешней (фоновой) части базового окна страницы.

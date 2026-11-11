@@ -22,7 +22,7 @@ export const CheckboxMultiFilter = ({ allValues, checkedOptions, onChange, check
 
 	const handleOnChange = (newVal) => {
 		const updatedOptions = checkedOptions.includes(newVal)
-			? checkedOptions.filter(item => item !== newVal) // удалить выбок
+			? checkedOptions.filter(item => item !== newVal) // удалить выбор
 			: [...checkedOptions, newVal];  // добавить
 
 		onChange(updatedOptions)

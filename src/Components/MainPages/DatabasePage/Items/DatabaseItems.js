@@ -13,9 +13,9 @@ export const DatabaseItems = ({ catalogState }) => {
 
 	return (
 		<div className="database-page-items">
-			{catalogState.map((value, index) => (
+			{catalogState.map((value) => (
 				<Link
-					key={index}
+					key={value.id}
 					className="no-decoration-text-link"
 					to={`/${NavigationConstants.database}/${value.id}`}
 				>

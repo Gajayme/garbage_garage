@@ -1,5 +1,7 @@
 import { NavLink } from "react-router-dom";
 
+import "Styles/Navigation/NavButton.scss";
+
 export const NavButton = ({ labelText, destination }) => {
 	return (
 		<NavLink

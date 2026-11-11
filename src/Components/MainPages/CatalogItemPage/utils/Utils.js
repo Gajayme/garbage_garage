@@ -1,4 +1,4 @@
-import { buildTitle } from "Components/utils/buildTitile";
+import { buildTitle } from "Components/utils/buildTitle.js";
 
 export const validateItemData = (data) => {
 	if (!data || typeof data !== "object") return false;

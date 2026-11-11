@@ -1,7 +1,4 @@
-import React from 'react';
-
-
-
+import "Styles/MainPages/UploadPage/Validations/ErrorText.scss";
 
 export const ErrorMessage = ({errors}) => {
     return <div>
