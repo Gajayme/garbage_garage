@@ -21,9 +21,15 @@ export const UploadPage = () => {
 	}
 
 
+	// key пересоздаёт форму при смене вещи или режима. React Router не
+	// размонтирует страницу при переходе между /upload и /upload/edit/:itemId:
+	// у обоих маршрутов одно и то же дерево элементов. Без key форма создания
+	// досталась бы заполненной данными редактируемой вещи, и Upload создал бы
+	// её копию. Значение "create" с id не совпадёт: id — только цифры.
 	return (
 	<>
 		<UploadPageForm
+			key={itemId ?? "create"}
 			editItemId={itemId}
 			notificationSetter={setNotification}
 		/>

@@ -1,18 +1,15 @@
-import { useCallback, useMemo, useState } from "react"
+import { useMemo, useState } from "react"
 import { v4 as uuidv4 } from 'uuid';
-import { useQueryClient } from "@tanstack/react-query";
 
 import { DefaultButton } from "Components/Button.js"
-import { FormDataLogger } from "Components/FormDataLogger.js";
-import { UploadFormValidation } from './Validations/Validations.js'
 import { ImageManagerWindow } from "./ImageManager/ImageManagerWindow.js"
 import { LabeledInput } from "Components/MainPages/UploadPage/LabeledInput.js"
 import { LabeledTextArea } from "Components/MainPages/UploadPage/LabeledTextArea.js"
 import { LabeledDropdown } from "Components/MainPages/UploadPage/LabeledDropDown.js"
 import { useInputParams } from "Components/hooks/useInputParams.js";
-import { useAuth } from "Components/Auth/AuthContext.js";
 import * as UploadConstants from "Components/MainPages/UploadPage/UploadPageConstants.js";
 import { useHydrateUploadForm } from "Components/MainPages/UploadPage/useHydrateUploadForm.js";
+import { useItemFormSubmit } from "Components/MainPages/UploadPage/useItemFormSubmit.js";
 import { normalizeFk, normalizeStatus } from "Components/MainPages/UploadPage/uploadFormNormalize.js";
 import { revokeBlobImage, revokeBlobImages } from "Components/MainPages/UploadPage/imageBlobs.js";
 import { urlToFile } from "Components/utils/urlToFile.js";
@@ -20,15 +17,9 @@ import {
 	INPUT_DEFS,
 	DROPDOWN_DEFS,
 	TEXT_AREA_DEFS,
-	FIELD_DEFS,
 	INITIAL_FORM,
 	INITIAL_ERRORS,
-	VALIDATION_MAPPER,
 } from "Components/MainPages/UploadPage/uploadFormFields.js";
-import {
-	invalidateItemLists,
-	invalidateItem,
-} from "Components/utils/itemCache.js";
 
 import * as Constants from 'Constants.js'
 
@@ -48,6 +39,13 @@ const swallowDragOver = (event) => {
 	event.dataTransfer.dropEffect = "none";
 };
 const swallowDrop = (event) => event.preventDefault();
+
+// Форма отправляется только кнопкой, Enter ничего не отправляет.
+// Поэтому кнопка отправки — type="button": submit-кнопку браузер нажимает
+// сам по Enter в любом текстовом поле. Без submit-кнопок браузер не отправляет
+// форму по Enter, лишь пока в ней больше одного текстового поля; останется
+// одно — отправит сам и перезагрузит страницу. Этот обработчик гасит такую отправку.
+const preventNativeSubmit = (event) => event.preventDefault();
 
 
 // Тексты уведомлений о результате отправки формы.
@@ -71,11 +69,6 @@ export const UploadPageForm = ({
 
 	// хук, который занимается загрузкой инпут параметров с сервера
 	const { brands, types, buyers, locations, statuses, isLoading } = useInputParams();
-	// хук, который занимается аутентификацией
-	const { isAdmin, checkAuth } = useAuth();
-
-	// клиент запросов для обновления данных в кеше
-	const queryClient = useQueryClient();
 
 
 	// Сбор опций для дропдаунов
@@ -91,38 +84,41 @@ export const UploadPageForm = ({
 		}));
 	}, [brands, types, buyers, locations, statuses]);
 
-	// Происходит ли отправка формы прямо сейчас
-	const [isSubmitting, setIsSubmitting] = useState(false);
-	const [isUpdating, setIsUpdating] = useState(false);
-	// Любая сетевая операция формы в данный момент. Единая точка для
-	// гонка-гарда в submitForm и для disabled у кнопок.
-	const isBusy = isSubmitting || isUpdating;
-
 	// стейты со значениями полей и ошибок (используем стабильные module-scope константы)
 	const [formState, setFormState] = useState(INITIAL_FORM);
 	const [errorState, setErrorState] = useState(INITIAL_ERRORS);
 
-	// Локальные хелперы «покажи ошибку / покажи успех». Прячут форму состояния
-	// уведомления — места вызова описывают намерение, а не способ. Обёрнуты
-	// в useCallback, чтобы ссылки были стабильны и их можно было передавать
-	// в кастомные хуки без перезапуска их useEffect.
-	const showError = useCallback(
-		() => notificationSetter({ isError: true, text: mainTextError }),
-		[notificationSetter]
-	);
-	const showSuccess = useCallback(
-		() => notificationSetter({ isError: false, text: mainTextSucess }),
-		[notificationSetter]
-	);
+	// Локальные хелперы «покажи ошибку / покажи успех».
+	const showError = () =>
+		notificationSetter({ isError: true, text: mainTextError });
+	const showSuccess = () =>
+		notificationSetter({ isError: false, text: mainTextSucess });
 
-	// Гидрация формы данными вещи в edit-режиме — целиком в кастомном хуке.
+	// Гидрация (заполнение формы) данными вещи в edit-режиме.
 	const { isHydrating, error: detailError } = useHydrateUploadForm({
 		editItemId,
 		paramsLoading: isLoading,
 		setFormState,
 		setErrorState,
 		initialErrors: INITIAL_ERRORS,
-		onError: showError,
+	});
+
+	// Сброс формы.
+	// Объявлен до хука отправки потому что используется в нем.
+	const resetForm = () => {
+		revokeBlobImages(formState.images);
+		setFormState(INITIAL_FORM);
+		setErrorState(INITIAL_ERRORS);
+	};
+
+	// Отправка формы — создание или редактирование, по editItemId.
+	const { submit, isBusy } = useItemFormSubmit({
+		editItemId,
+		formState,
+		setErrorState,
+		onCreated: resetForm,
+		notifySuccess: showSuccess,
+		notifyError: showError,
 	});
 
 	// Данные вещи не загрузились — редактировать нечего. Без этой ветки форма
@@ -137,151 +133,6 @@ export const UploadPageForm = ({
 			</p>
 		);
 	}
-
-	// Общий каркас отправки формы: гонка-гард, isAdmin, валидация, fetch, 401, нотификации, finally.
-	// Параметры различия между upload/update:
-	//   - url            — куда отправлять multipart-тело;
-	//   - method         — HTTP-метод: POST при создании, PUT при редактировании;
-	//   - setBusy        — какой флаг загрузки переключать;
-	//   - onSuccess      — что сделать с успешным ответом (reset формы / invalidate кеша);
-	//   - errorLogPrefix — префикс для console.error: отказ fetch, ответ не ok и
-	//                      исключения. Отказ по isAdmin, ошибки валидации и 401 не логируются.
-	const submitForm = async ({
-		url,
-		setBusy,
-		onSuccess,
-		errorLogPrefix,
-		method = Constants.http_methods.POST,
-	}) => {
-		if (isBusy) return;
-		setBusy(true);
-		try {
-			if (!isAdmin) {
-				showError();
-				return;
-			}
-
-			if (!validateForm()) return;
-
-			// fetch отклоняется, когда ответа нет или его нельзя прочитать: сеть,
-			// обрыв соединения, CORS — в том числе страница ошибки прокси без
-			// CORS-заголовков. Дошёл ли запрос до сервера, отсюда не узнать.
-			// Сюда же попадает исключение из buildFormData: оно вычисляется
-			// в аргументах fetch, и в этом случае запрос точно не ушёл.
-			let response;
-			try {
-				response = await fetch(url, {
-					method,
-					body: buildFormData(),
-					credentials: "include",
-				});
-			} catch (error) {
-				console.error(errorLogPrefix, error);
-				showError();
-				return;
-			}
-
-			if (response.status === 401) {
-				await checkAuth();
-				showError();
-				return;
-			}
-
-			if (!response.ok) {
-				console.error(errorLogPrefix, `Server error: ${response.status}`);
-				showError();
-				return;
-			}
-
-			showSuccess();
-			await onSuccess?.(response);
-		} catch (error) {
-			// Об ошибке не уведомляем из-за сбоя постобработки в onSuccess: сервер
-			// запрос уже принял, и «upload failed» заставит повторить загрузку —
-			// то есть создать дубликат. Так же молча уходят в лог исключения из
-			// validateForm и из checkAuth в ветке 401, хотя там запрос не прошёл.
-			console.error(errorLogPrefix, error);
-		} finally {
-			setBusy(false);
-		}
-	};
-
-	// обработчик отправки формы для создания
-	const handleOnSubmit = async (event) => {
-		event.preventDefault();
-		await submitForm({
-			url: `${Constants.base_server_url}${Constants.post_upload}`,
-			setBusy: setIsSubmitting,
-			// Сброс формы — первым: разбор ответа нужен только для лога и падает
-			// на теле без JSON, а не сброшенная после «sucess» форма подталкивает
-			// загрузить ту же вещь ещё раз.
-			onSuccess: async (response) => {
-				resetForm();
-				await invalidateItemLists(queryClient);
-				const responseJson = await response.json();
-				console.log("upload response:", responseJson);
-			},
-			errorLogPrefix: "upload error:",
-		});
-	};
-
-	// обработчик отправки формы для редактирования
-	const handleUpdateSubmit = async () => {
-		if (!isEdit) return;
-
-		await submitForm({
-			url: `${Constants.base_server_url}${Constants.postUpdate(editItemId)}`,
-			method: Constants.http_methods.PUT,
-			setBusy: setIsUpdating,
-			// Инвалидации независимы — запускаем параллельно. Ждём их обе
-			// намеренно: пока идёт догрузка деталей, кнопка Update остаётся
-			// заблокированной. Сети касается только invalidateItem — список
-			// каталога и базы отсюда неактивны, для них инвалидация сводится
-			// к синхронной пометке «протухло».
-			onSuccess: () =>
-				Promise.all([
-					invalidateItemLists(queryClient),
-					invalidateItem(queryClient, editItemId),
-				]),
-			errorLogPrefix: "update error:",
-		});
-	};
-
-	const validateForm = () => {
-		const errorsLocal = UploadFormValidation(
-			formState,
-			VALIDATION_MAPPER
-		);
-
-		setErrorState(errorsLocal);
-		return Object.values(errorsLocal).every(
-			(errorArray) => errorArray.length === 0
-		);
-	};
-
-	// компоновка данных для отправки на сервер
-	const buildFormData = () => {
-		const formData = new FormData();
-		FIELD_DEFS.forEach(({ name, apiField, serialize }) => {
-			const value = formState[name];
-			formData.append(apiField ?? name, serialize ? serialize(value) : value);
-		});
-		formState.images.forEach((image) => {
-			if (image?.file) {
-				formData.append(Constants.files, image.file);
-			}
-		});
-
-		FormDataLogger(formData)
-		return formData
-	}
-
-	// сброс формы
-	const resetForm = () => {
-		revokeBlobImages(formState.images);
-		setFormState(INITIAL_FORM);
-		setErrorState(INITIAL_ERRORS);
-	};
 
 	const handleOnChangeInput = (key) => {
 		return (event) => {
@@ -403,7 +254,7 @@ export const UploadPageForm = ({
 
 	return (
 
-		<form className="upload-page-form" onSubmit={handleOnSubmit} aria-busy={isBusy}>
+		<form className="upload-page-form" onSubmit={preventNativeSubmit} aria-busy={isBusy}>
 
 			{/* Один disabled на весь fieldset выключает все поля и кнопки формы
 			   на время запроса — нативно, без прокидывания disabled в каждый компонент. */}
@@ -462,24 +313,13 @@ export const UploadPageForm = ({
 				</div>
 
 				<div className="upload-form-actions">
-					{!isEdit && (
-						<DefaultButton
+					<DefaultButton
 						className={"upload-page-button"}
-						labelText={UploadConstants.buttonUpload}
+						labelText={isEdit ? UploadConstants.buttonSave : UploadConstants.buttonUpload}
 						disabled={isBusy}
-						type="submit"
-						onClick={handleOnSubmit}
+						type="button"
+						onClick={submit}
 					/>
-					)}
-					{isEdit && (
-						<DefaultButton
-							className={"upload-page-button"}
-							labelText={UploadConstants.buttonSave}
-							disabled={isBusy}
-							type="button"
-							onClick={handleUpdateSubmit}
-						/>
-					)}
 				</div>
 
 				<DefaultButton labelText={'TEST AUTO FILL'} type="button" onClick={handleOnTestAutofill}/>
