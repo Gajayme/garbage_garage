@@ -11,7 +11,6 @@ import * as UploadConstants from "Components/MainPages/UploadPage/UploadPageCons
 import { useHydrateUploadForm } from "Components/MainPages/UploadPage/useHydrateUploadForm.js";
 import { useItemFormSubmit } from "Components/MainPages/UploadPage/useItemFormSubmit.js";
 import { normalizeFk, normalizeStatus } from "Components/MainPages/UploadPage/uploadFormNormalize.js";
-import { revokeBlobImage, revokeBlobImages } from "Components/MainPages/UploadPage/imageBlobs.js";
 import { urlToFile } from "Components/utils/urlToFile.js";
 import {
 	INPUT_DEFS,
@@ -102,7 +101,6 @@ export const UploadPageForm = ({
 	// Сброс формы.
 	// Объявлен до хука отправки потому что используется в нем.
 	const resetForm = () => {
-		revokeBlobImages(formState.images);
 		setFormState(INITIAL_FORM);
 		setErrorState(INITIAL_ERRORS);
 	};
@@ -161,7 +159,6 @@ export const UploadPageForm = ({
 		const newImages = files.map((file) => ({
 			id: uuidv4(),
 			file,
-			src: URL.createObjectURL(file),
 		}));
 		setFormState((prevState) => ({
 			...prevState,
@@ -171,7 +168,6 @@ export const UploadPageForm = ({
 
 	// удалить все изображения
 	const handleOnDeleteAllImages = () => {
-		revokeBlobImages(formState.images);
 		setFormState((prev) => ({ ...prev, images: [] }));
 	};
 
@@ -192,13 +188,10 @@ export const UploadPageForm = ({
 
 	// удалить конкретное изображения
 	const handleOnDeleteSpecificImage = (id) => {
-		setFormState((prev) => {
-			revokeBlobImage(prev.images.find((img) => img.id === id));
-			return {
-				...prev,
-				images: prev.images.filter((img) => img.id !== id),
-			};
-		});
+		setFormState((prev) => ({
+			...prev,
+			images: prev.images.filter((img) => img.id !== id),
+		}));
 	};
 
 	// Первое реальное (не плейсхолдер) значение дропдауна. Хардкодить id нельзя:
