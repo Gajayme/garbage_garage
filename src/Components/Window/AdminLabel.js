@@ -1,4 +1,4 @@
-import { useAuth } from 'Components/Auth/AuthContext.js';
+import { useAuth } from 'Components/Auth/useAuth.js';
 
 /**
  * Надпись "admin" для хедера окна. Отображается только для авторизованного администратора.

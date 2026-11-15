@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import * as GlobalConstants from "Constants.js";
-import { useAuth } from "Components/Auth/AuthContext.js";
+import { useAuth } from "Components/Auth/useAuth.js";
 import { fetchItemDetails } from "Components/Api/fetchItemDetails.js";
 import { isValidPostId } from "Components/utils/isValidPostId.js";
 

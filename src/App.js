@@ -1,6 +1,5 @@
 import { useRef } from 'react';
 import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom';
-import { AuthProvider } from 'Components/Auth/AuthContext.js';
 import { routes } from 'Components/Navigation/routes.js';
 import { buildRouterRoutes } from 'Components/Navigation/buildRouterRoutes.js';
 
@@ -40,11 +39,7 @@ const router = createBrowserRouter([
 ]);
 
 const App = () => {
-	return (
-		<AuthProvider>
-			<RouterProvider router={router} />
-		</AuthProvider>
-	);
+	return <RouterProvider router={router} />;
 };
 
 export default App;

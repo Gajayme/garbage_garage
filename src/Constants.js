@@ -113,6 +113,7 @@ export const typesQueryKey = "uploadTypes" // all types
 export const buyersQueryKey = "uploadBuyers" // all buyers
 export const locationsQueryKey = "uploadLocations" // all locations
 export const statusesQueryKey = "uploadStatus" // all statuses
+export const sessionQueryKey = "session" // admin session (user/me)
 
 // Сколько данные считаются свежими. Значение lists стоит дефолтом на всех
 // запросах в index.js, остальные пороги хуки задают себе сами.
@@ -126,6 +127,12 @@ export const staleTimes = {
 	details: 2 * 60_000,
 	// Словари: меняются только через страницу настроек, которая их инвалидирует.
 	dictionaries: Infinity,
+	// Проверка сессии админа: перепроверяется при входе на админскую страницу
+	// и возвращении на вкладку, но не чаще этого порога. Порог сливает в один
+	// запрос проверки, идущие подряд: логин и переход после него, быстрые
+	// переходы между страницами. Чем он больше, тем дольше админская страница
+	// может открываться на истёкшей сессии, не сделав ни одного запроса.
+	session: 30_000,
 };
 
 // Коды 4xx, которые сами просят повторить позже: таймаут, «слишком рано»

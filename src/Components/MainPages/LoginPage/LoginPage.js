@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom'
 import { CustomInput } from 'Components/CustomInput.js'
 import { DefaultButton } from 'Components/Button.js'
 import { useLogin } from './useLogin.js'
-import { useAuth } from 'Components/Auth/AuthContext.js'
 import * as Nav from "Components/Navigation/paths.js";
 
 import 'Styles/MainPages/LoginPage/LoginPage.scss'
@@ -13,7 +12,6 @@ export const LoginPage = () => {
 	const [login, setLogin] = useState('')
 	const [password, setPassword] = useState('')
 	const navigate = useNavigate()
-	const { checkAuth } = useAuth()
 
 	const { mutate: doLogin, isPending, error } = useLogin()
 
@@ -21,10 +19,7 @@ export const LoginPage = () => {
 		doLogin(
 			{ login, password },
 			{
-				onSuccess: async () => {
-					await checkAuth()
-					navigate(`/${Nav.upload}`)
-				},
+				onSuccess: () => navigate(`/${Nav.upload}`),
 			}
 		)
 	}

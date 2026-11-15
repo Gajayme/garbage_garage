@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 
-import { useAuth } from "Components/Auth/AuthContext.js";
+import { useAuth } from "Components/Auth/useAuth.js";
 import { FormDataLogger } from "Components/FormDataLogger.js";
 import { UploadFormValidation } from "Components/MainPages/UploadPage/Validations/Validations.js";
 import { VALIDATION_MAPPER } from "Components/MainPages/UploadPage/uploadFormFields.js";

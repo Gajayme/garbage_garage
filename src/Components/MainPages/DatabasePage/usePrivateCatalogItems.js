@@ -1,7 +1,7 @@
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import * as GlobalConstants from "Constants.js";
 import { fetchItems as fetchItemsRequest } from "Components/Api/fetchItems.js";
-import { useAuth } from "Components/Auth/AuthContext.js";
+import { useAuth } from "Components/Auth/useAuth.js";
 import { buildQueryString } from "Components/Filters/filterQueryString.js";
 
 export const usePrivateCatalogItems = (filtersState) => {

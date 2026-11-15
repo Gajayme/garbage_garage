@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 
-import { useAuth } from "Components/Auth/AuthContext.js";
+import { useAuth } from "Components/Auth/useAuth.js";
 import { useConfirmedAction } from "Components/hooks/useConfirmedAction.js";
 import { useResetStateWithTimeout } from "Components/hooks/useResetStateWithTimeout.js";
 import { deleteItem } from "Components/Api/deleteItem.js";
