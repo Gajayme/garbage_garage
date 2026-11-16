@@ -42,6 +42,10 @@ npm test            # CRA/Jest test runner, watch mode by default
 npm test -- --watchAll=false --testPathPattern=<path>   # single file, non-watch
 ```
 
+In development the app still talks to the production API, but through the dev server: `base_server_url` is `/api/` when `NODE_ENV` is `development`, and `src/setupProxy.js` (picked up by `npm start` only, not part of the build) forwards `/api/*` to `https://api.garbage-garage.com/*` and strips `Domain` from `Set-Cookie`. Calling the API directly from `localhost` doesn't work for admin pages: `localhost` and `api.garbage-garage.com` are different sites, so the browser rejects the session cookie from the login response and `user/me` answers 401. The production build uses the absolute URL; there `garbage-garage.com` and `api.garbage-garage.com` are same-site.
+
+`.env.development` sets `HOST=localhost`, so the dev server listens on `127.0.0.1` only (CRA's default is every network address). Otherwise anyone on the same network could reach the app and the proxy to the production API, and a password typed in on another device would cross the network over plain `http`. To open the dev build from a phone, override it for one run: `HOST=0.0.0.0 npm start` (shell variables take precedence over `.env` files).
+
 Production runs as a Docker/Nginx image (`.deploy/prod/Dockerfile`, `docker-compose.yaml`, port `3000→80`). On push to `main` (or a manual `workflow_dispatch` run), `.github/workflows/deploy.yaml` builds the image, pushes it to GHCR (`ghcr.io/<owner>/<repo>:latest`), then SSHes into the server and, in `$HOME/<repo>/`, runs `docker compose pull`, `docker compose up -d --force-recreate` and `docker image prune -af`. The workflow ships only the image, not `docker-compose.yaml`: the server runs its own copy of that file, so a change to it in this repo doesn't reach production until the server copy is updated separately.
 
 There is no separate lint script; ESLint runs through `react-app`/`react-app/jest` (CRA's built-in config) during `npm start`/`npm run build`.
@@ -68,7 +72,8 @@ There is no separate lint script; ESLint runs through `react-app`/`react-app/jes
 src/
 ├── App.js              # router built from routes.js, Layout (window shell + Outlet)
 ├── index.js            # QueryClient with the query-wide defaults from Constants.js
-├── Constants.js        # API field names, API paths/builders, query keys, http methods, staleTimes, retryExceptClientError
+├── setupProxy.js       # dev-server proxy /api/* → production API (npm start only)
+├── Constants.js        # API base URL, API field names, API paths/builders, query keys, http methods, staleTimes, retryExceptClientError
 ├── Components/
 │   ├── Api/            # fetch wrappers for backend endpoints (not all requests live here, see above)
 │   ├── Auth/           # useAuth (session query), AdminRouteGuard, AuthChecker

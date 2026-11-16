@@ -28,7 +28,12 @@ export const locationId = "locationId"
 // Валюта, в которой отображаются цены
 export const currency = "rsd"
 
-export const base_server_url = "https://api.garbage-garage.com/"
+// В разработке — свой origin: src/setupProxy.js пересылает /api/* в API, иначе
+// браузер не принимает cookie сессии с другого сайта (подробнее там же).
+// В сборке NODE_ENV — "production", и ветка разработки из бандла вырезается.
+export const base_server_url = process.env.NODE_ENV === "development"
+	? "/api/"
+	: "https://api.garbage-garage.com/"
 
 // Идентификатор обязан остаться одним сегментом пути: без экранирования "a/b"
 // разваливается на два сегмента, а пробелы и "%" ломают адрес. Кодируем здесь,
