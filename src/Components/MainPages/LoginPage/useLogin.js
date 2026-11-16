@@ -12,7 +12,14 @@ const loginRequest = async ({ login, password }) => {
 
 	if (!response.ok) {
 		const data = await response.json().catch(() => ({}));
-		throw new Error(data.message || `Error: ${response.status}`);
+		// 422 — значения не прошли проверку формата на сервере (например, пароль
+		// короче 4 символов): для формы входа это те же неверные данные.
+		if (response.status === 401 || response.status === 422) {
+			throw new Error("Invalid login or password");
+		}
+		// Остальные отказы (429, 5xx): бэкенд кладёт пояснение в `detail`,
+		// показываем его, если это строка.
+		throw new Error(typeof data.detail === "string" ? data.detail : `Error: ${response.status}`);
 	}
 	return response.json();
 };
