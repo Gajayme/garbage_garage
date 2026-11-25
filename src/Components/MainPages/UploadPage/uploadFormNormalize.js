@@ -1,4 +1,4 @@
-/** Внешний ключ (brand, type, buyer, location): null или целое. */
+/** Внешний ключ (brand, type, buyer, location, size): null или целое. */
 export const normalizeFk = (v) => {
 	if (v == null || v === "") return null;
 	const n = typeof v === "number" ? v : parseInt(String(v), 10);

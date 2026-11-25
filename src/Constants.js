@@ -8,7 +8,6 @@ export const buyersPart = "buyersPart"
 export const boughtFor = "boughtFor"
 export const price = "price"
 export const soldFor = "soldFor"
-export const size = "size"
 export const status = "status"
 export const description = "description"
 
@@ -18,12 +17,14 @@ export const brand = "brand"
 export const type = "type"
 export const buyer = "buyer"
 export const location = "location"
+export const size = "size"
 // а на запись уходит только id, и имя поля другое. Не перепутать с парой выше:
 // в дефах UploadPage эти имена стоят рядом как `name` и `apiField`.
 export const brandId = "brandId"
 export const typeId = "typeId"
 export const buyerId = "buyerId"
 export const locationId = "locationId"
+export const sizeId = "sizeId"
 
 // Валюта, в которой отображаются цены
 export const currency = "rsd"
@@ -78,24 +79,30 @@ export const typeApi = "type/all"
 export const buyerApi = "buyer/all"
 export const locationApi = "location/all"
 export const statusApi = "status/all"
+export const sizeApi = "size/all"
 
 // API для добавления новых input данных
 export const brandUploadApi = "brand/upload"
 export const typeUploadApi = "type/upload"
 export const buyerUploadApi = "buyer/upload"
 export const locationUploadApi = "location/upload"
+// У размера тело другое, чем у остальных справочников: { "<title>": [typeId, …] }
+export const sizeUploadApi = "size/upload"
 
 // API для обновления input данных
 export const brandUpdateApi = "brand/update"
 export const typeUpdateApi = "type/update"
 export const buyerUpdateApi = "buyer/update"
 export const locationUpdateApi = "location/update"
+// Тело как у sizeUploadApi; список типов заменяется целиком
+export const sizeUpdateApi = "size/update"
 
 // API для удаления input данных
 export const brandDeleteApi = "brand/delete"
 export const typeDeleteApi = "type/delete"
 export const buyerDeleteApi = "buyer/delete"
 export const locationDeleteApi = "location/delete"
+export const sizeDeleteApi = "size/delete"
 
 // API для получения ссылки на WhatsApp по вещи: /post/{id}/whatsapp-link
 export const postWhatsappLink = (postID) =>
@@ -118,6 +125,7 @@ export const typesQueryKey = "uploadTypes" // all types
 export const buyersQueryKey = "uploadBuyers" // all buyers
 export const locationsQueryKey = "uploadLocations" // all locations
 export const statusesQueryKey = "uploadStatus" // all statuses
+export const sizesQueryKey = "uploadSizes" // all sizes with their types
 export const sessionQueryKey = "session" // admin session (user/me)
 
 // Сколько данные считаются свежими. Значение lists стоит дефолтом на всех

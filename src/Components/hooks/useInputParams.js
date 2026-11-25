@@ -38,13 +38,28 @@ export const useInputParams = () => {
 		gcTime: Infinity,
 	});
 
+	// Размеры приходят вместе со списком типов, к которым каждый подходит:
+	// [{ id, title, types: [{ id, title }] }].
+	const { data: sizes, isLoading: sizesLoading } = useQuery({
+		queryKey: [GlobalConstants.sizesQueryKey],
+		queryFn: () => fetchInputData(GlobalConstants.sizeApi),
+		staleTime: GlobalConstants.staleTimes.dictionaries,
+		gcTime: Infinity,
+	});
+
 	return {
 		brands,
 		types,
 		buyers,
 		locations,
 		statuses,
+		sizes,
 		isLoading:
-			brandsLoading || typesLoading || buyersLoading || locationsLoading || statusesLoading,
+			brandsLoading ||
+			typesLoading ||
+			buyersLoading ||
+			locationsLoading ||
+			statusesLoading ||
+			sizesLoading,
 	};
 };

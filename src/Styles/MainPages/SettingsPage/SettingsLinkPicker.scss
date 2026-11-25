@@ -1,0 +1,39 @@
+.settings-link-picker {
+	// В строке списка (flex-wrap) занимает всю ширину и уходит под название и кнопки.
+	flex-basis: 100%;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px 14px;
+	margin: 0 0 10px;
+	padding: 6px 10px 8px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+}
+
+.settings-link-picker__legend {
+	padding: 0 4px;
+	font-size: 0.85rem;
+	color: #666;
+}
+
+.settings-link-picker__option {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	cursor: pointer;
+	user-select: none;
+}
+
+// Цвет и размер — как у сообщений об ошибках секции (.settings-params__add-error),
+// чтобы подсказка выглядела так же.
+.settings-link-picker__hint {
+	flex-basis: 100%;
+	margin: 0;
+	font-size: 0.9rem;
+	color: #b00020;
+}
+
+.settings-link-picker:disabled .settings-link-picker__option {
+	opacity: 0.55;
+	cursor: not-allowed;
+}

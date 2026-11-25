@@ -17,3 +17,6 @@ export const labelCollator = new Intl.Collator("en", {
 
 /** Сравнение подписей по алфавиту. Пригодно как компаратор для Array.prototype.sort. */
 export const compareLabels = (a, b) => labelCollator.compare(a ?? "", b ?? "");
+
+/** Сравнение элементов справочника ({ title }) по названию, как compareLabels. */
+export const compareByTitle = (a, b) => compareLabels(a?.title, b?.title);

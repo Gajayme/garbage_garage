@@ -27,7 +27,7 @@ const emptyValue = "—";
 
 /**
  * Значение поля вещи → строка для вывода.
- * Справочники (brand, type, buyer, location) приходят объектами: в них
+ * Справочники (brand, type, buyer, location, size) приходят объектами: в них
  * показываем title (или name, как в buildDropdownState).
  */
 const formatValue = (value) => {

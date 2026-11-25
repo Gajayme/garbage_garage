@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-Frontend for **Garbage Garage**, a second-hand shop: a public storefront (catalog, item pages, purchase via WhatsApp) and an admin panel (upload/edit listings, internal inventory view, dictionaries for brands/types/buyers/locations). Talks to a separate backend at `api.garbage-garage.com` (`Constants.js` → `base_server_url`); no server code lives in this repo.
+Frontend for **Garbage Garage**, a second-hand shop: a public storefront (catalog, item pages, purchase via WhatsApp) and an admin panel (upload/edit listings, internal inventory view, dictionaries for brands/types/sizes/buyers/locations). Talks to a separate backend at `api.garbage-garage.com` (`Constants.js` → `base_server_url`); no server code lives in this repo.
 
 ## Working rules
 
@@ -27,6 +27,7 @@ Frontend for **Garbage Garage**, a second-hand shop: a public storefront (catalo
 
 - Code comments and working notes (`src/CodeReview.md`, `TODOS.md`) are written in Russian by convention; don't switch them to English when editing nearby code.
 - A code comment explains why the current code is the way it is, on its own terms. It must not reference the edit history — how the code used to be, what some change moved or fixed ("раньше было", "теперь", "обратно", "перенесено", "исправлено"); that belongs in the commit message. The test: the comment should read identically to someone opening the file for the first time. Naming an alternative is fine when it is a standing temptation rather than a past state — the block above `pendingRemoveIdRef` in `useItemActions.js` explains why cache cleanup belongs in the effect cleanup and not in `onSuccess`, and that warning stays useful forever. (Cite code by name, not by line number: line numbers rot.) Notes files (`src/CodeReview.md` and friends) are the exception: tracking history is their job.
+- A JSDoc description of a function parameter or prop (`onChange`, `onSubmit`, `buildBody`, `compareItems`, …) must make clear it's a function even to someone who skips the type and the `on` prefix: start with when it's called («Вызывается при переключении чекбокса…») or with the action it performs («Удалить элемент», «Сохранить правку»), then say what it receives or returns. A description of only its argument or its event («Новый список отмеченных id», «Порядок элементов», «Ввод в поле названия») reads like a plain value.
 
 ### Explanations
 
@@ -66,6 +67,8 @@ There is no separate lint script; ESLint runs through `react-app`/`react-app/jes
 - `retryExceptClientError` — the default `retry` for every query, with no per-hook overrides at present. A 4xx means the server already rejected the request on its contents, so retrying only delays the answer by the backoff; `408`/`425`/`429` are excluded because they ask to be retried (429 can come from the Cloudflare in front of the API rather than the backend). This does not affect mutations, which TanStack Query does not retry by default.
 
 **Path/id building is centralized in `Constants.js`.** Endpoint path builders (`postDetail`, `postUpdate`, `postWhatsappLink`, etc.) all funnel ids through an internal `segment()` (`encodeURIComponent`) to keep a single path segment intact. This only guards against a malformed URL, not a malicious id: `encodeURIComponent` doesn't touch `.`, so `".."` can still collapse a path via URL normalization.
+
+**Sizes are a dictionary tied to types.** Like the other dictionaries, an item reads `size` as `{ id, title }` and writes `sizeId` (`name`/`apiField` in the `UploadPage` defs). `size/all` returns each size with the types it fits (`types: [{ id, title }]`), and `size/upload`/`size/update` take `{ "<title>": [typeId, …] }`, which replaces the whole type list. On `UploadPage` the size dropdown declares `dependsOn: Constants.type`: it stays disabled until a type with sizes is picked, offers only that type's sizes (`sizesForType` in `utils/sizes.js`), and resets when the type changes. On `SettingsPage` the same `SettingsDictionarySection` serves sizes. The section knows nothing about types: its `link` prop (a `DictionaryLink`, see `SettingsPage/dictionaryLink.js`) ties a dictionary's items to another dictionary — checkboxes when adding and editing, linked titles in the list — and `SettingsPage` passes the types there. Sizes sort by `compareSizes` (XS…XL, then numbers, then the rest), not alphabetically.
 
 **`src` layout:**
 ```

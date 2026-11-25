@@ -5,6 +5,7 @@ import {
 	mapItemDetailFields,
 	mapDetailImagesToFormImages,
 } from "Components/MainPages/UploadPage/mapItemDetailToFormState.js";
+import { sizesForType } from "Components/utils/sizes.js";
 
 /**
  * Гидрирует поля и ошибки формы UploadPage данными вещи `editItemId`.
@@ -18,6 +19,10 @@ import {
  *
  * Контракт:
  *  - `editItemId` уже валиден (мусор отсеян на уровне UploadPage);
+ *  - `sizes` — справочник размеров из useInputParams, готов вместе с остальными
+ *    (`paramsLoading`). Размер вещи, не привязанный к её типу, при заполнении
+ *    сбрасывается: в дропдауне такой опции нет, <select> показал бы пустой
+ *    вариант, а старый id остался бы в состоянии и ушёл на сервер;
  *  - `setFormState` / `setErrorState` — стабильные сеттеры из useState;
  *  - `initialErrors` — стабильная ссылка (module-scope константа) на «пустые» ошибки.
  *
@@ -31,6 +36,7 @@ import {
 export const useHydrateUploadForm = ({
 	editItemId,
 	paramsLoading,
+	sizes,
 	setFormState,
 	setErrorState,
 	initialErrors,
@@ -72,6 +78,10 @@ export const useHydrateUploadForm = ({
 			try {
 				const d = detailData.data;
 				const fields = mapItemDetailFields(d);
+				const sizeFitsType = sizesForType(sizes, fields.type).some(
+					(size) => size.id === fields.size
+				);
+				if (!sizeFitsType) fields.size = null;
 				const images = await mapDetailImagesToFormImages(d.images);
 				if (cancelled) return;
 				setFormState((prev) => ({ ...prev, ...fields, images }));
@@ -92,6 +102,7 @@ export const useHydrateUploadForm = ({
 	}, [
 		editItemId,
 		paramsLoading,
+		sizes,
 		detailFetching,
 		detailData,
 		hydratedFor,

@@ -12,6 +12,7 @@ import { useHydrateUploadForm } from "Components/MainPages/UploadPage/useHydrate
 import { useItemFormSubmit } from "Components/MainPages/UploadPage/useItemFormSubmit.js";
 import { normalizeFk, normalizeStatus } from "Components/MainPages/UploadPage/uploadFormNormalize.js";
 import { urlToFile } from "Components/utils/urlToFile.js";
+import { sizesForType } from "Components/utils/sizes.js";
 import {
 	INPUT_DEFS,
 	DROPDOWN_DEFS,
@@ -63,25 +64,40 @@ export const UploadPageForm = ({
 
 
 	// хук, который занимается загрузкой инпут параметров с сервера
-	const { brands, types, buyers, locations, statuses, isLoading } = useInputParams();
-
-
-	// Сбор опций для дропдаунов
-	// Берём статический конфиг DROPDOWN_DEFS и достраиваем для каждой записи `options`,
-	// собранные подходящим билдером из соответствующего справочника useInputParams.
-	// Пересчёт идёт только при смене самих справочников, поэтому ссылки на options
-	// и на сам массив dropdownFields стабильны между «спокойными» рендерами.
-	const dropdownFields = useMemo(() => {
-		const dataByKey = { brands, types, buyers, locations, statuses };
-		return DROPDOWN_DEFS.map(({ dataKey, placeholder, builder, ...rest }) => ({
-			...rest,
-			options: builder(dataByKey[dataKey], placeholder, UploadConstants.defaultID),
-		}));
-	}, [brands, types, buyers, locations, statuses]);
+	const { brands, types, buyers, locations, statuses, sizes, isLoading } = useInputParams();
 
 	// стейты со значениями полей и ошибок (используем стабильные module-scope константы)
 	const [formState, setFormState] = useState(INITIAL_FORM);
 	const [errorState, setErrorState] = useState(INITIAL_ERRORS);
+
+	// Выбранный тип — отдельной переменной: от него зависят опции размера,
+	// а весь formState в зависимостях useMemo пересобирал бы опции на каждое
+	// нажатие клавиши в любом поле.
+	const selectedType = formState[Constants.type];
+
+	// Сбор опций для дропдаунов
+	// Берём статический конфиг DROPDOWN_DEFS и достраиваем для каждой записи `options`,
+	// собранные подходящим билдером из соответствующего справочника useInputParams.
+	// Дропдаун с `dependsOn` получает ещё и выбранный тип и заблокирован, пока
+	// выбирать не из чего: в опциях только пустой вариант.
+	// Пересчёт идёт только при смене справочников и типа, поэтому ссылки на options
+	// и на сам массив dropdownFields стабильны между «спокойными» рендерами.
+	const dropdownFields = useMemo(() => {
+		const dataByKey = { brands, types, buyers, locations, statuses, sizes };
+		return DROPDOWN_DEFS.map(({ dataKey, placeholder, builder, dependsOn, ...rest }) => {
+			const options = builder(
+				dataByKey[dataKey],
+				placeholder,
+				UploadConstants.defaultID,
+				dependsOn ? selectedType : undefined
+			);
+			return {
+				...rest,
+				options,
+				disabled: Boolean(dependsOn) && options.length <= 1,
+			};
+		});
+	}, [brands, types, buyers, locations, statuses, sizes, selectedType]);
 
 	// Локальные хелперы «покажи ошибку / покажи успех».
 	const showError = () =>
@@ -93,6 +109,7 @@ export const UploadPageForm = ({
 	const { isHydrating, error: detailError } = useHydrateUploadForm({
 		editItemId,
 		paramsLoading: isLoading,
+		sizes,
 		setFormState,
 		setErrorState,
 		initialErrors: INITIAL_ERRORS,
@@ -139,10 +156,20 @@ export const UploadPageForm = ({
 
 	const handleOnChangeDropDown = (key) => {
 		const normalize = key === Constants.status ? normalizeStatus : normalizeFk;
+		// Поля, чьи опции зависят от этого (размер от типа), сбрасываются:
+		// размер одного типа может не подходить другому. Сброс здесь, а не
+		// в эффекте на смену типа: гидрация edit-формы тоже меняет тип, и эффект
+		// стёр бы подставленный размер вещи, а этот обработчик она не вызывает.
+		const resetDependents = Object.fromEntries(
+			DROPDOWN_DEFS.filter((def) => def.dependsOn === key).map(
+				({ name, empty = '' }) => [name, empty]
+			)
+		);
 		return (newVal) => {
 			setFormState((prevState) => ({
 				...prevState,
 				[key]: normalize(newVal),
+				...resetDependents,
 			}));
 		};
 	};
@@ -194,18 +221,28 @@ export const UploadPageForm = ({
 		}));
 	};
 
-	// Первое реальное (не плейсхолдер) значение дропдауна. Хардкодить id нельзя:
+	// Реальные (не плейсхолдер) значения дропдауна. Хардкодить id нельзя:
 	// справочники живут на сервере, и записи с конкретным id может не быть —
 	// тогда <select> не найдёт подходящий <option> и поле останется пустым.
-	const firstDropdownValue = (name) => {
-		const options = dropdownFields.find((field) => field.name === name)?.options ?? {};
-		return (
-			Object.values(options).find((value) => value !== UploadConstants.defaultID) ?? null
-		);
+	const dropdownValues = (name) => {
+		const options = dropdownFields.find((field) => field.name === name)?.options ?? [];
+		return options
+			.map(([, value]) => value)
+			.filter((value) => value !== UploadConstants.defaultID);
 	};
+	const firstDropdownValue = (name) => dropdownValues(name)[0] ?? null;
 
 	// Автозаполнение всех полей для теста
 	const handleOnTestAutofill = async () => {
+
+		// Тип — первый, к которому привязан хоть один размер: опции размера
+		// в dropdownFields собраны под текущий тип, поэтому размер берётся
+		// из справочника напрямую.
+		const autofillType =
+			dropdownValues(Constants.type).find(
+				(typeId) => sizesForType(sizes, typeId).length > 0
+			) ?? null;
+		const autofillSize = sizesForType(sizes, autofillType)[0]?.id ?? null;
 
 		const imgFile = await urlToFile(DefaultImg, 'default.jpg')
 		const imageObject = {
@@ -221,11 +258,11 @@ export const UploadPageForm = ({
 			[Constants.price]: '8500',
 			[Constants.buyersPart]: '50',
 			[Constants.soldFor]: '8000',
-			[Constants.size]: '42',
 			[Constants.buyer]: firstDropdownValue(Constants.buyer),
 			[Constants.location]: firstDropdownValue(Constants.location),
 			[Constants.brand]: firstDropdownValue(Constants.brand),
-			[Constants.type]: firstDropdownValue(Constants.type),
+			[Constants.type]: autofillType,
+			[Constants.size]: autofillSize,
 			[Constants.status]: firstDropdownValue(Constants.status),
 			[Constants.description]: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
 			images: [imageObject]
@@ -272,7 +309,7 @@ export const UploadPageForm = ({
 							inputValidator={inputValidator}
 						/>
 					))}
-					{dropdownFields.map(({ name, label, id, options }) => (
+					{dropdownFields.map(({ name, label, id, options, disabled }) => (
 						<LabeledDropdown
 							key={name}
 							value={formState[name]}
@@ -282,6 +319,7 @@ export const UploadPageForm = ({
 							labelText={label}
 							id={id}
 							options={options}
+							disabled={disabled}
 						/>
 					))}
 					{TEXT_AREA_DEFS.map(({ name, label, id, maxLength, rows, inputValidator, placeholder }) => (

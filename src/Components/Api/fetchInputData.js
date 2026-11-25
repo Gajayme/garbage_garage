@@ -1,6 +1,6 @@
 import * as Constants from "Constants.js";
 
-// Получение input данных (какие есть бренды, типы, покупатели, местоположения)
+// Получение input данных (какие есть бренды, типы, размеры, покупатели, местоположения, статусы)
 export async function fetchInputData(path) {
 	const url = `${Constants.base_server_url}${path}`;
 	const resp = await fetch(url, { credentials: "include" });

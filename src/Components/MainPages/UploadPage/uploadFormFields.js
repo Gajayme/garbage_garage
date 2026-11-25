@@ -3,6 +3,7 @@ import { itemFieldLabel } from "Components/utils/itemFieldLabels.js";
 import * as UploadConstants from "Components/MainPages/UploadPage/UploadPageConstants.js";
 import {
 	buildDropdownState,
+	buildSizeDropdownState,
 	buildStatusDropdownState,
 } from "Components/MainPages/UploadPage/buildDropdownState.js";
 import {
@@ -21,8 +22,9 @@ const toInt = (value) => parseInt(value, 10);
 
 // Декларативный конфиг дропдаунов: здесь статическая часть (имя поля формы,
 // лейбл, id, плейсхолдер, билдер опций, ключ источника данных в useInputParams).
-// Опции (`options`) добавляет компонент через useMemo поверх этого конфига,
-// потому что зависят от ответа useInputParams.
+// Опции (`options`) и блокировку (`disabled`) добавляет компонент через useMemo
+// поверх этого конфига, потому что они зависят от ответа useInputParams.
+// Опции размера зависят ещё и от выбранного типа (`dependsOn`).
 export const DROPDOWN_DEFS = [
 	{ name: Constants.brand,    label: itemFieldLabel(Constants.brand),    id: "brand_dropdown",
 		apiField: Constants.brandId,    serialize: toInt, empty: null,
@@ -30,6 +32,10 @@ export const DROPDOWN_DEFS = [
 	{ name: Constants.type,     label: itemFieldLabel(Constants.type),     id: "type_dropdown",
 		apiField: Constants.typeId,     serialize: toInt, empty: null,
 		dataKey: "types",     placeholder: UploadConstants.chooseType,     builder: buildDropdownState },
+	{ name: Constants.size,     label: itemFieldLabel(Constants.size),     id: "size_dropdown",
+		apiField: Constants.sizeId,     serialize: toInt, empty: null,
+		dataKey: "sizes",     placeholder: UploadConstants.chooseSize,     builder: buildSizeDropdownState,
+		dependsOn: Constants.type },
 	{ name: Constants.buyer,    label: itemFieldLabel(Constants.buyer),    id: "buyer_dropdown",
 		apiField: Constants.buyerId,    serialize: toInt, empty: null,
 		dataKey: "buyers",    placeholder: UploadConstants.chooseBuyer,    builder: buildDropdownState },
@@ -49,7 +55,6 @@ export const INPUT_DEFS = [
 	{ name: Constants.boughtFor,  label: itemFieldLabel(Constants.boughtFor),  id: "bought_for_input", maxLength: 10, inputValidator: NumbersOnly, serialize: toInt },
 	{ name: Constants.price,      label: itemFieldLabel(Constants.price),      id: "price_input",      maxLength: 10, inputValidator: NumbersOnly, serialize: toInt },
 	{ name: Constants.soldFor,    label: itemFieldLabel(Constants.soldFor),    id: "sold_for_input",   maxLength: 10, inputValidator: NumbersOnly, serialize: toInt },
-	{ name: Constants.size,       label: itemFieldLabel(Constants.size),       id: "size_input",       maxLength: 10 },
 ];
 
 // Многострочные поля (textarea)
@@ -84,6 +89,9 @@ export const TEXT_AREA_DEFS = [
  * @property {string} [dataKey] - Дропдауны: ключ справочника в useInputParams.
  * @property {string} [placeholder] - Дропдауны: подпись пустого варианта.
  * @property {Function} [builder] - Дропдауны: сборка options из справочника.
+ * @property {string} [dependsOn] - Дропдауны: поле, от значения которого
+ *   зависят опции (размер — от типа). Пока оно пустое или опций нет, дропдаун
+ *   заблокирован; при его смене значение сбрасывается в `empty`.
  */
 
 /**
@@ -113,7 +121,7 @@ export const VALIDATION_MAPPER = {
 	[Constants.price]: [NonEmpty],
 	[Constants.buyersPart]: [],
 	[Constants.soldFor]: [],
-	[Constants.size]: [],
+	[Constants.size]: [NonEmpty],
 	[Constants.buyer]: [NonEmpty],
 	[Constants.location]: [NonEmpty],
 	[Constants.brand]: [NonEmpty],
@@ -148,6 +156,12 @@ const assertFieldDefs = () => {
 		}
 		if (!(def.name in INITIAL_FORM)) {
 			throw new Error(`${where}: поля нет в INITIAL_FORM`);
+		}
+		// UploadPageForm передаёт билдерам только выбранный тип (`selectedType`)
+		// и только его держит в зависимостях useMemo опций: другое поле
+		// в `dependsOn` молча бы не сработало.
+		if ("dependsOn" in def && def.dependsOn !== Constants.type) {
+			throw new Error(`${where}: dependsOn поддерживается только для типа (Constants.type)`);
 		}
 	});
 };

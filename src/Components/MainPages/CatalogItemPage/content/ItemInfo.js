@@ -4,7 +4,7 @@ import { currency } from "Constants.js";
 /**
  * Компонент с данными о вещи (размер, цена) — без заголовка и описания.
  *
- * @param {string|number} size - размер
+ * @param {string|null} size - размер; null — у вещи его нет, строка размера не выводится
  * @param {string|number} price - цена
  * @param {string} [delimiter] - разделитель «ключ — значение»
  * @param {string} [className] - дополнительный класс-обёртка
@@ -14,9 +14,11 @@ export const ItemInfo = ({ size, price, delimiter = ": ", className }) => {
 		<div className={`item-info${className ? ` ${className}` : ""}`}>
 
 			{/* Размер */}
-			<p className="item-info__row">
-				size{delimiter}{String(size)}
-			</p>
+			{size != null ? (
+				<p className="item-info__row">
+					size{delimiter}{size}
+				</p>
+			) : null}
 
 			{/* Цена */}
 			<p className="item-info__row">

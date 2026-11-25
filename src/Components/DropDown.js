@@ -2,22 +2,28 @@
 /**
  * Компонент выпадающего списка.
  *
- * @param {string} value - Текущее выбранное значение.
- * @param {Object} options - Опции, доступные для выбора.
- * @param {string} id - id выпадающего списка.
- * @param {Function} onChange - Функция для обработки выбора новой опции.
- * @param {string} className - Имя класса выпадающего списка.
- * @param {string} optionClassName - Имя класса опции внутри выпадающего списка.
+ * @param {object} props
+ * @param {string|number|null} props.value - Текущее выбранное значение;
+ *   null — пустой вариант.
+ * @param {Array<[string, string|number]>} props.options - Опции, доступные для выбора:
+ *   пары [подпись, значение] в порядке показа (см. buildDropdownState.js).
+ * @param {string} props.id - id выпадающего списка.
+ * @param {(value: string|null) => void} props.onChange - Выбор новой опции:
+ *   значение строкой (так его отдаёт <select>), у пустого варианта — null.
+ * @param {string} props.className - Имя класса выпадающего списка.
+ * @param {string} props.optionClassName - Имя класса опции внутри выпадающего списка.
+ * @param {boolean} [props.disabled] - Заблокировать выбор.
  */
-export const Dropdown = ({value, options, id, onChange, className, optionClassName}) => {
+export const Dropdown = ({value, options, id, onChange, className, optionClassName, disabled}) => {
 	return (
 		<select className={className}
 			// Защита от null
 			value={value ?? ''}
 			id={id}
+			disabled={disabled}
 			// Если пустая строка (дефолтное значение) то отправляем на валидацию null
 			onChange={(e) => onChange(e.target.value || null)}>
-			{Object.entries(options).map(([key, value], index) => (
+			{options.map(([key, value], index) => (
 				<option
 					className={optionClassName}
 					key={index}

@@ -1,12 +1,12 @@
 import * as GlobalConstants from "Constants.js";
 
-export const updateSettingRequest = async ({ apiPath, id, title }) => {
+export const updateSettingRequest = async ({ apiPath, id, body }) => {
 	const response = await fetch(
 		`${GlobalConstants.base_server_url}${GlobalConstants.withId(apiPath, id)}`,
 		{
 			method: GlobalConstants.http_methods.PUT,
 			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({ title }),
+			body: JSON.stringify(body),
 			credentials: "include",
 		}
 	);

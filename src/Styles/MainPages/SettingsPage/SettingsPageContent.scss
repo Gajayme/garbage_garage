@@ -74,6 +74,12 @@
 	font-weight: var(--font-weight-regular);
 }
 
+.settings-params__linked-titles {
+	display: block;
+	font-size: 0.85rem;
+	color: #666;
+}
+
 .settings-params__row-input {
 	flex: 1;
 	min-width: 120px;

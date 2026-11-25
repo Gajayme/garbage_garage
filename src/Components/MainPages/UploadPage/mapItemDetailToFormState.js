@@ -16,7 +16,7 @@ const EMPTY_FIELDS = {
 	price: "",
 	buyersPart: "",
 	soldFor: "",
-	size: "",
+	size: null,
 	buyer: null,
 	location: null,
 	brand: null,
@@ -44,11 +44,12 @@ export const mapItemDetailFields = (d) => {
 		price: normalizeDigitString(d.price),
 		buyersPart: normalizeDigitString(d.buyersPart),
 		soldFor: normalizeDigitString(d.soldFor),
-		size: d.size != null && d.size !== "" ? String(d.size) : "",
 		buyer: normalizeFk(d.buyer.id),
 		location: normalizeFk(d.location.id),
 		brand: normalizeFk(d.brand.id),
 		type: normalizeFk(d.type.id),
+		// Размер у вещи необязателен: в ответе API `size` может быть null.
+		size: normalizeFk(d.size?.id),
 		status: normalizeStatus(d.status),
 		description: d.description != null ? String(d.description) : "",
 	};

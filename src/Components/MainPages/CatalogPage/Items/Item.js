@@ -18,7 +18,10 @@ export const Item = ({ value }) => {
 	const type = value.type.title;
 
 	const name = buildTitle(brand, model, type);
-	const details = value.size + ", " + value.price + " " + currency;
+	// Размер у вещи необязателен (`size` может быть null): без него — только цена.
+	const details = [value.size?.title, `${value.price} ${currency}`]
+		.filter(Boolean)
+		.join(", ");
 
 	return (
 		<div className="catalog-page-item">
