@@ -12,12 +12,19 @@ import 'Styles/Filters/SpecificFilters/CheckboxMultiFilter.scss'
 export const isCheckboxMultiFilterActive = (value) =>
 	Array.isArray(value) && value.length > 0;
 
-// фильтр с чекбоксами с доступным мультивыбором
-export const CheckboxMultiFilter = ({ allValues, checkedOptions, onChange, checkmarkImg}) => {
+/**
+ * Фильтр с чекбоксами с доступным мультивыбором.
+ *
+ * @param {object} props
+ * @param {(nameA: string, nameB: string) => number} [props.compareNames] - Сравнить
+ *   подписи двух значений при сортировке списка: возвращает число, как компаратор
+ *   Array.prototype.sort. По умолчанию — compareLabels, по алфавиту.
+ */
+export const CheckboxMultiFilter = ({ allValues, checkedOptions, onChange, checkmarkImg, compareNames = compareLabels }) => {
 
 	const sortedValues = useMemo(
-		() => Object.entries(allValues).sort(([, nameA], [, nameB]) => compareLabels(nameA, nameB)),
-		[allValues]
+		() => Object.entries(allValues).sort(([, nameA], [, nameB]) => compareNames(nameA, nameB)),
+		[allValues, compareNames]
 	);
 
 	const handleOnChange = (newVal) => {

@@ -8,9 +8,17 @@ import checkmark from 'Assets/Icons/Filters/checkmark.svg';
 import rangeArrow from 'Assets/Icons/Filters/price_range_arrow.svg';
 
 import * as Constants from './Constants';
+import * as GlobalConstants from 'Constants.js';
+import { compareSizes } from 'Components/utils/sizes.js';
 
 import 'Styles/Filters/FiltersContent.scss'
 
+
+// Порядок значений фильтра с чекбоксами, если он не алфавитный. Ключ — имя
+// фильтра из ответа бэкенда, оно совпадает с названием поля вещи в API.
+const compareNamesByFilter = {
+	[GlobalConstants.size]: compareSizes,
+};
 
 export const FilterBuilder = ({
 	availableFilters,
@@ -28,6 +36,7 @@ export const FilterBuilder = ({
 						checkedOptions={filtersState[filterData.name] || []}
 						onChange={onFilterStateChanged(filterData.name)}
 						checkmarkImg={checkmark}
+						compareNames={compareNamesByFilter[filterData.name]}
 					/>
 				);
 			case Constants.FilterType.range:
